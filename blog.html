@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Blog — CAAMODULOCK | Cancelería de Aluminio, Vidrio y Seguridad</title>
+    <meta name="theme-color" content="#080808"/>
+    <meta name="description" content="Artículos técnicos, guías y novedades sobre cancelería de aluminio nacional y europea, sistemas perimetrales de seguridad y herrería arquitectónica."/>
+    
+    <!-- Open Graph Metadata -->
+    <meta property="og:type" content="website"/>
+    <meta property="og:site_name" content="CAAMODULOCK"/>
+    <meta property="og:title" content="Blog — CAAMODULOCK | Artículos y Novedades de la Cancelería"/>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;800;900&amp;display=swap" />
+</head>
+<body class="bg-background text-foreground">
+    <main class="bg-background text-foreground min-h-screen">
+        
+        <!-- Navigation Header -->
+        <nav class="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center text-foreground">
+            <a href="index.html" class="flex items-center gap-2">
+                <img src="assets/modulock-logo.png" alt="CAAMODULOCK" class="logo-custom-size object-contain"/>
+            </a>
+            
+            <div class="hidden md:flex gap-10 text-[10px] font-medium tracking-[0.2em] uppercase">
+                <a href="index.html#services" class="hover:opacity-50 transition-opacity">Servicios</a>
+                <a href="index.html#projects" class="hover:opacity-50 transition-opacity">Proyectos</a>
+                <a href="index.html#why" class="hover:opacity-50 transition-opacity">Experiencia</a>
+                <a href="index.html#contact" class="hover:opacity-50 transition-opacity">Contacto</a>
+                <a href="blog.html" class="hover:opacity-50 transition-opacity" style="color: var(--primary-glow)">Blog</a>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <div class="h-px w-12 bg-foreground/30 hidden sm:block"></div>
+                <span class="text-[10px] font-bold tracking-[0.1em] opacity-60 hidden sm:inline">MX / 2026</span>
+                <!-- Hamburger Button -->
+                <button id="mobileMenuToggle" class="flex md:hidden flex-col justify-between w-6 h-4 text-foreground focus:outline-none z-50 cursor-pointer" aria-label="Menú de navegación">
+                    <span class="w-full h-[2px] bg-foreground rounded-full transition-all duration-300 origin-left" id="hamburgerLine1"></span>
+                    <span class="w-full h-[2px] bg-foreground rounded-full transition-opacity duration-300" id="hamburgerLine2"></span>
+                    <span class="w-full h-[2px] bg-foreground rounded-full transition-all duration-300 origin-left" id="hamburgerLine3"></span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Mobile Navigation Menu Drawer -->
+        <div id="mobileMenuDrawer" class="fixed inset-0 bg-background/95 backdrop-blur-lg z-40 flex flex-col justify-center items-center gap-8 opacity-0 pointer-events-none transition-all duration-300 md:hidden">
+            <a href="index.html#services" class="mobile-menu-link text-2xl font-bold uppercase tracking-widest hover:text-primary transition-colors">Servicios</a>
+            <a href="index.html#projects" class="mobile-menu-link text-2xl font-bold uppercase tracking-widest hover:text-primary transition-colors">Proyectos</a>
+            <a href="index.html#why" class="mobile-menu-link text-2xl font-bold uppercase tracking-widest hover:text-primary transition-colors">Experiencia</a>
+            <a href="index.html#contact" class="mobile-menu-link text-2xl font-bold uppercase tracking-widest hover:text-primary transition-colors">Contacto</a>
+            <a href="blog.html" class="mobile-menu-link text-2xl font-bold uppercase tracking-widest hover:text-primary transition-colors" style="color: var(--primary-glow)">Blog</a>
+        </div>
+
+        <!-- Blog Hero Section -->
+        <section id="top" class="relative min-h-[50vh] flex flex-col justify-end px-6 pb-16 pt-40 md:pt-48 overflow-hidden">
+            <div class="absolute inset-0 z-0">
+                <img src="assets/hero-facade-D3hdqyy-.jpg" alt="Fachada de aluminio por CAAMODULOCK" width="1920" height="1280" class="w-full h-full object-cover brightness-50"/>
+                <div class="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent"></div>
+            </div>
+            
+            <div class="relative z-10 max-w-7xl mx-auto w-full">
+                <div class="grid md:grid-cols-12 gap-12 items-end">
+                    <div class="md:col-span-8 scroll-reveal">
+                        <span class="block text-[10px] font-medium tracking-[0.3em] uppercase text-primary-glow mb-6">Bitácora &amp; Novedades</span>
+                        <h1 class="text-[clamp(2.5rem,12vw,7rem)] md:text-[7vw] font-black leading-[0.85] tracking-tighter uppercase mb-6">Blog<br/>Industrial.</h1>
+                        <p class="max-w-md text-lg text-muted-foreground leading-relaxed">
+                            Artículos técnicos, guías y novedades sobre cancelería de aluminio nacional y europea, sistemas perimetrales de seguridad y herrería arquitectónica.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Blog Posts Grid Section -->
+        <section class="py-24 px-6 border-t border-border">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex justify-between items-end mb-16 scroll-reveal">
+                    <h2 class="text-3xl md:text-5xl font-bold tracking-tight uppercase leading-none">Entradas<br/>Publicadas</h2>
+                    <span class="text-[10px] font-bold tracking-[0.3em] uppercase text-muted-foreground hidden md:block">[ Conocimiento Técnico ]</span>
+                </div>
+                
+                <!-- Posts Container -->
+                <div id="blogPostsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Loaded dynamically via JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="relative pt-24 pb-0 border-t border-border px-6 overflow-hidden">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center space-y-3 scroll-reveal">
+                    <a href="tel:+525558809974" class="block text-[clamp(1.5rem,7vw,4.5rem)] font-light tracking-tight hover:text-primary transition-colors break-words">+52 55 5880 9974</a>
+                    <a href="mailto:contacto@cancelesmodulock.com.mx" class="block text-[clamp(1.25rem,6vw,3.75rem)] font-light tracking-tight hover:text-primary transition-colors break-all">contacto@cancelesmodulock.com.mx</a>
+                </div>
+                
+                <div class="mt-16 md:mt-24 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 text-[10px] font-bold uppercase tracking-widest scroll-reveal">
+                    <div class="text-muted-foreground leading-relaxed">Todos los derechos reservados<br/>© 2026 CAAMODULOCK S.A. de C.V.</div>
+                    <div class="text-muted-foreground leading-relaxed sm:text-center">Estado de México<br/>México</div>
+                    <div class="text-muted-foreground leading-relaxed space-y-1 sm:text-right">
+                        <span id="adminTrigger" class="block admin-trigger-btn mb-1">Acceso Administrador</span>
+                        <a href="index.html" class="block hover:text-primary transition-colors">Volver al Inicio</a>
+                    </div>
+                </div>
+                
+                <div class="relative mt-16 h-[200px] md:h-[340px] flex items-end justify-center overflow-hidden">
+                    <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[90vw] md:w-[820px] aspect-[2/1] border-t border-l border-r border-border rounded-t-full"></div>
+                    <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[65vw] md:w-[600px] aspect-[2/1] border-t border-l border-r border-border/60 rounded-t-full"></div>
+                    <a href="index.html#contact" class="glow-ring relative z-10 mb-12 md:mb-20 size-24 md:size-32 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs md:text-sm font-bold uppercase tracking-[0.15em] hover:scale-105 transition-transform">Cotizar</a>
+                </div>
+                
+                <div class="relative -mb-2 md:-mb-6 overflow-visible w-full scroll-reveal" style="transition-delay: 0.1s;">
+                    <h2 class="font-black leading-[0.8] tracking-tighter text-center whitespace-nowrap select-none text-[clamp(3rem,14vw,14rem)] w-full">MODULOCK</h2>
+                </div>
+            </div>
+        </footer>
+
+        <!-- ==========================================================================
+           ADMIN PORTAL MODALS
+           ========================================================================== */ -->
+
+        <!-- Modal 1: Login Form -->
+        <div id="loginModal" class="admin-modal-overlay">
+            <div class="admin-modal-container">
+                <div class="admin-modal-header">
+                    <h3 class="admin-modal-title">Panel de Acceso</h3>
+                    <span id="closeLoginBtn" class="admin-modal-close-btn font-bold text-xl">&times;</span>
+                </div>
+                <form id="loginForm" class="space-y-6">
+                    <div class="admin-form-group">
+                        <label class="admin-label">Contraseña del Administrador</label>
+                        <input type="password" id="adminPasswordInput" class="admin-input" placeholder="••••••••" required autocomplete="current-password" />
+                        <div id="loginError" class="text-red-500 text-xs mt-2" style="color: #ef4444; font-size: 0.75rem; display: none;">Contraseña incorrecta. Inténtelo de nuevo.</div>
+                    </div>
+                    <button type="submit" class="admin-submit-btn">Ingresar</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal 2: Admin Panel (Write Post) -->
+        <div id="adminPanelModal" class="admin-modal-overlay">
+            <div class="admin-modal-container" style="max-width: 650px;">
+                <div class="admin-modal-header">
+                    <div>
+                        <h3 class="admin-modal-title">Redactar Entrada</h3>
+                        <span class="text-xs text-green-500 font-bold" style="color: #10b981;">ADMINISTRADOR AUTENTICADO</span>
+                    </div>
+                    <button id="logoutBtn" class="admin-logout-btn">Cerrar Sesión</button>
+                </div>
+                <form id="createPostForm" class="space-y-6">
+                    <div class="admin-form-group">
+                        <label class="admin-label">Título del Artículo</label>
+                        <input type="text" id="postTitle" class="admin-input" placeholder="Ej. Ventajas del Aluminio Línea Española" required />
+                    </div>
+                    <div class="admin-form-group">
+                        <label class="admin-label">Categoría / Línea</label>
+                        <select id="postCategory" class="admin-select">
+                            <option>Aluminio y Vidrio</option>
+                            <option>Herrería y Metal</option>
+                            <option>Seguridad Perimetral</option>
+                            <option>Guías Técnicas</option>
+                            <option>Casos de Éxito</option>
+                        </select>
+                    </div>
+                    <div class="admin-form-group">
+                        <label class="admin-label">Imagen de Portada</label>
+                        <div class="admin-image-source-selector" style="display: flex; gap: 1.5rem; margin-bottom: 0.75rem;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; cursor: pointer; color: #fff;">
+                                <input type="radio" name="imageSource" value="default" checked style="accent-color: var(--primary-glow);" />
+                                Predeterminada del Sitio
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; cursor: pointer; color: #fff;">
+                                <input type="radio" name="imageSource" value="upload" style="accent-color: var(--primary-glow);" />
+                                Subir Imagen Personalizada
+                            </label>
+                        </div>
+                        
+                        <div id="defaultImageContainer">
+                            <select id="postImage" class="admin-select">
+                                <option value="assets/service-aluminum-DfJojfyS.jpg">Aluminio y Vidrio (Fondo)</option>
+                                <option value="assets/service-structural-CjurY88P.jpg">Estructura y Metal (Fondo)</option>
+                                <option value="assets/service-fencing-BTbCOTmA.jpg">Cercados y Malla (Fondo)</option>
+                                <option value="assets/project-commercial-Du_Spt2l.jpg">Obra Comercial (Fondo)</option>
+                                <option value="assets/project-industrial-BOXizEMv.jpg">Obra Industrial (Fondo)</option>
+                                <option value="assets/project-residential-DJPn9rzY.jpg">Obra Residencial (Fondo)</option>
+                            </select>
+                        </div>
+                        
+                        <div id="uploadImageContainer" style="display: none;">
+                            <div class="upload-dropzone" id="uploadDropzone">
+                                <input type="file" id="postImageFile" accept="image/*" style="display: none;" />
+                                <div class="upload-prompt" id="uploadPrompt">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-2 text-muted-foreground" style="color: #6b7280; display: block; margin: 0 auto 0.5rem;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                                    <span class="text-xs text-muted-foreground" style="color: #9ca3af; font-weight: 500;">Arrastra una imagen aquí o haz clic para buscar</span>
+                                </div>
+                                <div id="imagePreviewContainer" style="display: none; margin-top: 0.75rem; position: relative; border-radius: 0.5rem; overflow: hidden; aspect-ratio: 16/9; max-height: 150px; border: 1px solid var(--border);">
+                                    <img id="imagePreview" src="" alt="Vista previa" style="width: 100%; height: 100%; object-fit: cover;" />
+                                    <button type="button" id="removeUploadedImage" style="position: absolute; top: 0.5rem; right: 0.5rem; background: rgba(0,0,0,0.7); color: #ef4444; border: none; border-radius: 50%; width: 1.75rem; height: 1.75rem; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: bold; font-size: 1rem; transition: background 0.2s;">&times;</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="admin-form-group">
+                        <label class="admin-label">Resumen Breve (Aparece en la tarjeta)</label>
+                        <input type="text" id="postExcerpt" class="admin-input" placeholder="Ej. Descubre por qué la cancelería europea es el estándar de aislamiento..." required />
+                    </div>
+                    <div class="admin-form-group">
+                        <label class="admin-label">Contenido Completo del Artículo</label>
+                        <textarea id="postContent" class="admin-textarea" rows="6" placeholder="Escribe aquí el desarrollo del artículo (soporta saltos de párrafo)..." required></textarea>
+                    </div>
+                    <button type="submit" class="admin-submit-btn">Publicar Artículo</button>
+                </form>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Blog Logic script -->
+    <script src="blog.js"></script>
+</body>
+</html>

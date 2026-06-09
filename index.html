@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>CAAMODULOCK — Cancelería de Aluminio, Vidrio y Sistemas de Seguridad Premium</title>
+    <meta name="theme-color" content="#080808"/>
+    <meta name="description" content="Más de 20 años fabricando e instalando sistemas de aluminio, cancelería, herrería, malla ciclónica y reja de acero Modulock para los desarrollos comerciales, industriales y residenciales en México."/>
+    
+    <!-- Open Graph Metadata -->
+    <meta property="og:type" content="website"/>
+    <meta property="og:site_name" content="CAAMODULOCK"/>
+    <meta property="og:title" content="CAAMODULOCK — Cancelería de Aluminio, Vidrio y Sistemas de Seguridad Premium"/>
+    <meta property="og:description" content="Más de 20 años fabricando e instalando sistemas de aluminio, cancelería, herrería, malla ciclónica y reja de acero Modulock para los desarrollos comerciales, industriales y residenciales en México."/>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;800;900&amp;display=swap" />
+    
+    <style>
+        /* Estilos Premium para la expansión de tarjetas de servicios */
+        #servicesGrid {
+            position: relative !important;
+            transition: min-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .service-card {
+            transition: top 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                        left 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                        width 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                        height 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                        opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                        transform 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                        border-color 0.3s ease,
+                        box-shadow 0.3s ease !important;
+        }
+        
+        /* Efecto hover suave solo cuando no hay tarjetas expandidas */
+        #servicesGrid:not(.has-expanded-card) .service-card:hover {
+            transform: translateY(-4px) !important;
+            border-color: hsl(var(--primary)) !important;
+            box-shadow: 0 10px 30px -10px rgba(245, 165, 92, 0.2) !important;
+        }
+        
+        /* Oculta las tarjetas no seleccionadas */
+        .service-card.is-hidden {
+            opacity: 0 !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+            transform: scale(0.95) !important;
+        }
+        
+        /* Tarjeta seleccionada y expandida */
+        .service-card.is-expanded {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            z-index: 50 !important;
+            cursor: default !important;
+            transform: scale(1) !important;
+            border-color: hsl(var(--primary)) !important;
+            display: flex !important;
+            flex-direction: column !important;
+            overflow: hidden !important;
+        }
+        
+        /* Ajuste del contenido expandido */
+        .service-card.is-expanded .service-card-expanded {
+            max-height: 100% !important;
+            opacity: 1 !important;
+            flex-grow: 1 !important;
+            overflow-y: auto !important;
+            display: block !important;
+        }
+        
+        /* Estructura responsiva de dos columnas al estar expandida */
+        @media (min-width: 768px) {
+            .service-card.is-expanded {
+                flex-direction: row !important;
+            }
+            .service-card.is-expanded .service-card-header {
+                width: 50% !important;
+                height: 100% !important;
+                min-height: auto !important;
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: space-between !important;
+                padding: 3rem !important;
+            }
+            .service-card.is-expanded .service-card-expanded {
+                width: 50% !important;
+                height: 100% !important;
+                border-left: 1px solid rgba(255, 255, 255, 0.08) !important;
+                padding: 3rem !important;
+            }
+            .service-card.is-expanded .service-card-expanded-content {
+                border-top: none !important;
+                padding-top: 0 !important;
+                padding-bottom: 0 !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+                height: 100% !important;
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: space-between !important;
+            }
+        }
+        
+        @media (max-width: 767px) {
+            .service-card.is-expanded {
+                overflow-y: auto !important;
+            }
+            .service-card.is-expanded .service-card-header {
+                padding: 2rem !important;
+                min-height: auto !important;
+            }
+            .service-card.is-expanded .service-card-expanded {
+                padding: 2rem !important;
+                padding-top: 0 !important;
+            }
+            .service-card.is-expanded .service-card-expanded-content {
+                border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+                padding-top: 1.5rem !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+                padding-bottom: 0 !important;
+            }
+        }
+        
+        /* Ajuste de la imagen decorativa en estado expandido */
+        .service-card.is-expanded .absolute-img-container {
+            width: 50% !important;
+            height: 80% !important;
+            bottom: -10% !important;
+            right: -5% !important;
+            opacity: 0.15 !important;
+            transition: all 0.5s ease !important;
+        }
+        
+        /* Estilo del placeholder */
+        .service-card-placeholder {
+            visibility: hidden !important;
+            pointer-events: none !important;
+            background: transparent !important;
+            border: 1px solid transparent !important;
+        }
+    </style>
+    
+    <!-- Preload critical images -->
+    <link rel="preload" as="image" href="assets/modulock-logo.png"/>
+    <link rel="preload" as="image" href="assets/hero-bg.jpg?v=2"/>
+</head>
+<body class="bg-background text-foreground">
+    <main class="bg-background text-foreground min-h-screen">
+        
+        <!-- Navigation Header -->
+        <nav class="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center text-foreground">
+            <a href="#top" class="flex items-center gap-2">
+                <img src="assets/modulock-logo.png" alt="CAAMODULOCK" class="logo-custom-size object-contain"/>
+            </a>
+            
+            <div class="hidden md:flex gap-10 text-[10px] font-medium tracking-[0.2em] uppercase">
+                <a href="#services" class="hover:opacity-50 transition-opacity">Servicios</a>
+                <a href="#projects" class="hover:opacity-50 transition-opacity">Proyectos</a>
+                <a href="#why" class="hover:opacity-50 transition-opacity">Experiencia</a>
+                <a href="#contact" class="hover:opacity-50 transition-opacity">Contacto</a>
+                <a href="blog.html" class="hover:opacity-50 transition-opacity">Blog</a>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <div class="h-px w-12 bg-foreground/30 hidden sm:block"></div>
+                <span class="text-[10px] font-bold tracking-[0.1em] opacity-60 hidden sm:inline">MX / 2026</span>
+                <!-- Hamburger Button -->
+                <button id="mobileMenuToggle" class="flex md:hidden flex-col justify-between w-6 h-4 text-foreground focus:outline-none z-50 cursor-pointer" aria-label="Menú de navegación">
+                    <span class="w-full h-[2px] bg-foreground rounded-full transition-all duration-300 origin-left" id="hamburgerLine1"></span>
+                    <span class="w-full h-[2px] bg-foreground rounded-full transition-opacity duration-300" id="hamburgerLine2"></span>
+                    <span class="w-full h-[2px] bg-foreground rounded-full transition-all duration-300 origin-left" id="hamburgerLine3"></span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Mobile Navigation Menu Drawer -->
+        <div id="mobileMenuDrawer" class="fixed inset-0 bg-background/95 backdrop-blur-lg z-40 flex flex-col justify-center items-center gap-8 opacity-0 pointer-events-none transition-all duration-300 md:hidden">
+            <a href="#services" class="mobile-menu-link text-2xl font-bold uppercase tracking-widest hover:text-primary transition-colors">Servicios</a>
+            <a href="#projects" class="mobile-menu-link text-2xl font-bold uppercase tracking-widest hover:text-primary transition-colors">Proyectos</a>
+            <a href="#why" class="mobile-menu-link text-2xl font-bold uppercase tracking-widest hover:text-primary transition-colors">Experiencia</a>
+            <a href="#contact" class="mobile-menu-link text-2xl font-bold uppercase tracking-widest hover:text-primary transition-colors">Contacto</a>
+            <a href="blog.html" class="mobile-menu-link text-2xl font-bold uppercase tracking-widest hover:text-primary transition-colors">Blog</a>
+        </div>
+
+        <!-- Hero Section -->
+        <section id="top" class="relative min-h-screen flex flex-col justify-end px-6 pb-16 pt-32 md:pt-40 md:pb-20 overflow-hidden">
+            <div class="absolute inset-0 z-0">
+                <img src="assets/hero-bg.jpg?v=2" alt="Fachada de cancelería de aluminio y vidrio de alta especificación por CAAMODULOCK" width="2048" height="1536" class="w-full h-full object-cover object-center brightness-50"/>
+                <div class="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-background/60 via-transparent to-transparent"></div>
+            </div>
+            
+            <div class="relative z-10 max-w-7xl mx-auto w-full">
+                <div class="grid md:grid-cols-12 gap-12 items-end">
+                    
+                    <!-- Hero Texts -->
+                    <div class="md:col-span-8 scroll-reveal" style="transition-delay: 0.1s;">
+                        <span class="block text-[10px] font-medium tracking-[0.3em] uppercase text-muted-foreground mb-6">Desde 2006 — México</span>
+                        <h1 class="font-black leading-[0.85] tracking-tighter uppercase mb-8" style="font-size: clamp(2.5rem, 7vw, 7rem);">
+                            Arquitectura<br/>Modular.
+                        </h1>
+                        <p class="max-w-md text-lg text-muted-foreground leading-relaxed">
+                            Respaldados por más de 20 años de experiencia, somos una empresa líder dedicada al suministro, fabricación e instalación de cancelería de aluminio, vidrio, herrería, malla ciclónica y reja de acero Modulock en toda la República Mexicana.
+                        </p>
+                    </div>
+                    
+                    <!-- Featured Project Card / Direct Action -->
+                    <div class="md:col-span-4 flex flex-col gap-6 scroll-reveal" style="transition-delay: 0.3s;">
+                        <div class="glow-ring p-6 border border-foreground/10 backdrop-blur-md bg-foreground/5 rounded-2xl">
+                            <div class="text-[10px] uppercase tracking-widest text-muted-foreground mb-2">Proyecto Destacado</div>
+                            <div class="text-lg font-bold mb-4">Sam's Club / Malla Ciclónica</div>
+                            <img src="assets/sams-club.jpg?v=2" alt="Mallas de Sam's Club con cinta de privacidad de PVC color azul" width="800" height="450" loading="lazy" class="w-full aspect-video object-cover mb-4 rounded-xl"/>
+                            <a href="#projects" class="text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 group hover:gap-4 transition-all">Ver Obras Realizadas <span class="text-lg">→</span></a>
+                        </div>
+                        <a href="#contact" class="glow-hover w-full bg-primary text-primary-foreground font-bold uppercase py-5 tracking-widest text-sm rounded-full hover:brightness-110 transition-colors text-center">Solicitar Cotización</a>
+                    </div>
+                    
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats / Metrics Section -->
+        <section class="py-32 border-y border-border">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-12">
+                    
+                    <div class="flex flex-col gap-3 scroll-reveal">
+                        <span class="text-5xl md:text-6xl font-bold tracking-tighter" data-target="20">0+</span>
+                        <span class="text-[10px] uppercase tracking-widest text-muted-foreground">Años de Trayectoria</span>
+                    </div>
+                    
+                    <div class="flex flex-col gap-3 scroll-reveal" style="transition-delay: 0.1s;">
+                        <span class="text-5xl md:text-6xl font-bold tracking-tighter" data-target="500">0+</span>
+                        <span class="text-[10px] uppercase tracking-widest text-muted-foreground">Proyectos Entregados</span>
+                    </div>
+                    
+                    <div class="flex flex-col gap-3 scroll-reveal" style="transition-delay: 0.2s;">
+                        <span class="text-5xl md:text-6xl font-bold tracking-tighter" data-target="32">0</span>
+                        <span class="text-[10px] uppercase tracking-widest text-muted-foreground">Estados Cubiertos</span>
+                    </div>
+                    
+                    <div class="flex flex-col gap-3 scroll-reveal" style="transition-delay: 0.3s;">
+                        <span class="text-5xl md:text-6xl font-bold tracking-tighter" data-target="100">0%</span>
+                        <span class="text-[10px] uppercase tracking-widest text-muted-foreground">Garantía de Calidad</span>
+                    </div>
+                    
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services" class="py-32 px-6">
+            <div class="max-w-7xl mx-auto">
+                
+                <!-- Section Header -->
+                <div class="flex flex-col md:flex-row justify-between items-end mb-20 gap-8 scroll-reveal">
+                    <h2 class="text-4xl md:text-6xl font-bold tracking-tight uppercase leading-none">Ingeniería<br/>Arquitectónica</h2>
+                    <p class="max-w-sm text-muted-foreground text-sm leading-relaxed">
+                        Desde cancelería de aluminio y vidrio hasta sistemas perimetrales y de seguridad, fabricamos e instalamos soluciones metálicas y arquitectónicas de la más alta calidad.
+                    </p>
+                </div>
+                
+                <!-- Services Grid — cards expandibles al hacer click -->
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5" id="servicesGrid">
+                    
+                    <!-- Card 01: Aluminio y Vidrio -->
+                    <div class="service-card glow-ring group relative bg-charcoal overflow-hidden rounded-2xl border border-border cursor-pointer scroll-reveal" data-card="1">
+                        <!-- Vista colapsada (siempre visible) -->
+                        <div class="service-card-header p-10 flex flex-col" style="min-height: 280px;">
+                            <span class="text-[10px] font-bold tracking-widest text-muted-foreground mb-auto">01</span>
+                            <h3 class="text-2xl font-bold uppercase mb-4 tracking-tight">Aluminio y Vidrio</h3>
+                            <p class="text-sm text-muted-foreground leading-relaxed opacity-70 group-hover:opacity-100 transition-opacity">
+                                Suministro, diseño y fabricación integral de cancelería, domos, pérgolas, fachadas y puertas de alta especificación. Combinamos aluminio con herrería para soluciones arquitectónicas premium.
+                            </p>
+                            <!-- Indicador de expansión -->
+                            <div class="service-card-icon mt-6 flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-primary">
+                                <span class="service-card-label">Ver más</span>
+                                <span class="service-card-arrow transition-transform duration-300">→</span>
+                            </div>
+                        </div>
+                        <!-- Contenido expandido (oculto por defecto) -->
+                        <div class="service-card-expanded" style="max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease; opacity: 0;">
+                            <div class="service-card-expanded-content px-10 pb-10 border-t border-border/40 pt-6">
+                                <ul class="space-y-3 text-sm text-muted-foreground">
+                                    <li class="flex items-start gap-3"><span class="text-primary mt-1">▸</span>Ventanas, puertas y fachadas de aluminio (perfil europeo)</li>
+                                    <li class="flex items-start gap-3"><span class="text-primary mt-1">▸</span>Domos y pérgolas personalizadas (aluminio y herrería)</li>
+                                    <li class="flex items-start gap-3"><span class="text-primary mt-1">▸</span>Cristal templado, laminado y doble acristalamiento (control solar)</li>
+                                    <li class="flex items-start gap-3"><span class="text-primary mt-1">▸</span>Cancelería residencial, comercial e industrial fabricada a medida</li>
+                                </ul>
+                                <a href="#contact" class="inline-block mt-6 text-[10px] font-bold uppercase tracking-[0.2em] text-primary hover:opacity-80 transition-opacity">Solicitar cotización →</a>
+                            </div>
+                        </div>
+                        <!-- Imagen decorativa -->
+                        <div class="absolute-img-container absolute -bottom-6 -right-6 w-40 h-40 opacity-10 group-hover:opacity-20 transition-all duration-700 pointer-events-none">
+                            <img src="assets/service-aluminum-DfJojfyS.jpg" alt="Aluminio y Vidrio" width="512" height="512" loading="lazy" class="w-full h-full object-cover rounded-2xl"/>
+                        </div>
+                    </div>
+
+                    <!-- Card 02: Herrería y Portones -->
+                    <div class="service-card glow-ring group relative bg-charcoal overflow-hidden rounded-2xl border border-border cursor-pointer scroll-reveal" data-card="2" style="transition-delay: 0.1s;">
+                        <div class="service-card-header p-10 flex flex-col" style="min-height: 280px;">
+                            <span class="text-[10px] font-bold tracking-widest text-muted-foreground mb-auto">02</span>
+                            <h3 class="text-2xl font-bold uppercase mb-4 tracking-tight">Herrería y Portones</h3>
+                            <p class="text-sm text-muted-foreground leading-relaxed opacity-70 group-hover:opacity-100 transition-opacity">
+                                Fabricación de portones automatizados híbridos (herrería y aluminio) con bastidores de PTR calibre 18 forrados en aluminio premium. Estructuras metálicas de alta resistencia.
+                            </p>
+                            <div class="service-card-icon mt-6 flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-primary">
+                                <span class="service-card-label">Ver más</span>
+                                <span class="service-card-arrow transition-transform duration-300">→</span>
+                            </div>
+                        </div>
+                        <div class="service-card-expanded" style="max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease; opacity: 0;">
+                            <div class="service-card-expanded-content px-10 pb-10 border-t border-border/40 pt-6">
+                                <ul class="space-y-3 text-sm text-muted-foreground">
+                                    <li class="flex items-start gap-3"><span class="text-primary mt-1">▸</span>Portones inteligentes con bastidores de PTR (calibre 18) forrados de aluminio</li>
+                                    <li class="flex items-start gap-3"><span class="text-primary mt-1">▸</span>Puertas de seguridad, salidas de emergencia y herrería estructural</li>
+                                    <li class="flex items-start gap-3"><span class="text-primary mt-1">▸</span>Diseños ornamentales e industriales fabricados a medida en taller</li>
+                                    <li class="flex items-start gap-3"><span class="text-primary mt-1">▸</span>Automatización y sistemas de control de acceso integrados</li>
+                                </ul>
+                                <a href="#contact" class="inline-block mt-6 text-[10px] font-bold uppercase tracking-[0.2em] text-primary hover:opacity-80 transition-opacity">Solicitar cotización →</a>
+                            </div>
+                        </div>
+                        <div class="absolute-img-container absolute -bottom-6 -right-6 w-40 h-40 opacity-10 group-hover:opacity-20 transition-all duration-700 pointer-events-none">
+                            <img src="assets/service-structural-CjurY88P.jpg" alt="Herrería y Portones" width="512" height="512" loading="lazy" class="w-full h-full object-cover rounded-2xl"/>
+                        </div>
+                    </div>
+
+                    <!-- Card 03: Malla Ciclónica -->
+                    <div class="service-card glow-ring group relative bg-charcoal overflow-hidden rounded-2xl border border-border cursor-pointer scroll-reveal" data-card="3" style="transition-delay: 0.2s;">
+                        <div class="service-card-header p-10 flex flex-col" style="min-height: 280px;">
+                            <span class="text-[10px] font-bold tracking-widest text-muted-foreground mb-auto">03</span>
+                            <h3 class="text-2xl font-bold uppercase mb-4 tracking-tight">Malla Ciclónica</h3>
+                            <p class="text-sm text-muted-foreground leading-relaxed opacity-70 group-hover:opacity-100 transition-opacity">
+                                Suministro e instalación de cercos de malla ciclónica en distintas alturas, aberturas y calibres. Solución perimetral completa con accesorios de alta seguridad.
+                            </p>
+                            <div class="service-card-icon mt-6 flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-primary">
+                                <span class="service-card-label">Ver más</span>
+                                <span class="service-card-arrow transition-transform duration-300">→</span>
+                            </div>
+                        </div>
+                        <div class="service-card-expanded" style="max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease; opacity: 0;">
+                            <div class="service-card-expanded-content px-10 pb-10 border-t border-border/40 pt-6">
+                                <ul class="space-y-3 text-sm text-muted-foreground">
+                                    <li class="flex items-start gap-3"><span class="text-primary mt-1">▸</span>Malla galvanizada y plastificada en varios calibres y aberturas</li>
+                                    <li class="flex items-start gap-3"><span class="text-primary mt-1">▸</span>Accesorios de seguridad: alambre de púas y concertina de acero</li>
+                                    <li class="flex items-start gap-3"><span class="text-primary mt-1">▸</span>Cintas de privacidad en una amplia gama de colores</li>
+                                    <li class="flex items-start gap-3"><span class="text-primary mt-1">▸</span>Cercados perimetrales para lotes, fraccionamientos y áreas deportivas</li>
+                                </ul>
+                                <a href="#contact" class="inline-block mt-6 text-[10px] font-bold uppercase tracking-[0.2em] text-primary hover:opacity-80 transition-opacity">Solicitar cotización →</a>
+                            </div>
+                        </div>
+                        <div class="absolute-img-container absolute -bottom-6 -right-6 w-40 h-40 opacity-10 group-hover:opacity-20 transition-all duration-700 pointer-events-none">
+                            <img src="assets/service-fencing-BTbCOTmA.jpg" alt="Malla Ciclónica" width="512" height="512" loading="lazy" class="w-full h-full object-cover rounded-2xl"/>
+                        </div>
+                    </div>
+
+                    <!-- Card 04: Reja de Acero Modulock -->
+                    <div class="service-card glow-ring group relative bg-charcoal overflow-hidden rounded-2xl border border-border cursor-pointer scroll-reveal" data-card="4" style="transition-delay: 0.3s;">
+                        <div class="service-card-header p-10 flex flex-col" style="min-height: 280px;">
+                            <span class="text-[10px] font-bold tracking-widest text-muted-foreground mb-auto">04</span>
+                            <h3 class="text-2xl font-bold uppercase mb-4 tracking-tight">Reja de Acero Modulock</h3>
+                            <p class="text-sm text-muted-foreground leading-relaxed opacity-70 group-hover:opacity-100 transition-opacity">
+                                Diseñamos y fabricamos desde cero nuestro propio sistema de reja de acero modular. Máxima seguridad y durabilidad sin depender de marcas intermediarias.
+                            </p>
+                            <div class="service-card-icon mt-6 flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-primary">
+                                <span class="service-card-label">Ver más</span>
+                                <span class="service-card-arrow transition-transform duration-300">→</span>
+                            </div>
+                        </div>
+                        <div class="service-card-expanded" style="max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease; opacity: 0;">
+                            <div class="service-card-expanded-content px-10 pb-10 border-t border-border/40 pt-6">
+                                <ul class="space-y-3 text-sm text-muted-foreground">
+                                    <li class="flex items-start gap-3"><span class="text-primary mt-1">▸</span>Paneles de reja de acero electrosoldada fabricados bajo nuestra marca Modulock</li>
+                                    <li class="flex items-start gap-3"><span class="text-primary mt-1">▸</span>Recubrimiento de poliéster termoendurecido anticorrosión de alta especificación</li>
+                                    <li class="flex items-start gap-3"><span class="text-primary mt-1">▸</span>Fijaciones ocultas y herrajes de seguridad anti-vandalismo propios</li>
+                                    <li class="flex items-start gap-3"><span class="text-primary mt-1">▸</span>Diseños perimetrales a medida con postes y accesorios Modulock</li>
+                                </ul>
+                                <a href="#contact" class="inline-block mt-6 text-[10px] font-bold uppercase tracking-[0.2em] text-primary hover:opacity-80 transition-opacity">Solicitar cotización →</a>
+                            </div>
+                        </div>
+                        <div class="absolute-img-container absolute -bottom-6 -right-6 w-40 h-40 opacity-10 group-hover:opacity-20 transition-all duration-700 pointer-events-none">
+                            <img src="assets/service-structural-CjurY88P.jpg" alt="Reja de acero de seguridad Modulock" width="512" height="512" loading="lazy" class="w-full h-full object-cover rounded-2xl"/>
+                        </div>
+                    </div>
+
+                    <!-- Card 05: Barandales -->
+                    <div class="service-card glow-ring group relative bg-charcoal overflow-hidden rounded-2xl border border-border cursor-pointer scroll-reveal" data-card="5" style="transition-delay: 0.4s;">
+                        <div class="service-card-header p-10 flex flex-col" style="min-height: 280px;">
+                            <span class="text-[10px] font-bold tracking-widest text-muted-foreground mb-auto">05</span>
+                            <h3 class="text-2xl font-bold uppercase mb-4 tracking-tight">Barandales</h3>
+                            <p class="text-sm text-muted-foreground leading-relaxed opacity-70 group-hover:opacity-100 transition-opacity">
+                                Barandales de acero inoxidable y vidrio templado. Diseños estéticamente atractivos, robustos y totalmente personalizables.
+                            </p>
+                            <div class="service-card-icon mt-6 flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-primary">
+                                <span class="service-card-label">Ver más</span>
+                                <span class="service-card-arrow transition-transform duration-300">→</span>
+                            </div>
+                        </div>
+                        <div class="service-card-expanded" style="max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease; opacity: 0;">
+                            <div class="service-card-expanded-content px-10 pb-10 border-t border-border/40 pt-6">
+                                <ul class="space-y-3 text-sm text-muted-foreground">
+                                    <li class="flex items-start gap-3"><span class="text-primary mt-1">▸</span>Barandales de tubo inoxidable satinado y pulido</li>
+                                    <li class="flex items-start gap-3"><span class="text-primary mt-1">▸</span>Cristal templado de 10 y 12mm con herrajes ocultos</li>
+                                    <li class="flex items-start gap-3"><span class="text-primary mt-1">▸</span>Para escaleras, terrazas, albercas y rampas</li>
+                                    <li class="flex items-start gap-3"><span class="text-primary mt-1">▸</span>Diseños modernos, clásicos y a medida</li>
+                                </ul>
+                                <a href="#contact" class="inline-block mt-6 text-[10px] font-bold uppercase tracking-[0.2em] text-primary hover:opacity-80 transition-opacity">Solicitar cotización →</a>
+                            </div>
+                        </div>
+                        <div class="absolute-img-container absolute -bottom-6 -right-6 w-40 h-40 opacity-10 group-hover:opacity-20 transition-all duration-700 pointer-events-none">
+                            <img src="assets/service-fencing-BTbCOTmA.jpg" alt="Barandales de acero y cristal" width="512" height="512" loading="lazy" class="w-full h-full object-cover rounded-2xl"/>
+                        </div>
+                    </div>
+
+                    <!-- Card 06: Mamparas Modulock -->
+                    <div class="service-card glow-ring group relative bg-charcoal overflow-hidden rounded-2xl border border-border cursor-pointer scroll-reveal" data-card="6" style="transition-delay: 0.5s;">
+                        <div class="service-card-header p-10 flex flex-col" style="min-height: 280px;">
+                            <span class="text-[10px] font-bold tracking-widest text-muted-foreground mb-auto">06</span>
+                            <h3 class="text-2xl font-bold uppercase mb-4 tracking-tight">Mamparas Modulock</h3>
+                            <p class="text-sm text-muted-foreground leading-relaxed opacity-70 group-hover:opacity-100 transition-opacity">
+                                Fabricación directa desde cero de mamparas sanitarias suspendidas en lámina esmaltada con pintura en polvo horneada y aluminio acanalado. Higiénicas, duraderas y a medida.
+                            </p>
+                            <div class="service-card-icon mt-6 flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-primary">
+                                <span class="service-card-label">Ver más</span>
+                                <span class="service-card-arrow transition-transform duration-300">→</span>
+                            </div>
+                        </div>
+                        <div class="service-card-expanded" style="max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease; opacity: 0;">
+                            <div class="service-card-expanded-content px-10 pb-10 border-t border-border/40 pt-6">
+                                <ul class="space-y-3 text-sm text-muted-foreground">
+                                    <li class="flex items-start gap-3"><span class="text-primary mt-1">▸</span>Mamparas Modulock para baños públicos en lámina esmaltada y aluminio</li>
+                                    <li class="flex items-start gap-3"><span class="text-primary mt-1">▸</span>Acabados en pintura en polvo horneada en gran variedad de colores</li>
+                                    <li class="flex items-start gap-3"><span class="text-primary mt-1">▸</span>Puertas especiales de lámina para accesos de baño, de seguridad o emergencia</li>
+                                    <li class="flex items-start gap-3"><span class="text-primary mt-1">▸</span>Divisiones premium para sanitarios y mingitorios de alta resistencia</li>
+                                </ul>
+                                <a href="#contact" class="inline-block mt-6 text-[10px] font-bold uppercase tracking-[0.2em] text-primary hover:opacity-80 transition-opacity">Solicitar cotización →</a>
+                            </div>
+                        </div>
+                        <div class="absolute-img-container absolute -bottom-6 -right-6 w-40 h-40 opacity-10 group-hover:opacity-20 transition-all duration-700 pointer-events-none">
+                            <img src="assets/service-aluminum-DfJojfyS.jpg" alt="Mamparas Modulock sanitarias" width="512" height="512" loading="lazy" class="w-full h-full object-cover rounded-2xl"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =====================================================
+             JS: Animación de expansión para tarjetas de servicio
+             ===================================================== -->
+        <script>
+        (function () {
+            const grid = document.getElementById('servicesGrid');
+            const cards = document.querySelectorAll('.service-card');
+            
+            // Función para cerrar una tarjeta activa
+            function closeCard(card) {
+                const placeholder = grid.querySelector('.service-card-placeholder');
+                if (!placeholder) return;
+                
+                // Medir la posición actual del placeholder en el grid
+                const gridRect = grid.getBoundingClientRect();
+                const placeholderRect = placeholder.getBoundingClientRect();
+                const top = placeholderRect.top - gridRect.top;
+                const left = placeholderRect.left - gridRect.left;
+                const width = placeholderRect.width;
+                const height = placeholderRect.height;
+                
+                // Mover la tarjeta de vuelta a las coordenadas de su placeholder
+                card.classList.remove('is-expanded');
+                card.style.top = `${top}px`;
+                card.style.left = `${left}px`;
+                card.style.width = `${width}px`;
+                card.style.height = `${height}px`;
+                
+                // Resetear indicadores visuales
+                const label = card.querySelector('.service-card-label');
+                const arrow = card.querySelector('.service-card-arrow');
+                if (label) label.textContent = 'Ver más';
+                if (arrow) arrow.style.transform = 'rotate(0deg)';
+                
+                // Revelar las demás tarjetas
+                cards.forEach(c => {
+                    c.classList.remove('is-hidden');
+                });
+                grid.classList.remove('has-expanded-card');
+                
+                // Restaurar flujo estático tras terminar la transición (500ms)
+                setTimeout(() => {
+                    if (!card.classList.contains('is-expanded')) {
+                        card.style.position = '';
+                        card.style.top = '';
+                        card.style.left = '';
+                        card.style.width = '';
+                        card.style.height = '';
+                        card.style.zIndex = '';
+                        if (placeholder.parentNode) {
+                            placeholder.parentNode.removeChild(placeholder);
+                        }
+                    }
+                }, 500);
+            }
+            
+            // Función para expandir una tarjeta seleccionada
+            function expandCard(card) {
+                // Cerrar cualquier otra tarjeta que pudiera estar abierta
+                const openCard = grid.querySelector('.service-card.is-expanded');
+                if (openCard) {
+                    closeCard(openCard);
+                }
+                
+                // Medir dimensiones iniciales en el grid
+                const gridRect = grid.getBoundingClientRect();
+                const cardRect = card.getBoundingClientRect();
+                const top = cardRect.top - gridRect.top;
+                const left = cardRect.left - gridRect.left;
+                const width = cardRect.width;
+                const height = cardRect.height;
+                
+                // Crear un placeholder invisible para reservar el espacio en el grid
+                const placeholder = document.createElement('div');
+                placeholder.className = 'service-card-placeholder';
+                placeholder.style.width = `${width}px`;
+                placeholder.style.height = `${height}px`;
+                
+                card.parentNode.insertBefore(placeholder, card);
+                
+                // Congelar la tarjeta en su posición absolute inicial
+                card.style.transition = 'none';
+                card.style.position = 'absolute';
+                card.style.top = `${top}px`;
+                card.style.left = `${left}px`;
+                card.style.width = `${width}px`;
+                card.style.height = `${height}px`;
+                card.style.zIndex = '50';
+                
+                // Forzar recalculado de layout
+                card.offsetHeight;
+                
+                // Activar transición y clases de expansión
+                card.style.transition = '';
+                grid.classList.add('has-expanded-card');
+                
+                cards.forEach(c => {
+                    if (c !== card) {
+                        c.classList.add('is-hidden');
+                    }
+                });
+                
+                card.classList.add('is-expanded');
+                
+                // Cambiar etiqueta e indicador visual de dirección
+                const label = card.querySelector('.service-card-label');
+                const arrow = card.querySelector('.service-card-arrow');
+                if (label) label.textContent = 'CERRAR';
+                if (arrow) arrow.style.transform = 'rotate(-180deg)';
+                
+                // Centrar la vista en la sección de servicios de forma fluida
+                setTimeout(() => {
+                    document.getElementById('services').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            }
+            
+            cards.forEach(card => {
+                card.addEventListener('click', function (e) {
+                    const isExpanded = card.classList.contains('is-expanded');
+                    
+                    if (isExpanded) {
+                        // Cerrar únicamente al hacer clic en el botón / etiqueta CERRAR
+                        if (e.target.closest('.service-card-icon')) {
+                            closeCard(card);
+                        }
+                    } else {
+                        expandCard(card);
+                    }
+                });
+            });
+        })();
+        </script>
+
+        <!-- Selected Projects Section -->
+
+        <section id="projects" class="py-32 bg-charcoal/30 px-6">
+            <div class="max-w-7xl mx-auto">
+                
+                <!-- Section Header -->
+                <div class="flex justify-between items-end mb-20 scroll-reveal">
+                    <h2 class="text-4xl md:text-6xl font-bold tracking-tight uppercase leading-none">Proyectos<br/>Destacados</h2>
+                    <span class="text-[10px] font-bold tracking-[0.3em] uppercase text-muted-foreground hidden md:block">[ Portafolio de Proyectos ]</span>
+                </div>
+                
+                <!-- Projects Grid -->
+                <div class="grid md:grid-cols-2 gap-12 md:gap-20">
+                    
+                    <!-- Left Column -->
+                    <div class="space-y-20">
+                        
+                        <!-- Project 1 -->
+                        <div class="group cursor-pointer scroll-reveal">
+                            <div class="glow-ring overflow-hidden mb-6 rounded-2xl border border-border">
+                                <img src="assets/cedis-tabasco.jpg?v=2" alt="Detalle de cancelería de aluminio y vidrio en obra industrial CEDIS Tabasco" width="960" height="576" loading="lazy" class="w-full aspect-[5/3] object-cover grayscale group-hover:grayscale-0 group-hover:scale-[1.01] transition-all duration-1000"/>
+                            </div>
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="text-xl font-bold uppercase tracking-tight">CEDIS Tabasco</h4>
+                                    <p class="text-muted-foreground text-xs tracking-widest uppercase mt-1">Estructura de cancelería y fachadas / Tabasco</p>
+                                </div>
+                                <span class="text-2xl group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Project 2 -->
+                        <div class="group cursor-pointer scroll-reveal" style="transition-delay: 0.1s;">
+                            <div class="glow-ring overflow-hidden mb-6 rounded-2xl border border-border">
+                                <img src="assets/aeropuerto-guanajuato.jpg?v=3" alt="Barandal de acero inoxidable en terminal del Aeropuerto Internacional de Guanajuato" width="960" height="1200" loading="lazy" class="w-full aspect-[4/5] object-cover grayscale group-hover:grayscale-0 group-hover:scale-[1.03] transition-all duration-1000"/>
+                            </div>
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="text-xl font-bold uppercase tracking-tight">Aeropuerto Internacional de Guanajuato</h4>
+                                    <p class="text-muted-foreground text-xs tracking-widest uppercase mt-1">Suministro de barandales y acero inoxidable / Guanajuato</p>
+                                </div>
+                                <span class="text-2xl group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                    <!-- Right Column (Offset top) -->
+                    <div class="space-y-20 md:pt-40">
+                        
+                        <!-- Project 3 -->
+                        <div class="group cursor-pointer scroll-reveal" style="transition-delay: 0.2s;">
+                            <div class="glow-ring overflow-hidden mb-6 rounded-2xl border border-border">
+                                <img src="assets/farmacia-san-pablo.jpg?v=3" alt="Detalle de cancelería de aluminio, vidrio y barandal de cristal templado en Farmacia San Pablo" width="960" height="720" loading="lazy" class="w-full aspect-[4/3] object-cover grayscale group-hover:grayscale-0 group-hover:scale-[1.01] transition-all duration-1000"/>
+                            </div>
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="text-xl font-bold uppercase tracking-tight">Farmacia San Pablo</h4>
+                                    <p class="text-muted-foreground text-xs tracking-widest uppercase mt-1">Fachada y barandales / Prado Norte, Polanco CDMX</p>
+                                </div>
+                                <span class="text-2xl group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Project 4 -->
+                        <div class="group cursor-pointer scroll-reveal" style="transition-delay: 0.3s;">
+                            <div class="glow-ring overflow-hidden mb-6 rounded-2xl border border-border">
+                                <img src="assets/walmart-monterrey.jpg?v=2" alt="Suministro e instalación de reja de acero modular para exteriores en Walmart Monterrey" width="960" height="720" loading="lazy" class="w-full aspect-[4/3] object-cover grayscale group-hover:grayscale-0 group-hover:scale-[1.01] transition-all duration-1000"/>
+                            </div>
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="text-xl font-bold uppercase tracking-tight">Reja de Acero Walmart Monterrey</h4>
+                                    <p class="text-muted-foreground text-xs tracking-widest uppercase mt-1">Suministro e instalación perimetral exterior / Nuevo León</p>
+                                </div>
+                                <span class="text-2xl group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+        </section>
+
+        <!-- Why Choose Us Section -->
+        <section id="why" class="py-32 px-6 border-t border-border">
+            <div class="max-w-7xl mx-auto">
+                
+                <div class="grid md:grid-cols-12 gap-16 mb-20">
+                    <div class="md:col-span-5 scroll-reveal">
+                        <span class="text-[10px] font-bold tracking-[0.3em] uppercase text-muted-foreground mb-6 block">Por Qué CAAMODULOCK</span>
+                        <h2 class="text-4xl md:text-5xl font-bold tracking-tight uppercase leading-none">Soluciones Reales Para Obras Exigentes.</h2>
+                    </div>
+                    <p class="md:col-span-6 md:col-start-7 text-muted-foreground text-lg leading-relaxed self-end scroll-reveal" style="transition-delay: 0.1s;">
+                        Trabajamos con los desarrolladores, minoristas y constructores más exigentes, ofreciendo materiales de excelente calidad con garantía y plazos de entrega rápidos en todo México. No competimos por el precio más bajo, sino por entregar la máxima calidad y valor. Diseñamos, fabricamos e instalamos soluciones a la medida de tu espacio, asegurando durabilidad, estética impecable y un servicio de ingeniería personalizado que la competencia de bajo costo no puede ofrecer.
+                    </p>
+                </div>
+                
+                <!-- Why Cards Grid -->
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
+                    
+                    <!-- Card 1 -->
+                    <div class="glow-ring p-8 rounded-2xl border border-border bg-charcoal/40 transition-all duration-500 hover:bg-charcoal scroll-reveal">
+                        <span class="text-[10px] font-bold tracking-widest text-muted-foreground block mb-8">01</span>
+                        <h3 class="text-xl font-bold uppercase mb-3 tracking-tight">Presupuesto Libre</h3>
+                        <p class="text-sm text-muted-foreground leading-relaxed">
+                            Ofrecemos presupuestos gratuitos y detallados. Personalizamos los productos y acabados a tu gusto.
+                        </p>
+                    </div>
+                    
+                    <!-- Card 2 -->
+                    <div class="glow-ring p-8 rounded-2xl border border-border bg-charcoal/40 transition-all duration-500 hover:bg-charcoal scroll-reveal" style="transition-delay: 0.1s;">
+                        <span class="text-[10px] font-bold tracking-widest text-muted-foreground block mb-8">02</span>
+                        <h3 class="text-xl font-bold uppercase mb-3 tracking-tight">Personal Experto</h3>
+                        <p class="text-sm text-muted-foreground leading-relaxed">
+                            Nuestro personal cuenta con la capacitación, certificaciones de seguridad y experiencia necesarias para tu proyecto.
+                        </p>
+                    </div>
+                    
+                    <!-- Card 3 -->
+                    <div class="glow-ring p-8 rounded-2xl border border-border bg-charcoal/40 transition-all duration-500 hover:bg-charcoal scroll-reveal" style="transition-delay: 0.2s;">
+                        <span class="text-[10px] font-bold tracking-widest text-muted-foreground block mb-8">03</span>
+                        <h3 class="text-xl font-bold uppercase mb-3 tracking-tight">Garantía Real</h3>
+                        <p class="text-sm text-muted-foreground leading-relaxed">
+                            Trabajamos únicamente con materiales certificados y de alta calidad para ofrecerte la mayor durabilidad y garantía.
+                        </p>
+                    </div>
+                    
+                    <!-- Card 4 -->
+                    <div class="glow-ring p-8 rounded-2xl border border-border bg-charcoal/40 transition-all duration-500 hover:bg-charcoal scroll-reveal" style="transition-delay: 0.3s;">
+                        <span class="text-[10px] font-bold tracking-widest text-muted-foreground block mb-8">04</span>
+                        <h3 class="text-xl font-bold uppercase mb-3 tracking-tight">Plazos y Facilidad</h3>
+                        <p class="text-sm text-muted-foreground leading-relaxed">
+                            Tiempos de entrega rápidos y confiables. Puedes liquidar el restante del pago hasta que tu trabajo esté terminado.
+                        </p>
+                    </div>
+                    
+                </div>
+            </div>
+        </section>
+
+
+
+        <!-- Testimonials Section -->
+        <section class="py-32 px-6">
+            <div class="max-w-7xl mx-auto">
+                <span class="text-[10px] font-bold tracking-[0.3em] uppercase text-muted-foreground mb-16 block scroll-reveal">Voces de Clientes</span>
+                
+                <div class="grid md:grid-cols-2 gap-12 md:gap-16">
+                    
+                    <!-- Testimonial 1 -->
+                    <figure class="flex flex-col scroll-reveal">
+                        <blockquote class="text-base md:text-lg leading-relaxed tracking-tight text-balance mb-8 flex-1 text-muted-foreground">
+                            “He trabajado en más de 5 años con el proveedor y siempre se ha tenido el apoyo y compromiso de todo el equipo. El personal que trabaja en Modulock busca solucionar cualquier inconveniente que se presente durante las instalaciones.”
+                        </blockquote>
+                        <figcaption class="pt-6 border-t border-border">
+                            <p class="font-bold text-sm">Arq. Diana Rangel</p>
+                            <p class="text-[10px] uppercase tracking-widest text-muted-foreground mt-1">Especificadora de Proyectos / Desarrollo Residencial</p>
+                        </figcaption>
+                    </figure>
+                    
+                    <!-- Testimonial 2 -->
+                    <figure class="flex flex-col scroll-reveal" style="transition-delay: 0.1s;">
+                        <blockquote class="text-base md:text-lg leading-relaxed tracking-tight text-balance mb-8 flex-1 text-muted-foreground">
+                            “Modulock es una empresa muy confiable, con un alto sentido de servicio y calidad en sus trabajos. Espero sigan creciendo y mejorando cada día.”
+                        </blockquote>
+                        <figcaption class="pt-6 border-t border-border">
+                            <p class="font-bold text-sm">Arq. Victor Castillo</p>
+                            <p class="text-[10px] uppercase tracking-widest text-muted-foreground mt-1">Supervisor de Obra, Proyectos Comerciales</p>
+                        </figcaption>
+                    </figure>
+                    
+                    <!-- Testimonial 3 -->
+                    <figure class="flex flex-col scroll-reveal" style="transition-delay: 0.2s;">
+                        <blockquote class="text-base md:text-lg leading-relaxed tracking-tight text-balance mb-8 flex-1 text-muted-foreground">
+                            “Mi experiencia con proyectos que he contratado a Modulock, es que siempre ha entregado los trabajos en tiempo y forma, cumpliendo con servicio, calidad, costo y tiempo.”
+                        </blockquote>
+                        <figcaption class="pt-6 border-t border-border">
+                            <p class="font-bold text-sm">Ing. Fernando Martínez</p>
+                            <p class="text-[10px] uppercase tracking-widest text-muted-foreground mt-1">Director de Proyectos, Desarrollos de Infraestructura</p>
+                        </figcaption>
+                    </figure>
+                    
+                    <!-- Testimonial 4 -->
+                    <figure class="flex flex-col scroll-reveal" style="transition-delay: 0.3s;">
+                        <blockquote class="text-base md:text-lg leading-relaxed tracking-tight text-balance mb-8 flex-1 text-muted-foreground">
+                            “Excelente proveedor en el ramo de la cancelería, elaboración de espejos y acabados como alucobond, reja de acero y películas 3M. Modulock destaca por su atención al detalle antes de la instalación, el cumplimiento en tiempos y una calidad impecable. Lo que más valoramos es su garantía y servicio postventa: si surge algún detalle, lo solucionan de inmediato con personal muy capacitado. Una empresa totalmente confiable.”
+                        </blockquote>
+                        <figcaption class="pt-6 border-t border-border">
+                            <p class="font-bold text-sm">Arq. Daniel Isaac López</p>
+                            <p class="text-[10px] uppercase tracking-widest text-muted-foreground mt-1">Coordinador de Obra y Acabados, Edificación Comercial</p>
+                        </figcaption>
+                    </figure>
+                    
+                </div>
+            </div>
+        </section>
+
+        <!-- Logistics & Fleet Section -->
+        <section id="logistics" class="py-20 px-6 border-t border-border bg-foreground/[0.01]">
+            <div class="max-w-7xl mx-auto">
+                <div class="grid md:grid-cols-12 gap-10 md:gap-16 items-center">
+                    
+                    <!-- Text and Stats -->
+                    <div class="md:col-span-8 flex flex-col justify-center scroll-reveal">
+                        <span class="text-[10px] font-bold tracking-[0.3em] uppercase text-primary mb-6 block">Infraestructura y Flota Propia</span>
+                        <h2 class="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-8" style="line-height: 1.35;">
+                            Logística<br/>Sin Límites.
+                        </h2>
+                        <p class="text-muted-foreground text-lg leading-relaxed" style="margin-bottom: 3.5rem;">
+                            No dependemos de intermediarios. En <strong class="text-foreground">Modulock</strong> contamos con capacidad de transporte propia y especializada para movilizar cancelería, estructuras de herrería y rejas de acero de gran volumen directo de nuestro taller a cualquier obra dentro de la República Mexicana, asegurando puntualidad y seguridad.
+                        </p>
+                        
+                        <!-- Fleet Grid Metrics -->
+                        <div class="grid grid-cols-2 gap-8 border-t border-border" style="padding-top: 3.5rem;">
+                            <div class="flex flex-col gap-2 scroll-reveal">
+                                <span class="text-5xl font-bold tracking-tighter text-foreground" data-target="4">0</span>
+                                <span class="text-[10px] uppercase tracking-wider text-muted-foreground font-bold">Camionetas</span>
+                                <p class="text-xs text-muted-foreground">Capacidad de 1 tonelada para maniobra ágil y distribución local rápida.</p>
+                            </div>
+                            
+                            <div class="flex flex-col gap-2 scroll-reveal" style="transition-delay: 0.1s;">
+                                <span class="text-5xl font-bold tracking-tighter text-foreground" data-target="1">0</span>
+                                <span class="text-[10px] uppercase tracking-wider text-muted-foreground font-bold">Camión de Carga</span>
+                                <p class="text-xs text-muted-foreground">Unidad de 8 toneladas para traslados masivos y perfiles metálicos de gran longitud.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Image with premium frame -->
+                    <div class="md:col-span-4 flex flex-col items-center md:items-end scroll-reveal" style="transition-delay: 0.3s;">
+                        <div class="relative group rounded-3xl overflow-hidden border border-foreground/10 p-2 bg-foreground/5 backdrop-blur-sm max-w-[280px] w-full">
+                            <img src="assets/logistics-truck.jpg?v=2" alt="Flota de transporte de CAAMODULOCK cargada con canceles de aluminio y perfiles metálicos" width="1200" height="1146" loading="lazy" class="w-full aspect-[1.05] object-cover rounded-2xl"/>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-32 px-6 border-t border-border">
+            <div class="max-w-7xl mx-auto">
+                <div class="grid lg:grid-cols-2 gap-20">
+                    
+                    <!-- Contact Info -->
+                    <div class="scroll-reveal">
+                        <span class="text-[10px] font-bold tracking-[0.3em] uppercase text-muted-foreground mb-6 block">Inicia una Conversación</span>
+                        <h2 class="text-5xl md:text-7xl font-black uppercase tracking-tighter mb-8 leading-[0.9]">Haz Tu Idea<br/>Realidad.</h2>
+                        <p class="text-muted-foreground mb-12 max-w-sm leading-relaxed">
+                            Equipos especializados con cobertura nacional, listos para ejecutar proyectos comerciales, industriales y residenciales bajo los más altos estándares de calidad y excelencia.
+                        </p>
+                        
+                        <div class="space-y-6">
+                            
+                            <!-- Phone -->
+                            <a href="tel:+525558809974" class="flex items-center gap-4 group">
+                                <div class="size-12 border border-border rounded-full flex items-center justify-center text-sm font-bold group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary group-hover:shadow-[0_0_25px_-2px_rgba(245,165,92,0.6)] transition-all">+52</div>
+                                <div>
+                                    <div class="text-[10px] text-muted-foreground uppercase tracking-widest">Línea Directa</div>
+                                    <div class="font-bold uppercase tracking-tight">55 5880 9974</div>
+                                </div>
+                            </a>
+                            
+                            <!-- Email -->
+                            <a href="mailto:contacto@cancelesmodulock.com.mx" class="flex items-center gap-4 group">
+                                <div class="size-12 border border-border rounded-full flex items-center justify-center font-bold group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary group-hover:shadow-[0_0_25px_-2px_rgba(245,165,92,0.6)] transition-all">@</div>
+                                <div>
+                                    <div class="text-[10px] text-muted-foreground uppercase tracking-widest">Consultas</div>
+                                    <div class="font-bold tracking-tight">contacto@cancelesmodulock.com.mx</div>
+                                </div>
+                            </a>
+                            
+                            <!-- Location -->
+                            <div class="flex items-center gap-4">
+                                <div class="size-12 border border-border rounded-full flex items-center justify-center text-xs font-bold">MX</div>
+                                <div>
+                                    <div class="text-[10px] text-muted-foreground uppercase tracking-widest">Oficinas Centrales</div>
+                                    <div class="font-bold tracking-tight">Estado de México</div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    
+                    <!-- Contact Form Card -->
+                    <div class="glow-ring bg-charcoal p-8 md:p-10 border border-border rounded-3xl scroll-reveal" style="transition-delay: 0.2s;">
+                        <form class="space-y-8" noValidate="" id="contactForm">
+                            <div class="grid md:grid-cols-2 gap-8">
+                                <div class="border-b border-border pb-2 focus-within:border-foreground transition-colors">
+                                    <label class="text-[10px] uppercase text-muted-foreground tracking-widest block mb-2">Nombre Completo</label>
+                                    <input type="text" placeholder="Arturo Jiménez" class="w-full bg-transparent outline-none text-sm placeholder:text-muted-foreground/40" name="name" required/>
+                                </div>
+                                <div class="border-b border-border pb-2 focus-within:border-foreground transition-colors">
+                                    <label class="text-[10px] uppercase text-muted-foreground tracking-widest block mb-2">Empresa</label>
+                                    <input type="text" placeholder="Particular / Constructora" class="w-full bg-transparent outline-none text-sm placeholder:text-muted-foreground/40" name="company" required/>
+                                </div>
+                            </div>
+                            <div class="border-b border-border pb-2 focus-within:border-foreground transition-colors">
+                                    <label class="text-[10px] uppercase text-muted-foreground tracking-widest block mb-2">Teléfono</label>
+                                    <input type="tel" placeholder="+52 55 5880 9974" class="w-full bg-transparent outline-none text-sm placeholder:text-muted-foreground/40" name="phone" required/>
+                            </div>
+                            <div class="border-b border-border pb-2 focus-within:border-foreground transition-colors">
+                                <label class="text-[10px] uppercase text-muted-foreground tracking-widest block mb-2">Tipo de Proyecto</label>
+                                <select name="projectType" class="w-full bg-transparent outline-none text-sm appearance-none cursor-pointer">
+                                    <option class="bg-charcoal" selected="">Cancelería de Aluminio</option>
+                                    <option class="bg-charcoal">Malla Ciclónica / Reja de Acero Modulock</option>
+                                    <option class="bg-charcoal">Herrería Estructural</option>
+                                    <option class="bg-charcoal">Mamparas Modulock / Puertas Especiales</option>
+                                </select>
+                            </div>
+                            <div class="border-b border-border pb-2 focus-within:border-foreground transition-colors">
+                                <label class="text-[10px] uppercase text-muted-foreground tracking-widest block mb-2">Mensaje</label>
+                                <textarea name="message" rows="4" placeholder="Alcance, m2 aproximados, ubicación, tiempos..." class="w-full bg-transparent outline-none text-sm resize-none" required></textarea>
+                            </div>
+                            <button type="submit" class="glow-hover w-full py-5 bg-primary text-primary-foreground font-bold uppercase tracking-[0.2em] text-xs rounded-full hover:brightness-110 transition-colors">Enviar Solicitud</button>
+                            <div id="formStatus" class="text-sm mt-4 text-center"></div>
+                        </form>
+                    </div>
+                    
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="relative pt-24 pb-0 border-t border-border px-6 overflow-visible">
+            <div class="max-w-7xl mx-auto">
+                
+                <!-- Main big contacts -->
+                <div class="text-center space-y-3 scroll-reveal">
+                    <a href="tel:+525558809974" class="block text-[clamp(1.5rem,7vw,4.5rem)] font-light tracking-tight hover:text-primary transition-colors break-words">+52 55 5880 9974</a>
+                    <a href="mailto:contacto@cancelesmodulock.com.mx" class="block text-[clamp(1.25rem,6vw,3.75rem)] font-light tracking-tight hover:text-primary transition-colors break-all">contacto@cancelesmodulock.com.mx</a>
+                </div>
+                
+                <!-- Fine print details -->
+                <div class="mt-16 md:mt-24 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 text-[10px] font-bold uppercase tracking-widest scroll-reveal">
+                    <div class="text-muted-foreground leading-relaxed">Todos los derechos reservados<br/>© 2026 CAAMODULOCK S.A. de C.V.</div>
+                    <div class="text-muted-foreground leading-relaxed sm:text-center">Estado de México<br/>México</div>
+                    <div class="text-muted-foreground leading-relaxed space-y-1 sm:text-right">
+                        <a href="blog.html" class="block hover:text-primary transition-colors">Blog</a>
+                        <a href="#" class="block hover:text-primary transition-colors">Facebook</a>
+                        <a href="#" class="block hover:text-primary transition-colors">Aviso de Privacidad</a>
+                    </div>
+                </div>
+                
+                <!-- Geometric Arcs and CTA -->
+                <div class="relative mt-16 h-[200px] md:h-[340px] flex items-end justify-center overflow-hidden">
+                    <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[90vw] md:w-[820px] aspect-[2/1] border-t border-l border-r border-border rounded-t-full"></div>
+                    <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[65vw] md:w-[600px] aspect-[2/1] border-t border-l border-r border-border/60 rounded-t-full"></div>
+                    <a href="#contact" class="glow-ring relative z-10 mb-12 md:mb-20 size-24 md:size-32 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs md:text-sm font-bold uppercase tracking-[0.15em] hover:scale-105 transition-transform">Cotizar</a>
+                </div>
+                
+                <!-- Giant Bottom Branding -->
+                <div class="relative -mb-2 md:-mb-6 overflow-visible w-full scroll-reveal" style="transition-delay: 0.1s;">
+                    <h2 class="font-black leading-[0.8] tracking-tighter text-center whitespace-nowrap select-none text-[clamp(3rem,14vw,14rem)] w-full">MODULOCK</h2>
+                </div>
+                
+            </div>
+        </footer>
+
+        <!-- Mobile Floating Action Call Button -->
+        <a href="tel:+525558809974" aria-label="Llamar a Modulock" class="glow-static fixed bottom-6 right-6 z-50 h-14 px-5 bg-primary text-primary-foreground flex items-center gap-3 rounded-full hover:scale-105 transition-transform active:scale-95">
+            <span class="size-2 rounded-full bg-background animate-pulse"></span>
+            <span class="text-[10px] font-bold uppercase tracking-[0.2em]">Llámanos</span>
+        </a>
+
+    </main>
+
+    <!-- JavaScript Interactions -->
+    <script src="app.js?v=3"></script>
+</body>
+</html>
