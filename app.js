@@ -102,11 +102,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 <span class="inline-block size-3.5 border-2 border-t-transparent border-primary-foreground rounded-full animate-spin ml-2"></span>
             `;
 
-            // Retrieve webhook URL from the form's action attribute
-            const webhookUrl = contactForm.getAttribute('action');
+            // Retrieve submit URL from the form's action attribute
+            const submitUrl = contactForm.getAttribute('action') || '/api/submit';
 
-            // Fallback for development/testing if the default placeholder is still there or empty
-            if (!webhookUrl || webhookUrl.includes('your-n8n-webhook-url-here.com')) {
+            // Check if running locally (development environment)
+            const isLocalDev = window.location.hostname === 'localhost' || 
+                               window.location.hostname === '127.0.0.1' || 
+                               window.location.protocol === 'file:';
+
+            if (isLocalDev) {
                 setTimeout(() => {
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = originalBtnHTML;
@@ -114,8 +118,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     formStatus.style.color = '#10b981'; // success green
                     formStatus.innerHTML = `
                         <div class="mt-4 p-4 border border-[#10b981]/20 bg-[#10b981]/5 rounded-xl text-left">
-                            <strong class="text-white block mb-1">¡Modo Demostración Activo!</strong>
-                            El formulario validó con éxito. Para conectarlo a tu correo final, configura tu URL de webhook de n8n en el atributo <code>action</code> del formulario en <code>index.html</code>.
+                            <strong class="text-white block mb-1">¡Modo Demostración Activo (Local)!</strong>
+                            El formulario se validó correctamente. Al publicar el sitio en Cloudflare Pages con tus variables de entorno (Resend y n8n) configuradas, esta solicitud enviará una cotización formal y activará tus flujos de automatización automáticamente.
                         </div>
                     `;
                     contactForm.reset();
@@ -127,8 +131,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Real POST request to n8n webhook
-            fetch(webhookUrl, {
+            // Real POST request to serverless endpoint /api/submit
+            fetch(submitUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -138,8 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     company: company,
                     phone: phone,
                     projectType: projectType,
-                    message: message,
-                    submittedAt: new Date().toISOString()
+                    message: message
                 })
             })
             .then(response => {
