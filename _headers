@@ -1,0 +1,28 @@
+/*
+  # Previene Clickjacking — no permite embeber la web en iframes de terceros
+  X-Frame-Options: DENY
+
+  # Evita que el navegador adivine el tipo de contenido (MIME sniffing protection)
+  X-Content-Type-Options: nosniff
+
+  # Activa XSS filter en navegadores antiguos que lo soporten
+  X-XSS-Protection: 1; mode=block
+
+  # Controla qué información de referencia se envía al navegar a otros sitios
+  Referrer-Policy: strict-origin-when-cross-origin
+
+  # Fuerza HTTPS durante 1 año, incluye subdominios
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+
+  # Controla qué APIs del navegador puede usar la página (cámara, micrófono, geolocalización, etc.)
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
+
+  # Content Security Policy: define fuentes permitidas de scripts, estilos, imágenes y conexiones
+  # - default-src 'self': solo recursos del propio dominio por defecto
+  # - script-src: permite scripts propios + inline scripts del HTML (necesario para el bloque de servicios) + hash específico
+  # - style-src: permite estilos propios + Google Fonts + inline styles (requeridos por Tailwind y componentes)
+  # - img-src: imágenes propias + data URIs (para imágenes en base64 si las hubiera)
+  # - font-src: fuentes propias + Google Fonts CDN
+  # - connect-src: fetch API solo hacia el propio dominio y la API de Resend (llamada desde el worker, no el cliente)
+  # - frame-ancestors 'none': refuerzo adicional anti-clickjacking
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'

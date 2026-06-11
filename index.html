@@ -1057,16 +1057,16 @@
                             <div class="grid md:grid-cols-2 gap-8">
                                 <div class="border-b border-border pb-2 focus-within:border-foreground transition-colors">
                                     <label class="text-[10px] uppercase text-muted-foreground tracking-widest block mb-2">Nombre Completo</label>
-                                    <input type="text" placeholder="Arturo Jiménez" class="w-full bg-transparent outline-none text-sm placeholder:text-muted-foreground/40" name="name" required/>
+                                    <input type="text" placeholder="Arturo Jiménez" class="w-full bg-transparent outline-none text-sm placeholder:text-muted-foreground/40" name="name" maxlength="100" required/>
                                 </div>
                                 <div class="border-b border-border pb-2 focus-within:border-foreground transition-colors">
                                     <label class="text-[10px] uppercase text-muted-foreground tracking-widest block mb-2">Empresa</label>
-                                    <input type="text" placeholder="Particular / Constructora" class="w-full bg-transparent outline-none text-sm placeholder:text-muted-foreground/40" name="company" required/>
+                                    <input type="text" placeholder="Particular / Constructora" class="w-full bg-transparent outline-none text-sm placeholder:text-muted-foreground/40" name="company" maxlength="120" required/>
                                 </div>
                             </div>
                             <div class="border-b border-border pb-2 focus-within:border-foreground transition-colors">
                                     <label class="text-[10px] uppercase text-muted-foreground tracking-widest block mb-2">Teléfono</label>
-                                    <input type="tel" placeholder="+52 55 5880 9974" class="w-full bg-transparent outline-none text-sm placeholder:text-muted-foreground/40" name="phone" required/>
+                                    <input type="tel" placeholder="+52 55 5880 9974" class="w-full bg-transparent outline-none text-sm placeholder:text-muted-foreground/40" name="phone" maxlength="30" required/>
                             </div>
                             <div class="border-b border-border pb-2 focus-within:border-foreground transition-colors">
                                 <label class="text-[10px] uppercase text-muted-foreground tracking-widest block mb-2">Tipo de Proyecto</label>
@@ -1079,7 +1079,7 @@
                             </div>
                             <div class="border-b border-border pb-2 focus-within:border-foreground transition-colors">
                                 <label class="text-[10px] uppercase text-muted-foreground tracking-widest block mb-2">Mensaje</label>
-                                <textarea name="message" rows="4" placeholder="Alcance, m2 aproximados, ubicación, tiempos..." class="w-full bg-transparent outline-none text-sm resize-none" required></textarea>
+                                <textarea name="message" rows="4" placeholder="Alcance, m2 aproximados, ubicación, tiempos..." class="w-full bg-transparent outline-none text-sm resize-none" maxlength="2000" required></textarea>
                             </div>
                             <button type="submit" class="glow-hover w-full py-5 bg-primary text-primary-foreground font-bold uppercase tracking-[0.2em] text-xs rounded-full hover:brightness-110 transition-colors">Enviar Solicitud</button>
                             <div id="formStatus" class="text-sm mt-4 text-center"></div>
@@ -1136,6 +1136,6 @@
     </main>
 
     <!-- JavaScript Interactions -->
-    <script src="app.js?v=42"></script>
+    <script src="app.js?v=43"></script>
 </body>
 </html>

@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /functions/
+Disallow: /api/
+
+# Sitemap
+Sitemap: https://cancelesmodulock.com.mx/sitemap.xml

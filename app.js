@@ -89,7 +89,15 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (!name || !company || !phone || !message) {
                 formStatus.style.color = '#ef4444';
-                formStatus.innerHTML = 'Por favor, complete todos los campos obligatorios.';
+                formStatus.textContent = 'Por favor, complete todos los campos obligatorios.';
+                return;
+            }
+
+            // --- Input length limits (client-side guard, backend also validates) ---
+            const MAX = { name: 100, company: 120, phone: 30, message: 2000 };
+            if (name.length > MAX.name || company.length > MAX.company || phone.length > MAX.phone || message.length > MAX.message) {
+                formStatus.style.color = '#ef4444';
+                formStatus.textContent = 'Uno o más campos exceden la longitud máxima permitida.';
                 return;
             }
 
@@ -150,14 +158,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = originalBtnHTML;
                     
-                    // Show premium success notification
+                    // Show premium success notification — use escapeHtml to prevent XSS from user-supplied name
                     formStatus.style.color = '#10b981'; // success green
                     formStatus.innerHTML = `
                         <div class="mt-4 p-4 border border-[#10b981]/20 bg-[#10b981]/5 rounded-xl text-left">
                             <strong class="text-white block mb-1">¡Solicitud Enviada con Éxito!</strong>
-                            Estimado/a ${name}, nuestro departamento de ingeniería de cancelería y perfiles analizará tu propuesta y te contactará en menos de 24 horas hábiles.
+                            Estimado/a <span id="successName"></span>, nuestro departamento de ingeniería de cancelería y perfiles analizará tu propuesta y te contactará en menos de 24 horas hábiles.
                         </div>
                     `;
+                    // Safely inject the user name via textContent (no XSS risk)
+                    const successNameEl = formStatus.querySelector('#successName');
+                    if (successNameEl) successNameEl.textContent = name;
                     
                     contactForm.reset();
                     

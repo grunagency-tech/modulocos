@@ -4,8 +4,25 @@ export async function onRequestPost(context) {
         const data = await context.request.json();
         const { name, company, phone, projectType, message } = data;
 
-        // 2. Validate required fields
-        if (!name || !company || !phone || !message) {
+        // 2. Input sanitization — strip HTML tags and enforce max lengths to prevent injection
+        const sanitize = (str, maxLen) => {
+            if (typeof str !== 'string') return '';
+            return str
+                .replace(/</g, '&lt;')    // Prevent HTML injection in email
+                .replace(/>/g, '&gt;')
+                .replace(/&(?!amp;|lt;|gt;|quot;|#\d+;)/g, '&amp;') // Escape raw & not already encoded
+                .trim()
+                .slice(0, maxLen);
+        };
+
+        const safeName        = sanitize(name, 100);
+        const safeCompany     = sanitize(company, 120);
+        const safePhone       = sanitize(phone, 30);
+        const safeProjectType = sanitize(projectType, 80);
+        const safeMessage     = sanitize(message, 2000);
+
+        // 3. Validate required fields (after sanitization)
+        if (!safeName || !safeCompany || !safePhone || !safeMessage) {
             return new Response(
                 JSON.stringify({ success: false, error: 'Campos requeridos faltantes.' }),
                 { 
@@ -32,7 +49,8 @@ export async function onRequestPost(context) {
             );
         }
 
-        // 3. Format beautiful HTML email for notifications
+        // 4. Format beautiful HTML email for notifications (using sanitized variables)
+        const safePhoneHref = safePhone.replace(/[^0-9+\-() ]/g, ''); // tel: href — digits and common chars only
         const emailHtml = `
             <!DOCTYPE html>
             <html>
@@ -149,44 +167,44 @@ export async function onRequestPost(context) {
                         <div class="logo-text">MODU<span class="logo-accent">LOCK</span></div>
                     </div>
                     <div class="content">
-                        <h1>Nueva Solicitud de Cotización</h1>
+                        <h1>Nueva Solicitud de Cotizaci&oacute;n</h1>
                         <table>
                             <tr>
                                 <td class="label">Cliente</td>
-                                <td class="value">${name}</td>
+                                <td class="value">${safeName}</td>
                             </tr>
                             <tr>
                                 <td class="label">Empresa</td>
-                                <td class="value">${company}</td>
+                                <td class="value">${safeCompany}</td>
                             </tr>
                             <tr>
-                                <td class="label">Teléfono</td>
+                                <td class="label">Tel&eacute;fono</td>
                                 <td class="value">
-                                    <a href="tel:${phone}" style="color: #e0823a; text-decoration: none; font-weight: 600;">${phone}</a>
+                                    <a href="tel:${safePhoneHref}" style="color: #e0823a; text-decoration: none; font-weight: 600;">${safePhone}</a>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="label">Proyecto</td>
-                                <td class="value">${projectType || 'No especificado'}</td>
+                                <td class="value">${safeProjectType || 'No especificado'}</td>
                             </tr>
                         </table>
                         
                         <div class="label" style="margin-bottom: 8px;">Mensaje de Consulta</div>
-                        <div class="message-box">${message}</div>
+                        <div class="message-box">${safeMessage}</div>
                         
                         <div class="actions">
-                            <a href="tel:${phone}" class="btn">Llamar al Cliente</a>
+                            <a href="tel:${safePhoneHref}" class="btn">Llamar al Cliente</a>
                         </div>
                     </div>
                     <div class="footer">
-                        ESTE CORREO FUE GENERADO AUTOMÁTICAMENTE DESDE EL SITIO WEB MODULOCK
+                        ESTE CORREO FUE GENERADO AUTOM&Aacute;TICAMENTE DESDE EL SITIO WEB MODULOCK
                     </div>
                 </div>
             </body>
             </html>
         `;
 
-        // 4. Prepare parallel fetch operations (Resend Email + n8n Webhook)
+        // 5. Prepare parallel fetch operations (Resend Email + n8n Webhook)
         const promises = [];
 
         // Operation A: Send Email Notification via Resend API
@@ -199,7 +217,7 @@ export async function onRequestPost(context) {
             body: JSON.stringify({
                 from: 'Contacto Web Modulock <web@cancelesmodulock.com.mx>',
                 to: [notificationEmail],
-                subject: `Nueva Cotización: ${name} (${projectType || 'General'})`,
+                subject: `Nueva Cotización: ${safeName} (${safeProjectType || 'General'})`,
                 html: emailHtml
             })
         }).then(async (res) => {
@@ -219,11 +237,11 @@ export async function onRequestPost(context) {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    name,
-                    company,
-                    phone,
-                    projectType,
-                    message,
+                    name: safeName,
+                    company: safeCompany,
+                    phone: safePhone,
+                    projectType: safeProjectType,
+                    message: safeMessage,
                     submittedAt: new Date().toISOString(),
                     source: 'Cloudflare Pages Form'
                 })
