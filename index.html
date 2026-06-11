@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>CAAMODULOCK — Cancelería de Aluminio, Vidrio y Sistemas de Seguridad Premium</title>
     <meta name="theme-color" content="#080808"/>
-    <meta name="description" content="Más de 20 años fabricando e instalando sistemas de aluminio, cancelería, herrería, malla ciclónica y reja de acero Modulock para los desarrollos comerciales, industriales y residenciales en México."/>
+    <meta name="description" content="Más de 25 años fabricando e instalando sistemas de aluminio, cancelería, malla ciclónica y reja de acero Modulock para los desarrollos comerciales, industriales y residenciales en México."/>
     
     <!-- Open Graph Metadata -->
     <meta property="og:type" content="website"/>
     <meta property="og:site_name" content="CAAMODULOCK"/>
     <meta property="og:title" content="CAAMODULOCK — Cancelería de Aluminio, Vidrio y Sistemas de Seguridad Premium"/>
-    <meta property="og:description" content="Más de 20 años fabricando e instalando sistemas de aluminio, cancelería, herrería, malla ciclónica y reja de acero Modulock para los desarrollos comerciales, industriales y residenciales en México."/>
+    <meta property="og:description" content="Más de 25 años fabricando e instalando sistemas de aluminio, cancelería, malla ciclónica y reja de acero Modulock para los desarrollos comerciales, industriales y residenciales en México."/>
     
     <!-- Stylesheets -->
     <link rel="stylesheet" href="styles.css" />
@@ -22,6 +22,7 @@
         #servicesGrid {
             position: relative !important;
             transition: min-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            scroll-margin-top: 100px !important;
         }
         
         .service-card {
@@ -38,7 +39,7 @@
         /* Efecto hover suave solo cuando no hay tarjetas expandidas */
         #servicesGrid:not(.has-expanded-card) .service-card:hover {
             transform: translateY(-4px) !important;
-            border-color: hsl(var(--primary)) !important;
+            border-color: var(--primary) !important;
             box-shadow: 0 10px 30px -10px rgba(245, 165, 92, 0.2) !important;
         }
         
@@ -60,7 +61,8 @@
             z-index: 50 !important;
             cursor: default !important;
             transform: scale(1) !important;
-            border-color: hsl(var(--primary)) !important;
+            border-color: #e0823a !important;
+            box-shadow: 0 0 0 1px #e0823a4d, 0 0 40px -10px #f5a55c73 !important;
             display: flex !important;
             flex-direction: column !important;
             overflow: hidden !important;
@@ -109,16 +111,36 @@
         }
         
         @media (max-width: 767px) {
+            #servicesGrid.has-expanded-card {
+                display: block !important;
+            }
             .service-card.is-expanded {
-                overflow-y: auto !important;
+                position: relative !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: auto !important;
+                min-height: 280px !important;
+                z-index: 10 !important;
+                overflow: visible !important;
+                border-color: #e0823a !important;
+                box-shadow: 0 0 0 1px #e0823a4d, 0 0 40px -10px #f5a55c73 !important;
+            }
+            .service-card.is-hidden {
+                display: none !important;
+            }
+            .service-card-placeholder {
+                display: none !important;
             }
             .service-card.is-expanded .service-card-header {
-                padding: 2rem !important;
+                padding: 2.5rem 2rem 2rem 2rem !important;
                 min-height: auto !important;
             }
             .service-card.is-expanded .service-card-expanded {
                 padding: 2rem !important;
                 padding-top: 0 !important;
+                max-height: none !important;
+                overflow: visible !important;
             }
             .service-card.is-expanded .service-card-expanded-content {
                 border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
@@ -127,12 +149,21 @@
                 padding-right: 0 !important;
                 padding-bottom: 0 !important;
             }
+            /* Acomodar mejor el solicitar cotización (separarlo de los bullets en móvil) */
+            .service-card.is-expanded .service-card-expanded-content a[href="#contact"] {
+                margin-top: 2.5rem !important;
+                display: inline-block !important;
+            }
+            /* Ocultar imagen decorativa en móvil para evitar bug de scroll infinito */
+            .service-card.is-expanded .absolute-img-container {
+                display: none !important;
+            }
         }
         
         /* Ajuste de la imagen decorativa en estado expandido */
         .service-card.is-expanded .absolute-img-container {
             width: 50% !important;
-            height: 80% !important;
+            height: 60% !important;
             bottom: -10% !important;
             right: -5% !important;
             opacity: 0.15 !important;
@@ -146,10 +177,101 @@
             background: transparent !important;
             border: 1px solid transparent !important;
         }
+
+        /* Botón de cerrar (X) en esquina superior derecha (solo para la tarjeta expandida) */
+        .service-card-close-btn {
+            position: absolute !important;
+            top: 1.25rem !important;
+            right: 1.25rem !important;
+            z-index: 60 !important;
+            display: none !important;
+            background: transparent !important;
+            border: none !important;
+            padding: 0.5rem !important;
+            align-items: center !important;
+            justify-content: center !important;
+            cursor: pointer !important;
+            color: var(--primary) !important;
+            transition: all 0.3s ease !important;
+            line-height: 0 !important;
+        }
+        
+        .service-card-close-btn:hover {
+            color: var(--foreground) !important;
+            transform: scale(1.15) !important;
+        }
+        
+        .service-card.is-expanded .service-card-close-btn {
+            display: flex !important;
+        }
+
+        @media (min-width: 768px) {
+            .service-card-close-btn {
+                top: 2rem !important;
+                right: 2rem !important;
+            }
+        }
+
+        /* Activación de proyectos destacados al scroll en móvil */
+        @media (max-width: 767px) {
+            .project-card.active-scroll .glow-ring {
+                border-color: #e0823a80 !important;
+                box-shadow: 0 0 0 1px #e0823a4d, 0 0 40px -10px #f5a55c73 !important;
+            }
+            .project-card.active-scroll img {
+                filter: none !important;
+                filter: grayscale(0) !important;
+                transform: scale(1.02) !important;
+                scale: 1.02 !important;
+            }
+            /* Activación de tarjetas de por qué Modulock al scroll en móvil */
+            .why-card.active-scroll {
+                border-color: #e0823a80 !important;
+                box-shadow: 0 0 0 1px #e0823a4d, 0 0 40px -10px #f5a55c73 !important;
+            }
+        }
+        
+        /* Estilos del carrusel de testimoniales */
+        #testimonialSlider {
+            transition: transform 0.35s cubic-bezier(0.23, 1, 0.32, 1) !important;
+        }
+        .testimonial-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            border: none;
+            padding: 0;
+            margin: 0;
+            display: block;
+            outline: none;
+            box-shadow: none;
+        }
+        .testimonial-dot.active {
+            background-color: #e0823a !important;
+        }
+        
+        /* Responsive Display Utilities */
+        .desktop-only {
+            display: block !important;
+        }
+        .mobile-only {
+            display: none !important;
+        }
+        @media (max-width: 767px) {
+            .desktop-only {
+                display: none !important;
+            }
+            .mobile-only {
+                display: block !important;
+            }
+        }
     </style>
     
     <!-- Preload critical images -->
-    <link rel="preload" as="image" href="assets/modulock-logo.png"/>
+    <link rel="preload" as="image" href="assets/ML-BlancoNAranja.png"/>
     <link rel="preload" as="image" href="assets/hero-bg.jpg?v=2"/>
 </head>
 <body class="bg-background text-foreground">
@@ -158,7 +280,7 @@
         <!-- Navigation Header -->
         <nav class="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center text-foreground">
             <a href="#top" class="flex items-center gap-2">
-                <img src="assets/modulock-logo.png" alt="CAAMODULOCK" class="logo-custom-size object-contain"/>
+                <img src="assets/ML-BlancoNAranja.png" alt="CAAMODULOCK" class="logo-custom-size object-contain"/>
             </a>
             
             <div class="hidden md:flex gap-10 text-[10px] font-medium tracking-[0.2em] uppercase">
@@ -170,7 +292,7 @@
             </div>
             
             <div class="flex items-center gap-4">
-                <div class="h-px w-12 bg-foreground/30 hidden sm:block"></div>
+                <div class="h-px w-12 bg-foreground/30 hidden sm:block md:hidden"></div>
                 <span class="text-[10px] font-bold tracking-[0.1em] opacity-60 hidden sm:inline">MX / 2026</span>
                 <!-- Hamburger Button -->
                 <button id="mobileMenuToggle" class="flex md:hidden flex-col justify-between w-6 h-4 text-foreground focus:outline-none z-50 cursor-pointer" aria-label="Menú de navegación">
@@ -203,18 +325,17 @@
                     
                     <!-- Hero Texts -->
                     <div class="md:col-span-8 scroll-reveal" style="transition-delay: 0.1s;">
-                        <span class="block text-[10px] font-medium tracking-[0.3em] uppercase text-muted-foreground mb-6">Desde 2006 — México</span>
                         <h1 class="font-black leading-[0.85] tracking-tighter uppercase mb-8" style="font-size: clamp(2.5rem, 7vw, 7rem);">
                             Arquitectura<br/>Modular.
                         </h1>
                         <p class="max-w-md text-lg text-muted-foreground leading-relaxed">
-                            Respaldados por más de 20 años de experiencia, somos una empresa líder dedicada al suministro, fabricación e instalación de cancelería de aluminio, vidrio, herrería, malla ciclónica y reja de acero Modulock en toda la República Mexicana.
+                            Sistemas modulares diseñados para redefinir la arquitectura comercial, industrial y residencial. Fabricamos e instalamos cancelería de aluminio y vidrio, así como soluciones perimetrales de alta seguridad con más de 25 años de precisión técnica directo a tu proyecto.
                         </p>
                     </div>
                     
                     <!-- Featured Project Card / Direct Action -->
                     <div class="md:col-span-4 flex flex-col gap-6 scroll-reveal" style="transition-delay: 0.3s;">
-                        <div class="glow-ring p-6 border border-foreground/10 backdrop-blur-md bg-foreground/5 rounded-2xl">
+                        <div class="glow-ring featured-project-card p-6 border border-foreground/10 backdrop-blur-md bg-foreground/5 rounded-2xl">
                             <div class="text-[10px] uppercase tracking-widest text-muted-foreground mb-2">Proyecto Destacado</div>
                             <div class="text-lg font-bold mb-4">Sam's Club / Malla Ciclónica</div>
                             <img src="assets/sams-club.jpg?v=2" alt="Mallas de Sam's Club con cinta de privacidad de PVC color azul" width="800" height="450" loading="lazy" class="w-full aspect-video object-cover mb-4 rounded-xl"/>
@@ -233,7 +354,7 @@
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-12">
                     
                     <div class="flex flex-col gap-3 scroll-reveal">
-                        <span class="text-5xl md:text-6xl font-bold tracking-tighter" data-target="20">0+</span>
+                        <span class="text-5xl md:text-6xl font-bold tracking-tighter" data-target="25">0+</span>
                         <span class="text-[10px] uppercase tracking-widest text-muted-foreground">Años de Trayectoria</span>
                     </div>
                     
@@ -261,7 +382,7 @@
             <div class="max-w-7xl mx-auto">
                 
                 <!-- Section Header -->
-                <div class="flex flex-col md:flex-row justify-between items-end mb-20 gap-8 scroll-reveal">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-20 gap-8 scroll-reveal">
                     <h2 class="text-4xl md:text-6xl font-bold tracking-tight uppercase leading-none">Ingeniería<br/>Arquitectónica</h2>
                     <p class="max-w-sm text-muted-foreground text-sm leading-relaxed">
                         Desde cancelería de aluminio y vidrio hasta sistemas perimetrales y de seguridad, fabricamos e instalamos soluciones metálicas y arquitectónicas de la más alta calidad.
@@ -273,6 +394,12 @@
                     
                     <!-- Card 01: Aluminio y Vidrio -->
                     <div class="service-card glow-ring group relative bg-charcoal overflow-hidden rounded-2xl border border-border cursor-pointer scroll-reveal" data-card="1">
+                        <!-- Botón Cerrar (X) -->
+                        <button class="service-card-close-btn" aria-label="Cerrar">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 1.25rem; height: 1.25rem;">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
                         <!-- Vista colapsada (siempre visible) -->
                         <div class="service-card-header p-10 flex flex-col" style="min-height: 280px;">
                             <span class="text-[10px] font-bold tracking-widest text-muted-foreground mb-auto">01</span>
@@ -290,7 +417,7 @@
                         <div class="service-card-expanded" style="max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease; opacity: 0;">
                             <div class="service-card-expanded-content px-10 pb-10 border-t border-border/40 pt-6">
                                 <ul class="space-y-3 text-sm text-muted-foreground">
-                                    <li class="flex items-start gap-3"><span class="text-primary mt-1">▸</span>Ventanas, puertas y fachadas de aluminio (perfil europeo)</li>
+                                    <li class="flex items-start gap-3"><span class="text-primary mt-1">▸</span>Ventanas, puertas y fachadas de aluminio (línea nacional y europea)</li>
                                     <li class="flex items-start gap-3"><span class="text-primary mt-1">▸</span>Domos y pérgolas personalizadas (aluminio y herrería)</li>
                                     <li class="flex items-start gap-3"><span class="text-primary mt-1">▸</span>Cristal templado, laminado y doble acristalamiento (control solar)</li>
                                     <li class="flex items-start gap-3"><span class="text-primary mt-1">▸</span>Cancelería residencial, comercial e industrial fabricada a medida</li>
@@ -300,12 +427,18 @@
                         </div>
                         <!-- Imagen decorativa -->
                         <div class="absolute-img-container absolute -bottom-6 -right-6 w-40 h-40 opacity-10 group-hover:opacity-20 transition-all duration-700 pointer-events-none">
-                            <img src="assets/service-aluminum-DfJojfyS.jpg" alt="Aluminio y Vidrio" width="512" height="512" loading="lazy" class="w-full h-full object-cover rounded-2xl"/>
+                            <img src="assets/service-glass-facade.jpg" alt="Aluminio y Vidrio" width="512" height="512" loading="lazy" class="w-full h-full object-cover rounded-2xl grayscale"/>
                         </div>
                     </div>
 
                     <!-- Card 02: Herrería y Portones -->
                     <div class="service-card glow-ring group relative bg-charcoal overflow-hidden rounded-2xl border border-border cursor-pointer scroll-reveal" data-card="2" style="transition-delay: 0.1s;">
+                        <!-- Botón Cerrar (X) -->
+                        <button class="service-card-close-btn" aria-label="Cerrar">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 1.25rem; height: 1.25rem;">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
                         <div class="service-card-header p-10 flex flex-col" style="min-height: 280px;">
                             <span class="text-[10px] font-bold tracking-widest text-muted-foreground mb-auto">02</span>
                             <h3 class="text-2xl font-bold uppercase mb-4 tracking-tight">Herrería y Portones</h3>
@@ -321,7 +454,7 @@
                             <div class="service-card-expanded-content px-10 pb-10 border-t border-border/40 pt-6">
                                 <ul class="space-y-3 text-sm text-muted-foreground">
                                     <li class="flex items-start gap-3"><span class="text-primary mt-1">▸</span>Portones inteligentes con bastidores de PTR (calibre 18) forrados de aluminio</li>
-                                    <li class="flex items-start gap-3"><span class="text-primary mt-1">▸</span>Puertas de seguridad, salidas de emergencia y herrería estructural</li>
+                                    <li class="flex items-start gap-3"><span class="text-primary mt-1">▸</span>Herrería estructural y soporte metálico a la medida</li>
                                     <li class="flex items-start gap-3"><span class="text-primary mt-1">▸</span>Diseños ornamentales e industriales fabricados a medida en taller</li>
                                     <li class="flex items-start gap-3"><span class="text-primary mt-1">▸</span>Automatización y sistemas de control de acceso integrados</li>
                                 </ul>
@@ -329,12 +462,18 @@
                             </div>
                         </div>
                         <div class="absolute-img-container absolute -bottom-6 -right-6 w-40 h-40 opacity-10 group-hover:opacity-20 transition-all duration-700 pointer-events-none">
-                            <img src="assets/service-structural-CjurY88P.jpg" alt="Herrería y Portones" width="512" height="512" loading="lazy" class="w-full h-full object-cover rounded-2xl"/>
+                            <img src="assets/service-gate.png?v=3" alt="Herrería y Portones" width="512" height="512" loading="lazy" class="w-full h-full object-cover rounded-2xl grayscale"/>
                         </div>
                     </div>
 
                     <!-- Card 03: Malla Ciclónica -->
                     <div class="service-card glow-ring group relative bg-charcoal overflow-hidden rounded-2xl border border-border cursor-pointer scroll-reveal" data-card="3" style="transition-delay: 0.2s;">
+                        <!-- Botón Cerrar (X) -->
+                        <button class="service-card-close-btn" aria-label="Cerrar">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 1.25rem; height: 1.25rem;">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
                         <div class="service-card-header p-10 flex flex-col" style="min-height: 280px;">
                             <span class="text-[10px] font-bold tracking-widest text-muted-foreground mb-auto">03</span>
                             <h3 class="text-2xl font-bold uppercase mb-4 tracking-tight">Malla Ciclónica</h3>
@@ -358,12 +497,18 @@
                             </div>
                         </div>
                         <div class="absolute-img-container absolute -bottom-6 -right-6 w-40 h-40 opacity-10 group-hover:opacity-20 transition-all duration-700 pointer-events-none">
-                            <img src="assets/service-fencing-BTbCOTmA.jpg" alt="Malla Ciclónica" width="512" height="512" loading="lazy" class="w-full h-full object-cover rounded-2xl"/>
+                            <img src="assets/service-fencing.png?v=3" alt="Malla Ciclónica" width="512" height="512" loading="lazy" class="w-full h-full object-cover rounded-2xl grayscale"/>
                         </div>
                     </div>
 
                     <!-- Card 04: Reja de Acero Modulock -->
                     <div class="service-card glow-ring group relative bg-charcoal overflow-hidden rounded-2xl border border-border cursor-pointer scroll-reveal" data-card="4" style="transition-delay: 0.3s;">
+                        <!-- Botón Cerrar (X) -->
+                        <button class="service-card-close-btn" aria-label="Cerrar">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 1.25rem; height: 1.25rem;">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
                         <div class="service-card-header p-10 flex flex-col" style="min-height: 280px;">
                             <span class="text-[10px] font-bold tracking-widest text-muted-foreground mb-auto">04</span>
                             <h3 class="text-2xl font-bold uppercase mb-4 tracking-tight">Reja de Acero Modulock</h3>
@@ -387,12 +532,18 @@
                             </div>
                         </div>
                         <div class="absolute-img-container absolute -bottom-6 -right-6 w-40 h-40 opacity-10 group-hover:opacity-20 transition-all duration-700 pointer-events-none">
-                            <img src="assets/service-structural-CjurY88P.jpg" alt="Reja de acero de seguridad Modulock" width="512" height="512" loading="lazy" class="w-full h-full object-cover rounded-2xl"/>
+                            <img src="assets/service-structural.png?v=2" alt="Reja de acero de seguridad Modulock" width="512" height="512" loading="lazy" class="w-full h-full object-cover rounded-2xl grayscale"/>
                         </div>
                     </div>
 
                     <!-- Card 05: Barandales -->
                     <div class="service-card glow-ring group relative bg-charcoal overflow-hidden rounded-2xl border border-border cursor-pointer scroll-reveal" data-card="5" style="transition-delay: 0.4s;">
+                        <!-- Botón Cerrar (X) -->
+                        <button class="service-card-close-btn" aria-label="Cerrar">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 1.25rem; height: 1.25rem;">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
                         <div class="service-card-header p-10 flex flex-col" style="min-height: 280px;">
                             <span class="text-[10px] font-bold tracking-widest text-muted-foreground mb-auto">05</span>
                             <h3 class="text-2xl font-bold uppercase mb-4 tracking-tight">Barandales</h3>
@@ -416,12 +567,18 @@
                             </div>
                         </div>
                         <div class="absolute-img-container absolute -bottom-6 -right-6 w-40 h-40 opacity-10 group-hover:opacity-20 transition-all duration-700 pointer-events-none">
-                            <img src="assets/service-fencing-BTbCOTmA.jpg" alt="Barandales de acero y cristal" width="512" height="512" loading="lazy" class="w-full h-full object-cover rounded-2xl"/>
+                            <img src="assets/service-railings.png?v=2" alt="Barandales de acero y cristal" width="512" height="512" loading="lazy" class="w-full h-full object-cover rounded-2xl grayscale"/>
                         </div>
                     </div>
 
                     <!-- Card 06: Mamparas Modulock -->
                     <div class="service-card glow-ring group relative bg-charcoal overflow-hidden rounded-2xl border border-border cursor-pointer scroll-reveal" data-card="6" style="transition-delay: 0.5s;">
+                        <!-- Botón Cerrar (X) -->
+                        <button class="service-card-close-btn" aria-label="Cerrar">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 1.25rem; height: 1.25rem;">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
                         <div class="service-card-header p-10 flex flex-col" style="min-height: 280px;">
                             <span class="text-[10px] font-bold tracking-widest text-muted-foreground mb-auto">06</span>
                             <h3 class="text-2xl font-bold uppercase mb-4 tracking-tight">Mamparas Modulock</h3>
@@ -438,14 +595,13 @@
                                 <ul class="space-y-3 text-sm text-muted-foreground">
                                     <li class="flex items-start gap-3"><span class="text-primary mt-1">▸</span>Mamparas Modulock para baños públicos en lámina esmaltada y aluminio</li>
                                     <li class="flex items-start gap-3"><span class="text-primary mt-1">▸</span>Acabados en pintura en polvo horneada en gran variedad de colores</li>
-                                    <li class="flex items-start gap-3"><span class="text-primary mt-1">▸</span>Puertas especiales de lámina para accesos de baño, de seguridad o emergencia</li>
                                     <li class="flex items-start gap-3"><span class="text-primary mt-1">▸</span>Divisiones premium para sanitarios y mingitorios de alta resistencia</li>
                                 </ul>
                                 <a href="#contact" class="inline-block mt-6 text-[10px] font-bold uppercase tracking-[0.2em] text-primary hover:opacity-80 transition-opacity">Solicitar cotización →</a>
                             </div>
                         </div>
                         <div class="absolute-img-container absolute -bottom-6 -right-6 w-40 h-40 opacity-10 group-hover:opacity-20 transition-all duration-700 pointer-events-none">
-                            <img src="assets/service-aluminum-DfJojfyS.jpg" alt="Mamparas Modulock sanitarias" width="512" height="512" loading="lazy" class="w-full h-full object-cover rounded-2xl"/>
+                            <img src="assets/service-aluminum.png?v=2" alt="Mamparas Modulock sanitarias" width="512" height="512" loading="lazy" class="w-full h-full object-cover rounded-2xl grayscale"/>
                         </div>
                     </div>
                 </div>
@@ -464,6 +620,15 @@
             function closeCard(card) {
                 const placeholder = grid.querySelector('.service-card-placeholder');
                 if (!placeholder) return;
+                
+                // Revelar las demás tarjetas y restaurar el grid primero para obtener dimensiones correctas en móvil
+                cards.forEach(c => {
+                    c.classList.remove('is-hidden');
+                });
+                grid.classList.remove('has-expanded-card');
+                
+                // Forzar recalculado de layout
+                grid.offsetHeight;
                 
                 // Medir la posición actual del placeholder en el grid
                 const gridRect = grid.getBoundingClientRect();
@@ -485,12 +650,6 @@
                 const arrow = card.querySelector('.service-card-arrow');
                 if (label) label.textContent = 'Ver más';
                 if (arrow) arrow.style.transform = 'rotate(0deg)';
-                
-                // Revelar las demás tarjetas
-                cards.forEach(c => {
-                    c.classList.remove('is-hidden');
-                });
-                grid.classList.remove('has-expanded-card');
                 
                 // Restaurar flujo estático tras terminar la transición (500ms)
                 setTimeout(() => {
@@ -562,10 +721,10 @@
                 if (label) label.textContent = 'CERRAR';
                 if (arrow) arrow.style.transform = 'rotate(-180deg)';
                 
-                // Centrar la vista en la sección de servicios de forma fluida
+                // Centrar la vista en el grid de servicios (que contiene la tarjeta activa) de forma nativa y fluida
                 setTimeout(() => {
-                    document.getElementById('services').scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }, 100);
+                    document.getElementById('servicesGrid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 300);
             }
             
             cards.forEach(card => {
@@ -573,8 +732,8 @@
                     const isExpanded = card.classList.contains('is-expanded');
                     
                     if (isExpanded) {
-                        // Cerrar únicamente al hacer clic en el botón / etiqueta CERRAR
-                        if (e.target.closest('.service-card-icon')) {
+                        // Cerrar únicamente al hacer clic en el botón / etiqueta CERRAR o el botón X de la esquina
+                        if (e.target.closest('.service-card-icon') || e.target.closest('.service-card-close-btn')) {
                             closeCard(card);
                         }
                     } else {
@@ -603,7 +762,7 @@
                     <div class="space-y-20">
                         
                         <!-- Project 1 -->
-                        <div class="group cursor-pointer scroll-reveal">
+                        <div class="group cursor-pointer scroll-reveal project-card">
                             <div class="glow-ring overflow-hidden mb-6 rounded-2xl border border-border">
                                 <img src="assets/cedis-tabasco.jpg?v=2" alt="Detalle de cancelería de aluminio y vidrio en obra industrial CEDIS Tabasco" width="960" height="576" loading="lazy" class="w-full aspect-[5/3] object-cover grayscale group-hover:grayscale-0 group-hover:scale-[1.01] transition-all duration-1000"/>
                             </div>
@@ -612,21 +771,19 @@
                                     <h4 class="text-xl font-bold uppercase tracking-tight">CEDIS Tabasco</h4>
                                     <p class="text-muted-foreground text-xs tracking-widest uppercase mt-1">Estructura de cancelería y fachadas / Tabasco</p>
                                 </div>
-                                <span class="text-2xl group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
                             </div>
                         </div>
                         
                         <!-- Project 2 -->
-                        <div class="group cursor-pointer scroll-reveal" style="transition-delay: 0.1s;">
+                        <div class="group cursor-pointer scroll-reveal project-card" style="transition-delay: 0.1s;">
                             <div class="glow-ring overflow-hidden mb-6 rounded-2xl border border-border">
-                                <img src="assets/aeropuerto-guanajuato.jpg?v=3" alt="Barandal de acero inoxidable en terminal del Aeropuerto Internacional de Guanajuato" width="960" height="1200" loading="lazy" class="w-full aspect-[4/5] object-cover grayscale group-hover:grayscale-0 group-hover:scale-[1.03] transition-all duration-1000"/>
+                                <img src="assets/aeropuerto-guanajuato.jpg?v=4" alt="Barandal de acero inoxidable en terminal del Aeropuerto Internacional de Guanajuato" width="960" height="1200" loading="lazy" class="w-full aspect-[4/5] object-cover grayscale group-hover:grayscale-0 group-hover:scale-[1.03] transition-all duration-1000"/>
                             </div>
                             <div class="flex justify-between items-start">
                                 <div>
                                     <h4 class="text-xl font-bold uppercase tracking-tight">Aeropuerto Internacional de Guanajuato</h4>
-                                    <p class="text-muted-foreground text-xs tracking-widest uppercase mt-1">Suministro de barandales y acero inoxidable / Guanajuato</p>
+                                    <p class="text-muted-foreground text-xs tracking-widest uppercase mt-1">Suministro de barandales de acero inoxidable / Guanajuato</p>
                                 </div>
-                                <span class="text-2xl group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
                             </div>
                         </div>
                         
@@ -636,21 +793,20 @@
                     <div class="space-y-20 md:pt-40">
                         
                         <!-- Project 3 -->
-                        <div class="group cursor-pointer scroll-reveal" style="transition-delay: 0.2s;">
+                        <div class="group cursor-pointer scroll-reveal project-card" style="transition-delay: 0.2s;">
                             <div class="glow-ring overflow-hidden mb-6 rounded-2xl border border-border">
                                 <img src="assets/farmacia-san-pablo.jpg?v=3" alt="Detalle de cancelería de aluminio, vidrio y barandal de cristal templado en Farmacia San Pablo" width="960" height="720" loading="lazy" class="w-full aspect-[4/3] object-cover grayscale group-hover:grayscale-0 group-hover:scale-[1.01] transition-all duration-1000"/>
                             </div>
                             <div class="flex justify-between items-start">
                                 <div>
                                     <h4 class="text-xl font-bold uppercase tracking-tight">Farmacia San Pablo</h4>
-                                    <p class="text-muted-foreground text-xs tracking-widest uppercase mt-1">Fachada y barandales / Prado Norte, Polanco CDMX</p>
+                                    <p class="text-muted-foreground text-xs tracking-widest uppercase mt-1">Fachada y barandales / Polanco CDMX</p>
                                 </div>
-                                <span class="text-2xl group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
                             </div>
                         </div>
                         
                         <!-- Project 4 -->
-                        <div class="group cursor-pointer scroll-reveal" style="transition-delay: 0.3s;">
+                        <div class="group cursor-pointer scroll-reveal project-card" style="transition-delay: 0.3s;">
                             <div class="glow-ring overflow-hidden mb-6 rounded-2xl border border-border">
                                 <img src="assets/walmart-monterrey.jpg?v=2" alt="Suministro e instalación de reja de acero modular para exteriores en Walmart Monterrey" width="960" height="720" loading="lazy" class="w-full aspect-[4/3] object-cover grayscale group-hover:grayscale-0 group-hover:scale-[1.01] transition-all duration-1000"/>
                             </div>
@@ -659,7 +815,6 @@
                                     <h4 class="text-xl font-bold uppercase tracking-tight">Reja de Acero Walmart Monterrey</h4>
                                     <p class="text-muted-foreground text-xs tracking-widest uppercase mt-1">Suministro e instalación perimetral exterior / Nuevo León</p>
                                 </div>
-                                <span class="text-2xl group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">↗</span>
                             </div>
                         </div>
                         
@@ -675,11 +830,11 @@
                 
                 <div class="grid md:grid-cols-12 gap-16 mb-20">
                     <div class="md:col-span-5 scroll-reveal">
-                        <span class="text-[10px] font-bold tracking-[0.3em] uppercase text-muted-foreground mb-6 block">Por Qué CAAMODULOCK</span>
+                        <span class="text-[10px] font-bold tracking-[0.3em] uppercase text-primary mb-6 block">Por Qué Modulock</span>
                         <h2 class="text-4xl md:text-5xl font-bold tracking-tight uppercase leading-none">Soluciones Reales Para Obras Exigentes.</h2>
                     </div>
                     <p class="md:col-span-6 md:col-start-7 text-muted-foreground text-lg leading-relaxed self-end scroll-reveal" style="transition-delay: 0.1s;">
-                        Trabajamos con los desarrolladores, minoristas y constructores más exigentes, ofreciendo materiales de excelente calidad con garantía y plazos de entrega rápidos en todo México. No competimos por el precio más bajo, sino por entregar la máxima calidad y valor. Diseñamos, fabricamos e instalamos soluciones a la medida de tu espacio, asegurando durabilidad, estética impecable y un servicio de ingeniería personalizado que la competencia de bajo costo no puede ofrecer.
+                        Diseñamos con ingeniería a la medida y durabilidad garantizada para los proyectos más exigentes en México. No competimos por el precio más bajo; entregamos la máxima calidad bajo un estándar que las opciones de bajo costo no pueden ofrecer.
                     </p>
                 </div>
                 
@@ -687,7 +842,7 @@
                 <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
                     
                     <!-- Card 1 -->
-                    <div class="glow-ring p-8 rounded-2xl border border-border bg-charcoal/40 transition-all duration-500 hover:bg-charcoal scroll-reveal">
+                    <div class="glow-ring p-8 rounded-2xl border border-border bg-charcoal/40 transition-all duration-500 hover:bg-charcoal scroll-reveal why-card">
                         <span class="text-[10px] font-bold tracking-widest text-muted-foreground block mb-8">01</span>
                         <h3 class="text-xl font-bold uppercase mb-3 tracking-tight">Presupuesto Libre</h3>
                         <p class="text-sm text-muted-foreground leading-relaxed">
@@ -696,7 +851,7 @@
                     </div>
                     
                     <!-- Card 2 -->
-                    <div class="glow-ring p-8 rounded-2xl border border-border bg-charcoal/40 transition-all duration-500 hover:bg-charcoal scroll-reveal" style="transition-delay: 0.1s;">
+                    <div class="glow-ring p-8 rounded-2xl border border-border bg-charcoal/40 transition-all duration-500 hover:bg-charcoal scroll-reveal why-card" style="transition-delay: 0.1s;">
                         <span class="text-[10px] font-bold tracking-widest text-muted-foreground block mb-8">02</span>
                         <h3 class="text-xl font-bold uppercase mb-3 tracking-tight">Personal Experto</h3>
                         <p class="text-sm text-muted-foreground leading-relaxed">
@@ -705,7 +860,7 @@
                     </div>
                     
                     <!-- Card 3 -->
-                    <div class="glow-ring p-8 rounded-2xl border border-border bg-charcoal/40 transition-all duration-500 hover:bg-charcoal scroll-reveal" style="transition-delay: 0.2s;">
+                    <div class="glow-ring p-8 rounded-2xl border border-border bg-charcoal/40 transition-all duration-500 hover:bg-charcoal scroll-reveal why-card" style="transition-delay: 0.2s;">
                         <span class="text-[10px] font-bold tracking-widest text-muted-foreground block mb-8">03</span>
                         <h3 class="text-xl font-bold uppercase mb-3 tracking-tight">Garantía Real</h3>
                         <p class="text-sm text-muted-foreground leading-relaxed">
@@ -714,7 +869,7 @@
                     </div>
                     
                     <!-- Card 4 -->
-                    <div class="glow-ring p-8 rounded-2xl border border-border bg-charcoal/40 transition-all duration-500 hover:bg-charcoal scroll-reveal" style="transition-delay: 0.3s;">
+                    <div class="glow-ring p-8 rounded-2xl border border-border bg-charcoal/40 transition-all duration-500 hover:bg-charcoal scroll-reveal why-card" style="transition-delay: 0.3s;">
                         <span class="text-[10px] font-bold tracking-widest text-muted-foreground block mb-8">04</span>
                         <h3 class="text-xl font-bold uppercase mb-3 tracking-tight">Plazos y Facilidad</h3>
                         <p class="text-sm text-muted-foreground leading-relaxed">
@@ -731,54 +886,75 @@
         <!-- Testimonials Section -->
         <section class="py-32 px-6">
             <div class="max-w-7xl mx-auto">
-                <span class="text-[10px] font-bold tracking-[0.3em] uppercase text-muted-foreground mb-16 block scroll-reveal">Voces de Clientes</span>
+                <span class="text-[10px] font-bold tracking-[0.3em] uppercase text-primary mb-16 block scroll-reveal">Voces de Clientes</span>
                 
-                <div class="grid md:grid-cols-2 gap-12 md:gap-16">
+                <!-- Testimonials Carousel -->
+                <div class="relative overflow-hidden mt-8 max-w-4xl mx-auto testimonial-carousel-container">
                     
-                    <!-- Testimonial 1 -->
-                    <figure class="flex flex-col scroll-reveal">
-                        <blockquote class="text-base md:text-lg leading-relaxed tracking-tight text-balance mb-8 flex-1 text-muted-foreground">
-                            “He trabajado en más de 5 años con el proveedor y siempre se ha tenido el apoyo y compromiso de todo el equipo. El personal que trabaja en Modulock busca solucionar cualquier inconveniente que se presente durante las instalaciones.”
-                        </blockquote>
-                        <figcaption class="pt-6 border-t border-border">
-                            <p class="font-bold text-sm">Arq. Diana Rangel</p>
-                            <p class="text-[10px] uppercase tracking-widest text-muted-foreground mt-1">Especificadora de Proyectos / Desarrollo Residencial</p>
-                        </figcaption>
-                    </figure>
-                    
-                    <!-- Testimonial 2 -->
-                    <figure class="flex flex-col scroll-reveal" style="transition-delay: 0.1s;">
-                        <blockquote class="text-base md:text-lg leading-relaxed tracking-tight text-balance mb-8 flex-1 text-muted-foreground">
-                            “Modulock es una empresa muy confiable, con un alto sentido de servicio y calidad en sus trabajos. Espero sigan creciendo y mejorando cada día.”
-                        </blockquote>
-                        <figcaption class="pt-6 border-t border-border">
-                            <p class="font-bold text-sm">Arq. Victor Castillo</p>
-                            <p class="text-[10px] uppercase tracking-widest text-muted-foreground mt-1">Supervisor de Obra, Proyectos Comerciales</p>
-                        </figcaption>
-                    </figure>
-                    
-                    <!-- Testimonial 3 -->
-                    <figure class="flex flex-col scroll-reveal" style="transition-delay: 0.2s;">
-                        <blockquote class="text-base md:text-lg leading-relaxed tracking-tight text-balance mb-8 flex-1 text-muted-foreground">
-                            “Mi experiencia con proyectos que he contratado a Modulock, es que siempre ha entregado los trabajos en tiempo y forma, cumpliendo con servicio, calidad, costo y tiempo.”
-                        </blockquote>
-                        <figcaption class="pt-6 border-t border-border">
-                            <p class="font-bold text-sm">Ing. Fernando Martínez</p>
-                            <p class="text-[10px] uppercase tracking-widest text-muted-foreground mt-1">Director de Proyectos, Desarrollos de Infraestructura</p>
-                        </figcaption>
-                    </figure>
-                    
-                    <!-- Testimonial 4 -->
-                    <figure class="flex flex-col scroll-reveal" style="transition-delay: 0.3s;">
-                        <blockquote class="text-base md:text-lg leading-relaxed tracking-tight text-balance mb-8 flex-1 text-muted-foreground">
-                            “Excelente proveedor en el ramo de la cancelería, elaboración de espejos y acabados como alucobond, reja de acero y películas 3M. Modulock destaca por su atención al detalle antes de la instalación, el cumplimiento en tiempos y una calidad impecable. Lo que más valoramos es su garantía y servicio postventa: si surge algún detalle, lo solucionan de inmediato con personal muy capacitado. Una empresa totalmente confiable.”
-                        </blockquote>
-                        <figcaption class="pt-6 border-t border-border">
-                            <p class="font-bold text-sm">Arq. Daniel Isaac López</p>
-                            <p class="text-[10px] uppercase tracking-widest text-muted-foreground mt-1">Coordinador de Obra y Acabados, Edificación Comercial</p>
-                        </figcaption>
-                    </figure>
-                    
+                    <!-- Sliding Wrapper -->
+                    <div id="testimonialSlider" class="flex transition-transform duration-300 ease-out-quint cursor-grab active:cursor-grabbing">
+                        
+                        <!-- Slide 1 -->
+                        <div class="w-full shrink-0 px-4 pb-8">
+                            <div class="bg-charcoal/20 border border-border/60 p-8 md:p-12 rounded-3xl min-h-[260px] flex flex-col justify-between text-center">
+                                <blockquote class="text-sm md:text-base leading-relaxed tracking-tight text-balance mb-8 text-muted-foreground italic">
+                                    “He trabajado en más de 5 años con el proveedor y siempre se ha tenido el apoyo y compromiso de todo el equipo. El personal que trabaja en Modulock busca solucionar cualquier inconveniente que se presente durante las instalaciones.”
+                                </blockquote>
+                                <figcaption class="pt-6 border-t border-border/30">
+                                    <p class="font-bold text-sm text-foreground">Arq. Diana Rangel</p>
+                                    <p class="text-[9px] uppercase tracking-widest text-muted-foreground mt-1">Especificadora de Proyectos / Desarrollo Residencial</p>
+                                </figcaption>
+                            </div>
+                        </div>
+
+                        <!-- Slide 2 -->
+                        <div class="w-full shrink-0 px-4 pb-8">
+                            <div class="bg-charcoal/20 border border-border/60 p-8 md:p-12 rounded-3xl min-h-[260px] flex flex-col justify-between text-center">
+                                <blockquote class="text-sm md:text-base leading-relaxed tracking-tight text-balance mb-8 text-muted-foreground italic">
+                                    “Modulock es una empresa muy confiable, con un alto sentido de servicio y calidad en sus trabajos. Espero sigan creciendo y mejorando cada día.”
+                                </blockquote>
+                                <figcaption class="pt-6 border-t border-border/30">
+                                    <p class="font-bold text-sm text-foreground">Arq. Victor Castillo</p>
+                                    <p class="text-[9px] uppercase tracking-widest text-muted-foreground mt-1">Supervisor de Obra, Proyectos Comerciales</p>
+                                </figcaption>
+                            </div>
+                        </div>
+
+                        <!-- Slide 3 -->
+                        <div class="w-full shrink-0 px-4 pb-8">
+                            <div class="bg-charcoal/20 border border-border/60 p-8 md:p-12 rounded-3xl min-h-[260px] flex flex-col justify-between text-center">
+                                <blockquote class="text-sm md:text-base leading-relaxed tracking-tight text-balance mb-8 text-muted-foreground italic">
+                                    “Mi experiencia con proyectos que he contratado a Modulock, es que siempre ha entregado los trabajos en tiempo y forma, cumpliendo con servicio, calidad, costo y tiempo.”
+                                </blockquote>
+                                <figcaption class="pt-6 border-t border-border/30">
+                                    <p class="font-bold text-sm text-foreground">Ing. Fernando Martínez</p>
+                                    <p class="text-[9px] uppercase tracking-widest text-muted-foreground mt-1">Director de Proyectos, Desarrollos de Infraestructura</p>
+                                </figcaption>
+                            </div>
+                        </div>
+
+                        <!-- Slide 4 -->
+                        <div class="w-full shrink-0 px-4 pb-8">
+                            <div class="bg-charcoal/20 border border-border/60 p-8 md:p-12 rounded-3xl min-h-[260px] flex flex-col justify-between text-center">
+                                <blockquote class="text-sm md:text-base leading-relaxed tracking-tight text-balance mb-8 text-muted-foreground italic">
+                                    “Excelente proveedor en el ramo de la cancelería, elaboración de espejos y acabados como alucobond, reja de acero y películas 3M. Modulock destaca por su atención al detalle antes de la instalación, el cumplimiento en tiempos y una calidad impecable. Lo que más valoramos es su garantía y servicio postventa: si surge algún detalle, lo solucionan de inmediato con personal muy capacitado. Una empresa totalmente confiable.”
+                                </blockquote>
+                                <figcaption class="pt-6 border-t border-border/30">
+                                    <p class="font-bold text-sm text-foreground">Arq. Daniel Isaac López</p>
+                                    <p class="text-[9px] uppercase tracking-widest text-muted-foreground mt-1">Coordinador de Obra y Acabados, Edificación Comercial</p>
+                                </figcaption>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Navigation Dots -->
+                    <div class="flex items-center justify-center mt-4">
+                        <div id="testimonialDots" class="flex gap-4 items-center justify-center">
+                            <!-- Injected dynamically via JS -->
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </section>
@@ -794,8 +970,13 @@
                         <h2 class="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-8" style="line-height: 1.35;">
                             Logística<br/>Sin Límites.
                         </h2>
-                        <p class="text-muted-foreground text-lg leading-relaxed" style="margin-bottom: 3.5rem;">
+                        <!-- Desktop Copy -->
+                        <p class="desktop-only text-muted-foreground text-lg leading-relaxed" style="margin-bottom: 3.5rem;">
                             No dependemos de intermediarios. En <strong class="text-foreground">Modulock</strong> contamos con capacidad de transporte propia y especializada para movilizar cancelería, estructuras de herrería y rejas de acero de gran volumen directo de nuestro taller a cualquier obra dentro de la República Mexicana, asegurando puntualidad y seguridad.
+                        </p>
+                        <!-- Mobile Copy -->
+                        <p class="mobile-only text-muted-foreground text-lg leading-relaxed" style="margin-bottom: 3.5rem;">
+                            Sin intermediarios. Con nuestra propia flota especializada, en <strong class="text-foreground">Modulock</strong> trasladamos cancelería, herrería y rejas de gran volumen directo del taller a cualquier obra en el país, garantizando puntualidad y seguridad.
                         </p>
                         
                         <!-- Fleet Grid Metrics -->
@@ -832,7 +1013,7 @@
                     
                     <!-- Contact Info -->
                     <div class="scroll-reveal">
-                        <span class="text-[10px] font-bold tracking-[0.3em] uppercase text-muted-foreground mb-6 block">Inicia una Conversación</span>
+                        <span class="text-[10px] font-bold tracking-[0.3em] uppercase text-primary mb-6 block">Inicia una Conversación</span>
                         <h2 class="text-5xl md:text-7xl font-black uppercase tracking-tighter mb-8 leading-[0.9]">Haz Tu Idea<br/>Realidad.</h2>
                         <p class="text-muted-foreground mb-12 max-w-sm leading-relaxed">
                             Equipos especializados con cobertura nacional, listos para ejecutar proyectos comerciales, industriales y residenciales bajo los más altos estándares de calidad y excelencia.
@@ -893,7 +1074,7 @@
                                     <option class="bg-charcoal" selected="">Cancelería de Aluminio</option>
                                     <option class="bg-charcoal">Malla Ciclónica / Reja de Acero Modulock</option>
                                     <option class="bg-charcoal">Herrería Estructural</option>
-                                    <option class="bg-charcoal">Mamparas Modulock / Puertas Especiales</option>
+                                    <option class="bg-charcoal">Mamparas Modulock</option>
                                 </select>
                             </div>
                             <div class="border-b border-border pb-2 focus-within:border-foreground transition-colors">
@@ -921,11 +1102,11 @@
                 
                 <!-- Fine print details -->
                 <div class="mt-16 md:mt-24 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 text-[10px] font-bold uppercase tracking-widest scroll-reveal">
-                    <div class="text-muted-foreground leading-relaxed">Todos los derechos reservados<br/>© 2026 CAAMODULOCK S.A. de C.V.</div>
-                    <div class="text-muted-foreground leading-relaxed sm:text-center">Estado de México<br/>México</div>
-                    <div class="text-muted-foreground leading-relaxed space-y-1 sm:text-right">
+                    <div class="text-muted-foreground leading-relaxed text-center sm:text-left">Todos los derechos reservados<br/>© 2026 MODULOCK</div>
+                    <div class="text-muted-foreground leading-relaxed text-center">Estado de México<br/>México</div>
+                    <div class="text-muted-foreground leading-relaxed space-y-1 text-center sm:text-right">
                         <a href="blog.html" class="block hover:text-primary transition-colors">Blog</a>
-                        <a href="#" class="block hover:text-primary transition-colors">Facebook</a>
+                        <a href="https://www.facebook.com/profile.php?id=100063681050874&amp;mibextid=wwXIfr&amp;rdid=407tLcS89V7k2iOK&amp;share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1LDk3gda85%2F%3Fmibextid%3DwwXIfr" target="_blank" rel="noopener noreferrer" class="block hover:text-primary transition-colors">Facebook</a>
                         <a href="#" class="block hover:text-primary transition-colors">Aviso de Privacidad</a>
                     </div>
                 </div>
@@ -946,14 +1127,15 @@
         </footer>
 
         <!-- Mobile Floating Action Call Button -->
-        <a href="tel:+525558809974" aria-label="Llamar a Modulock" class="glow-static fixed bottom-6 right-6 z-50 h-14 px-5 bg-primary text-primary-foreground flex items-center gap-3 rounded-full hover:scale-105 transition-transform active:scale-95">
-            <span class="size-2 rounded-full bg-background animate-pulse"></span>
-            <span class="text-[10px] font-bold uppercase tracking-[0.2em]">Llámanos</span>
+        <a href="tel:+525558809974" aria-label="Llamar a Modulock" class="glow-static fixed bottom-6 right-6 z-50 size-14 bg-primary text-primary-foreground flex items-center justify-center rounded-full hover:scale-105 transition-transform active:scale-95 shadow-lg">
+            <svg class="size-6" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.622h0a3 3 0 01.408-1.503l1.103-1.928a3 3 0 014.28-1.09l2.428 1.517a3 3 0 011.085 4.28l-.94 1.41a1.5 1.5 0 00-.23 1.326l.487 1.948a3 3 0 004.283 2.158l2.036-1.018a1.5 1.5 0 011.666.082l2.25 1.706a3 3 0 01.326 4.282l-1.93 2.25a3 3 0 01-4.28-.231L1.922 9.17a3 3 0 01.328-4.283z"/>
+            </svg>
         </a>
 
     </main>
 
     <!-- JavaScript Interactions -->
-    <script src="app.js?v=3"></script>
+    <script src="app.js?v=41"></script>
 </body>
 </html>

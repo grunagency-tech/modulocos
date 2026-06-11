@@ -465,45 +465,19 @@ document.addEventListener('DOMContentLoaded', () => {
     // 7. Mobile Navigation Menu Toggle
     const mobileMenuToggle = document.getElementById('mobileMenuToggle');
     const mobileMenuDrawer = document.getElementById('mobileMenuDrawer');
-    const hamburgerLines = {
-        line1: document.getElementById('hamburgerLine1'),
-        line2: document.getElementById('hamburgerLine2'),
-        line3: document.getElementById('hamburgerLine3')
-    };
 
     if (mobileMenuToggle && mobileMenuDrawer) {
         mobileMenuToggle.addEventListener('click', () => {
-            const isOpen = mobileMenuDrawer.classList.contains('opacity-100');
-            if (isOpen) {
-                // Close Drawer
-                mobileMenuDrawer.classList.remove('opacity-100', 'pointer-events-auto');
-                mobileMenuDrawer.classList.add('opacity-0', 'pointer-events-none');
-                
-                // Animate hamburger back
-                hamburgerLines.line1.style.transform = 'none';
-                hamburgerLines.line2.style.opacity = '1';
-                hamburgerLines.line3.style.transform = 'none';
-            } else {
-                // Open Drawer
-                mobileMenuDrawer.classList.remove('opacity-0', 'pointer-events-none');
-                mobileMenuDrawer.classList.add('opacity-100', 'pointer-events-auto');
-                
-                // Animate hamburger to X
-                hamburgerLines.line1.style.transform = 'rotate(45deg) translate(2px, -1px)';
-                hamburgerLines.line2.style.opacity = '0';
-                hamburgerLines.line3.style.transform = 'rotate(-45deg) translate(2px, 1px)';
-            }
+            mobileMenuToggle.classList.toggle('is-active');
+            mobileMenuDrawer.classList.toggle('is-open');
         });
 
         // Close drawer when clicking any link
         const mobileLinks = mobileMenuDrawer.querySelectorAll('.mobile-menu-link');
         mobileLinks.forEach(link => {
             link.addEventListener('click', () => {
-                mobileMenuDrawer.classList.remove('opacity-100', 'pointer-events-auto');
-                mobileMenuDrawer.classList.add('opacity-0', 'pointer-events-none');
-                hamburgerLines.line1.style.transform = 'none';
-                hamburgerLines.line2.style.opacity = '1';
-                hamburgerLines.line3.style.transform = 'none';
+                mobileMenuToggle.classList.remove('is-active');
+                mobileMenuDrawer.classList.remove('is-open');
             });
         });
     }

@@ -148,47 +148,197 @@ document.addEventListener('DOMContentLoaded', () => {
     // 6. Mobile Navigation Menu Toggle
     const mobileMenuToggle = document.getElementById('mobileMenuToggle');
     const mobileMenuDrawer = document.getElementById('mobileMenuDrawer');
-    const hamburgerLines = {
-        line1: document.getElementById('hamburgerLine1'),
-        line2: document.getElementById('hamburgerLine2'),
-        line3: document.getElementById('hamburgerLine3')
-    };
 
     if (mobileMenuToggle && mobileMenuDrawer) {
         mobileMenuToggle.addEventListener('click', () => {
-            const isOpen = mobileMenuDrawer.classList.contains('opacity-100');
-            if (isOpen) {
-                // Close Drawer
-                mobileMenuDrawer.classList.remove('opacity-100', 'pointer-events-auto');
-                mobileMenuDrawer.classList.add('opacity-0', 'pointer-events-none');
-                
-                // Animate hamburger back
-                hamburgerLines.line1.style.transform = 'none';
-                hamburgerLines.line2.style.opacity = '1';
-                hamburgerLines.line3.style.transform = 'none';
-            } else {
-                // Open Drawer
-                mobileMenuDrawer.classList.remove('opacity-0', 'pointer-events-none');
-                mobileMenuDrawer.classList.add('opacity-100', 'pointer-events-auto');
-                
-                // Animate hamburger to X
-                hamburgerLines.line1.style.transform = 'rotate(45deg) translate(2px, -1px)';
-                hamburgerLines.line2.style.opacity = '0';
-                hamburgerLines.line3.style.transform = 'rotate(-45deg) translate(2px, 1px)';
-            }
+            mobileMenuToggle.classList.toggle('is-active');
+            mobileMenuDrawer.classList.toggle('is-open');
         });
 
         // Close drawer when clicking any link
         const mobileLinks = mobileMenuDrawer.querySelectorAll('.mobile-menu-link');
         mobileLinks.forEach(link => {
             link.addEventListener('click', () => {
-                mobileMenuDrawer.classList.remove('opacity-100', 'pointer-events-auto');
-                mobileMenuDrawer.classList.add('opacity-0', 'pointer-events-none');
-                hamburgerLines.line1.style.transform = 'none';
-                hamburgerLines.line2.style.opacity = '1';
-                hamburgerLines.line3.style.transform = 'none';
+                mobileMenuToggle.classList.remove('is-active');
+                mobileMenuDrawer.classList.remove('is-open');
             });
         });
+    }
+
+    // 7. Observer for mobile project card scroll activation
+    const projectCards = document.querySelectorAll('.project-card');
+    if (projectCards.length > 0) {
+        const observerOptions = {
+            root: null,
+            rootMargin: '-45% 0px -45% 0px', // Target the center 10% area of the viewport
+            threshold: 0 // Trigger as soon as any part of the card enters the region
+        };
+        
+        const projectObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const isMobile = window.innerWidth < 768 || window.matchMedia('(max-width: 767px)').matches;
+                if (isMobile) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active-scroll');
+                    } else {
+                        entry.target.classList.remove('active-scroll');
+                    }
+                } else {
+                    entry.target.classList.remove('active-scroll');
+                }
+            });
+        }, observerOptions);
+        
+        projectCards.forEach(card => projectObserver.observe(card));
+    }
+
+    // 8. Observer for mobile why-choose-us card scroll activation
+    const whyCards = document.querySelectorAll('.why-card');
+    if (whyCards.length > 0) {
+        const observerOptions = {
+            root: null,
+            rootMargin: '-20% 0px -20% 0px', // Target the center 60% area of the viewport
+            threshold: 0 // Trigger as soon as any part of the card enters the region
+        };
+        
+        const whyObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const isMobile = window.innerWidth < 768 || window.matchMedia('(max-width: 767px)').matches;
+                if (isMobile) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active-scroll');
+                    } else {
+                        entry.target.classList.remove('active-scroll');
+                    }
+                } else {
+                    entry.target.classList.remove('active-scroll');
+                }
+            });
+        }, observerOptions);
+        
+        whyCards.forEach(card => whyObserver.observe(card));
+    }
+
+    // 9. Testimonials Carousel Logic
+    const slider = document.getElementById('testimonialSlider');
+    const dotsContainer = document.getElementById('testimonialDots');
+    const prevBtn = document.getElementById('prevTestimonial');
+    const nextBtn = document.getElementById('nextTestimonial');
+    
+    if (slider && dotsContainer) {
+        const slides = Array.from(slider.children);
+        let currentSlide = 0;
+        const totalSlides = slides.length;
+        let autoplayInterval;
+        const autoplayDelay = 6000; // 6 seconds for comfortable dynamic rotation
+        
+        // Dynamically create dots
+        slides.forEach((_, index) => {
+            const dot = document.createElement('button');
+            dot.className = `testimonial-dot ${index === 0 ? 'active' : ''}`;
+            dot.setAttribute('aria-label', `Ir al testimonio ${index + 1}`);
+            dot.addEventListener('click', () => {
+                goToSlide(index);
+                restartAutoplay();
+            });
+            dotsContainer.appendChild(dot);
+        });
+        
+        const dots = dotsContainer.querySelectorAll('.testimonial-dot');
+        
+        function goToSlide(index) {
+            currentSlide = index;
+            updateCarousel();
+        }
+        
+        function updateCarousel() {
+            slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+            dots.forEach((dot, index) => {
+                if (index === currentSlide) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+        
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateCarousel();
+        }
+        
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            updateCarousel();
+        }
+        
+        if (prevBtn) {
+            prevBtn.addEventListener('click', () => {
+                prevSlide();
+                restartAutoplay();
+            });
+        }
+        
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => {
+                nextSlide();
+                restartAutoplay();
+            });
+        }
+        
+        // Touch Gestures for mobile swipe support
+        let startX = 0;
+        let endX = 0;
+        
+        slider.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+            pauseAutoplay();
+        }, { passive: true });
+        
+        slider.addEventListener('touchend', (e) => {
+            endX = e.changedTouches[0].clientX;
+            const diffX = startX - endX;
+            if (diffX > 50) {
+                // Swipe left -> Next slide
+                nextSlide();
+            } else if (diffX < -50) {
+                // Swipe right -> Prev slide
+                prevSlide();
+            }
+            startAutoplay();
+        }, { passive: true });
+        
+        slider.addEventListener('touchcancel', () => {
+            startAutoplay();
+        }, { passive: true });
+        
+        // Mouse hover pause/resume (Desktop UI/UX)
+        const carouselContainer = document.querySelector('.testimonial-carousel-container');
+        if (carouselContainer && window.matchMedia('(hover: hover)').matches) {
+            carouselContainer.addEventListener('mouseenter', pauseAutoplay);
+            carouselContainer.addEventListener('mouseleave', startAutoplay);
+        }
+        
+        function startAutoplay() {
+            if (!autoplayInterval) {
+                autoplayInterval = setInterval(nextSlide, autoplayDelay);
+            }
+        }
+        
+        function pauseAutoplay() {
+            if (autoplayInterval) {
+                clearInterval(autoplayInterval);
+                autoplayInterval = null;
+            }
+        }
+        
+        function restartAutoplay() {
+            pauseAutoplay();
+            startAutoplay();
+        }
+        
+        // Initialize Autoplay
+        startAutoplay();
     }
 });
 
