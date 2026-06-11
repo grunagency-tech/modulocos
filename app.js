@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
         lastScrollY = currentScrollY;
     });
 
-    // 4. Contact Form Handler (Premium Interactions)
+    // 4. Contact Form Handler (Premium Interactions & Webhook Submission)
     const contactForm = document.getElementById('contactForm');
     const formStatus = document.getElementById('formStatus');
 
@@ -84,6 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const name = contactForm.querySelector('[name="name"]').value;
             const company = contactForm.querySelector('[name="company"]').value;
             const phone = contactForm.querySelector('[name="phone"]').value;
+            const projectType = contactForm.querySelector('[name="projectType"]').value;
             const message = contactForm.querySelector('[name="message"]').value;
             
             if (!name || !company || !phone || !message) {
@@ -101,29 +102,83 @@ document.addEventListener('DOMContentLoaded', () => {
                 <span class="inline-block size-3.5 border-2 border-t-transparent border-primary-foreground rounded-full animate-spin ml-2"></span>
             `;
 
-            // Simulate server request delay
-            setTimeout(() => {
+            // Retrieve webhook URL from the form's action attribute
+            const webhookUrl = contactForm.getAttribute('action');
+
+            // Fallback for development/testing if the default placeholder is still there or empty
+            if (!webhookUrl || webhookUrl.includes('your-n8n-webhook-url-here.com')) {
+                setTimeout(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnHTML;
+                    
+                    formStatus.style.color = '#10b981'; // success green
+                    formStatus.innerHTML = `
+                        <div class="mt-4 p-4 border border-[#10b981]/20 bg-[#10b981]/5 rounded-xl text-left">
+                            <strong class="text-white block mb-1">¡Modo Demostración Activo!</strong>
+                            El formulario validó con éxito. Para conectarlo a tu correo final, configura tu URL de webhook de n8n en el atributo <code>action</code> del formulario en <code>index.html</code>.
+                        </div>
+                    `;
+                    contactForm.reset();
+                    
+                    setTimeout(() => {
+                        formStatus.innerHTML = '';
+                    }, 12000);
+                }, 1200);
+                return;
+            }
+
+            // Real POST request to n8n webhook
+            fetch(webhookUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: name,
+                    company: company,
+                    phone: phone,
+                    projectType: projectType,
+                    message: message,
+                    submittedAt: new Date().toISOString()
+                })
+            })
+            .then(response => {
+                if (response.ok) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnHTML;
+                    
+                    // Show premium success notification
+                    formStatus.style.color = '#10b981'; // success green
+                    formStatus.innerHTML = `
+                        <div class="mt-4 p-4 border border-[#10b981]/20 bg-[#10b981]/5 rounded-xl text-left">
+                            <strong class="text-white block mb-1">¡Solicitud Enviada con Éxito!</strong>
+                            Estimado/a ${name}, nuestro departamento de ingeniería de cancelería y perfiles analizará tu propuesta y te contactará en menos de 24 horas hábiles.
+                        </div>
+                    `;
+                    
+                    contactForm.reset();
+                    
+                    setTimeout(() => {
+                        formStatus.innerHTML = '';
+                    }, 8000);
+                } else {
+                    throw new Error('Servidor retornó un error');
+                }
+            })
+            .catch(error => {
+                console.error('Error al enviar el formulario:', error);
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalBtnHTML;
                 
-                // Show clean premium success notification
-                formStatus.style.color = '#10b981'; // success green
+                // Show professional error message with fallback contact info
+                formStatus.style.color = '#ef4444'; // error red
                 formStatus.innerHTML = `
-                    <div class="mt-4 p-4 border border-[#10b981]/20 bg-[#10b981]/5 rounded-xl">
-                        <strong class="text-white block mb-1">¡Solicitud Enviada con Éxito!</strong>
-                        Estimado/a ${name}, nuestro departamento de ingeniería de cancelería y perfiles analizará tu propuesta y te contactará en menos de 24 horas hábiles.
+                    <div class="mt-4 p-4 border border-[#ef4444]/20 bg-[#ef4444]/5 rounded-xl text-left">
+                        <strong class="text-white block mb-1">Error al Enviar la Solicitud</strong>
+                        No pudimos enlazar con el servidor de contacto en este momento. Por favor, llámanos directamente al <strong>+52 55 5880 9974</strong> o escríbenos a <strong>contacto@cancelesmodulock.com.mx</strong>.
                     </div>
                 `;
-                
-                // Reset form fields
-                contactForm.reset();
-                
-                // Clear message after 8 seconds
-                setTimeout(() => {
-                    formStatus.innerHTML = '';
-                }, 8000);
-
-            }, 1800);
+            });
         });
     }
 
