@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (cmsLoginForm) {
         cmsLoginForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            if (cmsPasswordInput.value === 'Modulock2026') {
+            if (cmsPasswordInput.value === '12345') {
                 sessionStorage.setItem('modulock_is_admin', 'true');
                 cmsLoginError.style.display = 'none';
                 cmsPasswordInput.value = '';

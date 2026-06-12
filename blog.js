@@ -715,7 +715,7 @@ console.log("Presión de diseño a 30m para viento de 120km/h: " + calculateWind
         const pwd = adminPasswordInput.value;
         
         // Owner validation password
-        if (pwd === 'Modulock2026') {
+        if (pwd === '12345') {
             sessionStorage.setItem('modulock_is_admin', 'true');
             loginModal.classList.remove('active');
             loginForm.reset();
