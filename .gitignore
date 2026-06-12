@@ -1,0 +1,6 @@
+# Local environment variables
+.dev.vars
+
+# OS generated files
+.DS_Store
+Thumbs.db
