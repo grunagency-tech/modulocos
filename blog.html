@@ -158,95 +158,158 @@
             <a href="blog.html" class="mobile-menu-link text-2xl font-bold uppercase tracking-widest hover:text-primary transition-colors" style="color: var(--primary-glow)">Blog</a>
         </div>
 
-        <!-- Blog Hero Section -->
-        <section id="top" class="relative min-h-[50vh] flex flex-col justify-end px-6 pb-16 pt-40 md:pt-48 overflow-hidden">
-            <div class="absolute inset-0 z-0">
-                <img src="assets/hero-facade-D3hdqyy-.jpg" alt="Fachada de aluminio por CAAMODULOCK" width="1920" height="1280" class="w-full h-full object-cover brightness-50"/>
-                <div class="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent"></div>
-            </div>
-            
-            <div class="relative z-10 max-w-7xl mx-auto w-full">
-                <div class="grid md:grid-cols-12 gap-12 items-end">
-                    <div class="md:col-span-8 scroll-reveal">
-                        <span class="block text-[10px] font-medium tracking-[0.3em] uppercase text-primary-glow mb-6">Bitácora &amp; Novedades</span>
-                        <h1 class="text-[clamp(2.5rem,12vw,7rem)] md:text-[7vw] font-black leading-[0.85] tracking-tighter uppercase mb-6">Blog<br/>Industrial.</h1>
-                        <p class="max-w-md text-lg text-muted-foreground leading-relaxed">
-                            Artículos técnicos, guías y novedades sobre cancelería de aluminio nacional y europea, sistemas perimetrales de seguridad y herrería arquitectónica.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Blog Posts Grid Section -->
-        <section class="py-24 px-6 border-t border-border">
-            <div class="max-w-7xl mx-auto">
-                <div class="flex justify-between items-end mb-16 scroll-reveal">
-                    <h2 class="text-3xl md:text-5xl font-bold tracking-tight uppercase leading-none">Entradas<br/>Publicadas</h2>
-                    <span class="text-[10px] font-bold tracking-[0.3em] uppercase text-muted-foreground hidden md:block">[ Conocimiento Técnico ]</span>
+        <!-- ==========================================================================
+           GRID VIEW (BLOG HOME)
+           ========================================================================== -->
+        <div id="blogGridView">
+            <!-- Blog Hero Section -->
+            <section id="top" class="relative min-h-[50vh] flex flex-col justify-end px-6 pb-16 pt-40 md:pt-48 overflow-hidden">
+                <div class="absolute inset-0 z-0">
+                    <img src="assets/hero-facade-D3hdqyy-.jpg" alt="Fachada de aluminio por CAAMODULOCK" width="1920" height="1280" class="w-full h-full object-cover brightness-50"/>
+                    <div class="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent"></div>
                 </div>
                 
-                <!-- Posts Container -->
-                <div id="blogPostsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- Default Post 1 (Pre-populated for SEO crawlers) -->
-                    <article class="blog-card scroll-reveal">
-                        <div class="blog-card-img-wrapper">
-                            <img src="assets/service-aluminum-DfJojfyS.jpg" alt="Aislamiento Térmico y Acústico: El Estándar de la Ventanería Línea Española" class="blog-card-img" loading="lazy" />
+                <div class="relative z-10 max-w-7xl mx-auto w-full">
+                    <div class="grid md:grid-cols-12 gap-12 items-end">
+                        <div class="md:col-span-8 scroll-reveal">
+                            <span class="block text-[10px] font-medium tracking-[0.3em] uppercase text-primary-glow mb-6">Bitácora &amp; Novedades</span>
+                            <h1 class="text-[clamp(2.5rem,12vw,7rem)] md:text-[7vw] font-black leading-[0.85] tracking-tighter uppercase mb-6">Blog<br/>Industrial.</h1>
+                            <p class="max-w-md text-lg text-muted-foreground leading-relaxed">
+                                Artículos técnicos, guías y novedades sobre cancelería de aluminio nacional y europea, sistemas perimetrales de seguridad y herrería arquitectónica.
+                            </p>
                         </div>
-                        <div class="blog-card-content">
-                            <span class="blog-card-category">Aluminio y Vidrio</span>
-                            <h3 class="blog-card-title">Aislamiento Térmico y Acústico: El Estándar de la Ventanería Línea Española</h3>
-                            <p class="blog-card-excerpt">Analizamos cómo los sistemas europeos y nacionales de alta gama mejoran la eficiencia energética en residencias y corporativos en México.</p>
-                            <div class="blog-card-meta">
-                                <span>28 May 2026</span>
-                                <button class="read-more-btn font-bold text-xs uppercase tracking-wider hover:opacity-80 transition-opacity" style="color: var(--primary-glow)">Leer más →</button>
-                            </div>
-                            <!-- Full article content hidden for SEO crawlers -->
-                            <div style="display:none;" aria-hidden="true">
-                                El aislamiento acústico y térmico se ha convertido en una necesidad primordial en la arquitectura contemporánea de las grandes urbes mexicanas. La Ventanería Línea Española (como los sistemas Eurovent Premium) destaca por incorporar tecnologías de ruptura de puente térmico (RPT) y empaques de EPDM de alta resistencia. Al combinar perfiles de aluminio extruido calibrado con doble acristalamiento templado (unidad Duoplus con cámaras de gas argón), se logra reducir el ruido exterior en hasta 40 decibelios y se disminuye en un 35% la pérdida de calor o climatización. Esto no solo se traduce en un confort inmediato para el usuario residencial o corporativo, sino también en un ahorro energético considerable a mediano y largo plazo.
-                            </div>
-                        </div>
-                    </article>
+                    </div>
+                </div>
+            </section>
 
-                    <!-- Default Post 2 (Pre-populated for SEO crawlers) -->
-                    <article class="blog-card scroll-reveal" style="transition-delay: 0.1s;">
-                        <div class="blog-card-img-wrapper">
-                            <img src="assets/service-fencing-BTbCOTmA.jpg" alt="Seguridad Perimetral Inteligente: Implementación de Reja de Acero Modulock en Naves Industriales" class="blog-card-img" loading="lazy" />
+            <!-- Blog Posts Grid Section -->
+            <section class="py-24 px-6 border-t border-border">
+                <div class="max-w-7xl mx-auto">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 scroll-reveal gap-6">
+                        <div>
+                            <h2 class="text-3xl md:text-5xl font-bold tracking-tight uppercase leading-none mb-2">Entradas<br/>Publicadas</h2>
+                            <p class="text-sm text-muted-foreground">Explora el conocimiento técnico de Modulock</p>
                         </div>
-                        <div class="blog-card-content">
-                            <span class="blog-card-category">Seguridad Perimetral</span>
-                            <h3 class="blog-card-title">Seguridad Perimetral Inteligente: Implementación de Reja de Acero Modulock en Naves Industriales</h3>
-                            <p class="blog-card-excerpt">Guía técnica sobre la colocación de sistemas electrosoldados de alta resistencia en centros logísticos y almacenes.</p>
-                            <div class="blog-card-meta">
-                                <span>15 May 2026</span>
-                                <button class="read-more-btn font-bold text-xs uppercase tracking-wider hover:opacity-80 transition-opacity" style="color: var(--primary-glow)">Leer más →</button>
-                            </div>
-                            <!-- Full article content hidden for SEO crawlers -->
-                            <div style="display:none;" aria-hidden="true">
-                                Los centros logísticos y naves industriales en zonas de alta plusvalía o corredores industriales como Querétaro, San Luis Potosí y Monterrey requieren de sistemas de delimitación robustos pero con estética limpia. El sistema de Reja de Acero Modulock destaca por su malla de acero electrosoldado de alta especificación con nervaduras de refuerzo bidimensionales. Su recubrimiento de poliéster termoendurecido proporciona una protección anticorrosión excepcional, diseñada para soportar los climas más duros del país sin perder color ni resistencia estructural. Al complementarse con fijaciones ocultas anti-vandalismo y concertina de seguridad de acero inoxidable, se convierte en un perímetro impenetrable y estético que cumple con los requerimientos logísticos internacionales.
-                            </div>
-                        </div>
-                    </article>
+                        <span class="text-[10px] font-bold tracking-[0.3em] uppercase text-muted-foreground hidden md:block">[ Conocimiento Técnico ]</span>
+                    </div>
 
-                    <!-- Default Post 3 (Pre-populated for SEO crawlers) -->
-                    <article class="blog-card scroll-reveal" style="transition-delay: 0.2s;">
-                        <div class="blog-card-img-wrapper">
-                            <img src="assets/project-commercial-Du_Spt2l.jpg" alt="Suministro e Instalación en Obra: El Reto de las Alturas en Fachadas Suspendidas" class="blog-card-img" loading="lazy" />
+                    <!-- Search Bar & Category Chips -->
+                    <div class="scroll-reveal" style="transition-delay: 0.1s;">
+                        <div class="search-container">
+                            <svg class="search-icon-svg" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                            <input type="text" id="blogSearchInput" class="search-input" placeholder="Buscar artículos por palabra clave..." aria-label="Buscar artículos" />
                         </div>
-                        <div class="blog-card-content">
-                            <span class="blog-card-category">Aluminio y Vidrio</span>
-                            <h3 class="blog-card-title">Suministro e Instalación en Obra: El Reto de las Alturas en Fachadas Suspendidas</h3>
-                            <p class="blog-card-excerpt">Cómo planificamos la instalación de fachadas acristaladas con sistemas de herrajes araña y cristal curvo de gran tamaño.</p>
-                            <div class="blog-card-meta">
-                                <span>03 May 2026</span>
-                                <button class="read-more-btn font-bold text-xs uppercase tracking-wider hover:opacity-80 transition-opacity" style="color: var(--primary-glow)">Leer más →</button>
-                            </div>
-                            <!-- Full article content hidden for SEO crawlers -->
-                            <div style="display:none;" aria-hidden="true">
-                                La instalación de fachadas de vidrio suspendidas con herrajes tipo araña (Spider Systems) en plazas comerciales o corporativos representa uno de los retos de ingeniería más complejos en la construcción. Exige un análisis estricto de cargas de viento, tolerancias milimétricas en los barrenos del cristal templado de 10mm o 12mm, y personal altamente capacitado en trabajos de altura con plataformas articuladas. En CAAMODULOCK, cada pieza de cristal y perfil se manufactura bajo estrictas normas de control de calidad. Nuestro equipo coordina la entrega justo a tiempo y el montaje sistemático utilizando metodologías CPM para evitar paros de obra y garantizar que el soporte metálico y el acristalamiento estructural mantengan una integridad absoluta frente a movimientos sísmicos y ráfagas de viento.
-                            </div>
+
+                        <div class="category-pills" id="categoryPills">
+                            <button class="category-pill active" data-category="Todos">Todos</button>
+                            <button class="category-pill" data-category="Aluminio y Vidrio">Aluminio y Vidrio</button>
+                            <button class="category-pill" data-category="Seguridad Perimetral">Seguridad Perimetral</button>
+                            <button class="category-pill" data-category="Herrería y Metal">Herrería y Metal</button>
+                            <button class="category-pill" data-category="Mamparas y Puertas">Mamparas y Puertas</button>
+                            <button class="category-pill" data-category="Guías Técnicas">Guías Técnicas</button>
                         </div>
-                    </article>
+                    </div>
+                    
+                    <!-- Posts Container -->
+                    <div id="blogPostsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <!-- Pre-populated for SEO crawlers (will be replaced or handled dynamically) -->
+                        <article class="blog-card scroll-reveal">
+                            <div class="blog-card-img-wrapper">
+                                <img src="assets/service-aluminum-DfJojfyS.jpg" alt="Aislamiento Térmico y Acústico" class="blog-card-img" loading="lazy" />
+                            </div>
+                            <div class="blog-card-content">
+                                <span class="blog-card-category">Aluminio y Vidrio</span>
+                                <h3 class="blog-card-title">Aislamiento Térmico y Acústico: El Estándar de la Ventanería Línea Española</h3>
+                                <p class="blog-card-excerpt">Analizamos cómo los sistemas europeos y nacionales de alta gama mejoran la eficiencia energética en residencias y corporativos en México.</p>
+                                <div class="blog-card-meta">
+                                    <span>28 May 2026</span>
+                                    <button class="read-more-btn font-bold text-xs uppercase tracking-wider hover:opacity-80 transition-opacity" style="color: var(--primary-glow)">Leer artículo →</button>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+
+                    <!-- Newsletter CTA Banner -->
+                    <div class="newsletter-card scroll-reveal">
+                        <span class="block text-[10px] font-bold tracking-[0.27em] uppercase text-primary-glow mb-4">Suscripción al Boletín</span>
+                        <h3 class="text-2xl md:text-3xl font-black uppercase text-white tracking-tight mb-4">Mantente al Día con la Ingeniería de Modulock</h3>
+                        <p class="text-sm text-muted-foreground max-w-md mx-auto mb-8">
+                            Recibe guías técnicas, especificaciones de obra y casos de éxito directamente en tu bandeja de entrada una vez al mes.
+                        </p>
+                        <form id="newsletterForm" class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                            <input type="email" class="newsletter-input" placeholder="tu-correo@empresa.com" required aria-label="Correo electrónico para boletín" />
+                            <button type="submit" class="newsletter-submit-btn">Suscribirse</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+
+        <!-- ==========================================================================
+           ARTICLE VIEW (INDIVIDUAL POST DETAILS)
+           ========================================================================== -->
+        <section id="blogArticleView" class="article-view-section py-32 px-6">
+            <div class="max-w-5xl mx-auto">
+                <!-- Back Button -->
+                <div class="back-to-blog-btn" id="backToBlogBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                    Volver al Blog
+                </div>
+
+                <!-- Article Header / Hero Image -->
+                <div class="relative min-h-[40vh] md:min-h-[50vh] flex flex-col justify-end rounded-2xl overflow-hidden mb-12 border border-border" id="articleHero">
+                    <img src="assets/hero-facade-D3hdqyy-.jpg" id="articleHeroImg" alt="Portada de Artículo" class="absolute inset-0 w-full h-full object-cover brightness-50" />
+                    <div class="absolute inset-0 bg-gradient-to-t from-background via-background/25 to-transparent"></div>
+                    
+                    <div class="relative z-10 p-6 md:p-12 max-w-4xl">
+                        <div class="breadcrumbs" id="articleBreadcrumbs">
+                            <a id="breadcrumbHome">Blog</a>
+                            <span class="opacity-40">/</span>
+                            <span id="breadcrumbCategory" class="text-primary-glow font-bold"></span>
+                        </div>
+                        <h1 class="text-3xl md:text-5xl lg:text-6.5xl font-black uppercase tracking-tight text-white mb-6 leading-[1.05]" id="articleTitle">Título del Artículo</h1>
+                        
+                        <div class="article-meta-info" id="articleMeta">
+                            <span id="articleAuthorName" class="font-semibold text-white">Nombre del Autor</span>
+                            <div class="article-meta-sep"></div>
+                            <span id="articleDate">Fecha</span>
+                            <div class="article-meta-sep"></div>
+                            <span id="articleReadTime" class="text-primary-glow">Tiempo de Lectura</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Article Body -->
+                <div class="article-body-wrapper">
+                    <div class="article-content" id="articleContent">
+                        <!-- Dynamic article text contents render here -->
+                    </div>
+
+                    <!-- CTA contextual (after introduction, inside article or just before bio) -->
+                    <div class="newsletter-card" style="margin-top: 4rem; padding: 2.5rem !important;">
+                        <h4 class="text-lg font-bold text-white uppercase tracking-wider mb-2">¿Tienes un proyecto comercial o industrial en mente?</h4>
+                        <p class="text-xs text-muted-foreground mb-6">Cotiza cancelería de aluminio de alta gama y sistemas de cercado de seguridad perimetral Modulock.</p>
+                        <a href="index.html#contact" class="inline-block bg-primary text-primary-foreground font-bold text-xs uppercase tracking-widest px-8 py-3.5 rounded-full hover:scale-105 transition-transform">Hablar con un Ingeniero</a>
+                    </div>
+
+                    <!-- Author Block -->
+                    <div class="author-block" id="articleAuthorBlock">
+                        <img src="assets/ML-BlancoNAranja.png" id="authorAvatar" alt="Avatar de Autor" class="author-avatar" />
+                        <div class="author-info">
+                            <h4 class="author-name" id="authorName">Nombre del Autor</h4>
+                            <div class="author-role" id="authorRole">Cargo de Autor</div>
+                            <p class="author-bio" id="authorBio">Breve biografía detallando su experiencia y capacidades en la construcción e ingeniería.</p>
+                        </div>
+                    </div>
+
+                    <!-- Related Articles Grid -->
+                    <div class="related-posts-section" id="relatedPostsSection">
+                        <h3 class="related-title">Artículos Relacionados</h3>
+                        <div id="relatedPostsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <!-- Related cards load here -->
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
