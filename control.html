@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Panel de Control — CAAMODULOCK</title>
+    <meta name="theme-color" content="#080808"/>
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/svg+xml" href="assets/ML-BlancoNAranja.svg" />
+    <link rel="apple-touch-icon" href="assets/ML-BlancoNAranja.png" />
+
+    <!-- Google Fonts & Stylesheet -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" />
+    <link rel="stylesheet" href="styles.css" />
+
+    <style>
+        /* Panel Custom Dashboard Styles (Vanilla CSS) */
+        :root {
+            --cms-charcoal-dark: #0b0b0c;
+            --cms-charcoal-light: #121213;
+            --cms-border: rgba(255, 255, 255, 0.08);
+            --cms-gray-text: #9ca3af;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-background);
+            color: var(--color-foreground);
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+        }
+
+        /* Access Portal Modal Override */
+        .login-overlay {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(8, 8, 8, 0.95);
+            backdrop-filter: blur(16px);
+            z-index: 99999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 1;
+            transition: opacity 0.4s ease;
+        }
+
+        .login-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .login-box {
+            background-color: var(--cms-charcoal-dark);
+            border: 1px solid var(--cms-border);
+            border-radius: 1.5rem;
+            width: 90%;
+            max-width: 420px;
+            padding: 3rem 2.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75);
+            text-align: center;
+        }
+
+        /* CMS Main App Layout */
+        .cms-layout {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* Sidebar Listing styling */
+        .cms-sidebar {
+            width: 320px;
+            background-color: var(--cms-charcoal-dark);
+            border-right: 1px solid var(--cms-border);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .cms-sidebar-header {
+            padding: 1.5rem !important;
+            border-bottom: 1px solid var(--cms-border);
+        }
+
+        .cms-sidebar-title {
+            font-size: 0.95rem;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .cms-post-list-container {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 1rem !important;
+        }
+
+        .cms-sidebar-footer {
+            padding: 1.25rem !important;
+            border-top: 1px solid var(--cms-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* CMS Sidebar Cards */
+        .cms-post-item {
+            padding: 1rem !important;
+            border-radius: 0.75rem;
+            border: 1px solid transparent;
+            cursor: pointer;
+            margin-bottom: 0.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .cms-post-item:hover {
+            background-color: rgba(255, 255, 255, 0.03);
+            border-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .cms-post-item.active {
+            background-color: var(--cms-charcoal-light);
+            border-color: var(--primary-glow);
+        }
+
+        .cms-post-item-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .cms-post-item-meta {
+            font-size: 0.7rem;
+            color: var(--cms-gray-text);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .cms-post-item-badge {
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            padding: 0.1rem 0.35rem;
+            border-radius: 0.25rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-system {
+            background-color: rgba(255, 255, 255, 0.08);
+            color: var(--cms-gray-text);
+        }
+
+        .badge-custom {
+            background-color: rgba(245, 165, 92, 0.1);
+            color: var(--primary-glow);
+        }
+
+        /* Work Area styling */
+        .cms-workarea {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--color-background);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .cms-workarea-header {
+            padding: 1rem 2rem !important;
+            background-color: var(--cms-charcoal-dark);
+            border-bottom: 1px solid var(--cms-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        /* Tabs Menu */
+        .cms-tabs {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .cms-tab-btn {
+            background: none;
+            border: none;
+            color: var(--cms-gray-text);
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 0.5rem 0;
+            cursor: pointer;
+            position: relative;
+            transition: color 0.2s ease;
+        }
+
+        .cms-tab-btn:hover {
+            color: #fff;
+        }
+
+        .cms-tab-btn.active {
+            color: var(--primary-glow);
+        }
+
+        .cms-tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1rem;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--primary-glow);
+        }
+
+        /* Workspace Panels container */
+        .cms-panels-container {
+            flex-grow: 1;
+            overflow-y: auto;
+            position: relative;
+            padding: 2rem !important;
+        }
+
+        .cms-panel {
+            display: none;
+            height: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .cms-panel.active {
+            display: block;
+        }
+
+        /* CMS Form elements */
+        .cms-form-section {
+            background-color: var(--cms-charcoal-dark);
+            border: 1px solid var(--cms-border);
+            border-radius: 1rem;
+            padding: 2rem !important;
+            margin-bottom: 2rem;
+        }
+
+        .cms-section-title {
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            padding-bottom: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Block Builder styling */
+        .block-builder-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .builder-block-card {
+            background-color: var(--cms-charcoal-light);
+            border: 1px solid var(--cms-border);
+            border-radius: 0.75rem;
+            padding: 1.25rem !important;
+            position: relative;
+            transition: border-color 0.2s ease;
+        }
+
+        .builder-block-card:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .block-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .block-title {
+            font-size: 0.65rem;
+            font-family: var(--font-mono);
+            font-weight: 700;
+            color: var(--primary-glow);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .block-controls {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .block-control-btn {
+            background-color: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--cms-border);
+            color: var(--cms-gray-text);
+            border-radius: 0.35rem;
+            width: 1.75rem;
+            height: 1.75rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.8rem;
+        }
+
+        .block-control-btn:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+            color: #fff;
+        }
+
+        .block-control-btn.btn-delete:hover {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+
+        /* Builder Action Buttons */
+        .add-block-row {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            padding: 1rem !important;
+            background-color: var(--cms-charcoal-dark);
+            border: 1px solid var(--cms-border);
+            border-radius: 0.75rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+
+        .add-block-btn {
+            background-color: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--cms-border);
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0.5rem 1rem !important;
+            border-radius: 9999px !important;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .add-block-btn:hover {
+            background-color: rgba(245, 165, 92, 0.08);
+            border-color: var(--primary-glow);
+            color: var(--primary-glow);
+        }
+
+        /* Visual Table block editor */
+        .block-table-editor {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 0.5rem;
+        }
+
+        .block-table-editor th, 
+        .block-table-editor td {
+            border: 1px solid var(--cms-border);
+            padding: 0.5rem !important;
+        }
+
+        .block-table-editor input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: #fff;
+            outline: none;
+            font-size: 0.8rem;
+        }
+
+        /* JSON page elements */
+        .json-textarea {
+            width: 100%;
+            height: 350px;
+            font-family: var(--font-mono) !important;
+            font-size: 0.8rem !important;
+            background-color: var(--cms-charcoal-dark) !important;
+            border: 1px solid var(--cms-border) !important;
+            border-radius: 0.75rem !important;
+            padding: 1.5rem !important;
+            color: #10b981 !important; /* retro terminal green color */
+            outline: none;
+            resize: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. LOGIN ACCESS PORTAL GATEWAY -->
+    <div id="cmsLoginOverlay" class="login-overlay">
+        <div class="login-box">
+            <img src="assets/ML-BlancoNAranja.png" alt="CAAMODULOCK" style="height: 3.5rem; margin-bottom: 2rem;" />
+            <h2 class="text-xl font-bold uppercase tracking-wider text-white mb-2">CMS Administrador</h2>
+            <p class="text-xs text-muted-foreground mb-8">Gestor editorial premium de CAAMODULOCK</p>
+            
+            <form id="cmsLoginForm" class="space-y-6">
+                <div class="admin-form-group" style="text-align: left;">
+                    <label class="admin-label">Clave de Acceso</label>
+                    <input type="password" id="cmsPasswordInput" class="admin-input" placeholder="••••••••" required autocomplete="current-password" />
+                    <div id="cmsLoginError" class="text-red-500 text-xs mt-2" style="color: #ef4444; font-size: 0.75rem; display: none;">Contraseña incorrecta. Inténtelo de nuevo.</div>
+                </div>
+                <button type="submit" class="admin-submit-btn">Desbloquear Panel</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 2. MAIN WORKSPACE LAYOUT -->
+    <div class="cms-layout">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="cms-sidebar">
+            <div class="cms-sidebar-header">
+                <div class="cms-sidebar-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
+                    <span>Modulock CMS</span>
+                </div>
+            </div>
+            
+            <!-- Sidebar search bar -->
+            <div style="padding: 1rem 1rem 0.5rem 1rem !important;">
+                <div class="search-container" style="margin-bottom: 0.5rem; max-width: 100%;">
+                    <svg class="search-icon-svg" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <input type="text" id="cmsSearchInput" class="search-input" placeholder="Buscar entradas..." style="padding-top: 0.6rem !important; padding-bottom: 0.6rem !important; font-size: 0.8rem !important; background-color: rgba(255,255,255,0.02) !important;" />
+                </div>
+                
+                <button id="cmsNewPostBtn" class="admin-submit-btn" style="margin-top: 0.5rem; padding: 0.75rem !important; font-size: 0.75rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    Nueva Entrada
+                </button>
+            </div>
+            
+            <!-- Sidebar list container -->
+            <div class="cms-post-list-container" id="cmsPostList">
+                <!-- Posts populated dynamically -->
+            </div>
+            
+            <div class="cms-sidebar-footer">
+                <a href="blog.html" class="admin-trigger-btn" style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase;">Ir al Blog</a>
+                <button id="cmsLogoutBtn" class="admin-logout-btn" style="padding: 0.35rem 0.75rem !important;">Salir</button>
+            </div>
+        </aside>
+
+        <!-- CMS Work area -->
+        <main class="cms-workarea">
+            
+            <!-- Work area header / tabs -->
+            <div class="cms-workarea-header">
+                <div class="cms-tabs">
+                    <button class="cms-tab-btn active" data-tab="editor">Editor de Contenido</button>
+                    <button class="cms-tab-btn" data-tab="preview" id="previewTabBtn">Vista Previa</button>
+                    <button class="cms-tab-btn" data-tab="json">Publicación e Integración</button>
+                </div>
+                
+                <div>
+                    <button id="cmsSaveBtn" class="admin-submit-btn" style="margin-top: 0; padding: 0.6rem 1.5rem !important; font-size: 0.75rem; width: auto;">Guardar Cambios</button>
+                </div>
+            </div>
+
+            <!-- Workspace Panels -->
+            <div class="cms-panels-container">
+                
+                <!-- PANEL 1: EDITOR -->
+                <div class="cms-panel active" id="panel-editor">
+                    
+                    <!-- Metadata Form -->
+                    <div class="cms-form-section">
+                        <div class="cms-section-title">Metadatos del Artículo</div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            
+                            <div class="admin-form-group">
+                                <label class="admin-label">Título del Artículo</label>
+                                <input type="text" id="postTitle" class="admin-input" placeholder="Ej. Ventajas del Aislamiento Térmico en Obra" required />
+                            </div>
+                            
+                            <div class="admin-form-group">
+                                <label class="admin-label">Categoría / Línea</label>
+                                <select id="postCategory" class="admin-select">
+                                    <option>Aluminio y Vidrio</option>
+                                    <option>Herrería y Metal</option>
+                                    <option>Seguridad Perimetral</option>
+                                    <option>Mamparas y Puertas</option>
+                                    <option>Guías Técnicas</option>
+                                    <option>Casos de Éxito</option>
+                                </select>
+                            </div>
+                            
+                            <div class="admin-form-group">
+                                <label class="admin-label">Resumen Breve (Excerpt)</label>
+                                <input type="text" id="postExcerpt" class="admin-input" placeholder="Breve párrafo explicativo para la tarjeta del blog..." required />
+                            </div>
+                            
+                            <div class="admin-form-group">
+                                <label class="admin-label">Imagen de Portada</label>
+                                <div class="admin-image-source-selector" style="display: flex; gap: 1.5rem; margin-bottom: 0.75rem;">
+                                    <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; cursor: pointer; color: #fff;">
+                                        <input type="radio" name="imageSource" value="default" checked style="accent-color: var(--primary-glow);" />
+                                        Predeterminada del Sitio
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; cursor: pointer; color: #fff;">
+                                        <input type="radio" name="imageSource" value="upload" style="accent-color: var(--primary-glow);" />
+                                        Subir Imagen Personalizada
+                                    </label>
+                                </div>
+                                
+                                <div id="defaultImageContainer">
+                                    <select id="postImage" class="admin-select">
+                                        <option value="assets/service-aluminum-DfJojfyS.jpg">Aluminio y Vidrio (Fondo)</option>
+                                        <option value="assets/service-structural-CjurY88P.jpg">Estructura y Metal (Fondo)</option>
+                                        <option value="assets/service-fencing-BTbCOTmA.jpg">Cercados y Malla (Fondo)</option>
+                                        <option value="assets/project-commercial-Du_Spt2l.jpg">Obra Comercial (Fondo)</option>
+                                        <option value="assets/project-industrial-BOXizEMv.jpg">Obra Industrial (Fondo)</option>
+                                        <option value="assets/project-residential-DJPn9rzY.jpg">Obra Residencial (Fondo)</option>
+                                    </select>
+                                </div>
+                                
+                                <div id="uploadImageContainer" style="display: none;">
+                                    <div class="upload-dropzone" id="uploadDropzone">
+                                        <input type="file" id="postImageFile" accept="image/*" style="display: none;" />
+                                        <div class="upload-prompt" id="uploadPrompt">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin: 0 auto 0.5rem; display: block; color: var(--cms-gray-text);"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                                            <span class="text-xs text-muted-foreground" style="color: #9ca3af; font-weight: 500;">Cargar imagen o arrastra aquí</span>
+                                        </div>
+                                        <div id="imagePreviewContainer" style="display: none; margin-top: 0.75rem; position: relative; border-radius: 0.5rem; overflow: hidden; aspect-ratio: 16/9; max-height: 120px; border: 1px solid var(--border);">
+                                            <img id="imagePreview" src="" alt="Vista previa" style="width: 100%; height: 100%; object-fit: cover;" />
+                                            <button type="button" id="removeUploadedImage" style="position: absolute; top: 0.5rem; right: 0.5rem; background: rgba(0,0,0,0.7); color: #ef4444; border: none; border-radius: 50%; width: 1.5rem; height: 1.5rem; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: bold; font-size: 0.9rem;">&times;</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                    <!-- Block Builder Section -->
+                    <div class="cms-form-section">
+                        <div class="cms-section-title">
+                            <span>Estructura del Artículo (Bloques)</span>
+                            <span style="font-size: 0.65rem; color: var(--cms-gray-text); text-transform: none;">Organiza y da formato al desarrollo de tu post</span>
+                        </div>
+                        
+                        <div class="block-builder-container" id="blockBuilder">
+                            <!-- Drag and drop / editable content blocks load dynamically here -->
+                        </div>
+                        
+                        <!-- Add block selector buttons row -->
+                        <div class="add-block-row">
+                            <button class="add-block-btn" data-type="p">+ Párrafo</button>
+                            <button class="add-block-btn" data-type="h2">+ Subtítulo H2</button>
+                            <button class="add-block-btn" data-type="h3">+ Subtítulo H3</button>
+                            <button class="add-block-btn" data-type="quote">+ Cita</button>
+                            <button class="add-block-btn" data-type="callout">+ Nota Callout</button>
+                            <button class="add-block-btn" data-type="code">+ Código</button>
+                            <button class="add-block-btn" data-type="table">+ Tabla</button>
+                            <button class="add-block-btn" data-type="faq">+ FAQs</button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- PANEL 2: LIVE PREVIEW -->
+                <div class="cms-panel" id="panel-preview">
+                    <!-- This container mimics exactly the post page container elements to inherit CSS styles -->
+                    <section class="article-view-section active py-12 px-0" style="background-color: transparent;">
+                        <div class="max-w-5xl mx-auto">
+                            
+                            <!-- Article Header / Hero Image -->
+                            <div class="article-hero-section" id="articlePreviewHero" style="margin-top: 0;">
+                                <img src="assets/hero-facade-D3hdqyy-.jpg" id="articlePreviewHeroImg" alt="Portada" class="absolute inset-0 w-full h-full object-cover brightness-50" />
+                                <div class="absolute inset-0 bg-gradient-to-t from-background via-background/25 to-transparent"></div>
+                                
+                                <div class="relative z-10 p-6 md:p-12 max-w-4xl">
+                                    <div class="breadcrumbs">
+                                        <a>Blog</a>
+                                        <span class="opacity-40">/</span>
+                                        <span id="articlePreviewCategory" class="text-primary-glow font-bold"></span>
+                                    </div>
+                                    <h1 class="article-hero-title" id="articlePreviewTitle">Título</h1>
+                                    
+                                    <div class="article-meta-info">
+                                        <span id="articlePreviewAuthor" class="font-semibold text-white">Nombre del Autor</span>
+                                        <div class="article-meta-sep"></div>
+                                        <span id="articlePreviewDate">Fecha</span>
+                                        <div class="article-meta-sep"></div>
+                                        <span id="articlePreviewReadTime" class="text-primary-glow">Tiempo de Lectura</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Article Body -->
+                            <div class="article-body-wrapper">
+                                <div class="article-content" id="articlePreviewContent">
+                                    <!-- HTML output of content blocks renders here in real time -->
+                                </div>
+                                
+                                <!-- Author box preview (fixed defaults) -->
+                                <div class="author-block">
+                                    <img src="assets/ML-BlancoNAranja.png" class="author-avatar" alt="Avatar" />
+                                    <div class="author-info">
+                                        <h4 class="author-name">Equipo Modulock</h4>
+                                        <div class="author-role">Ingeniería y Seguridad</div>
+                                        <p class="author-bio">Redactores técnicos oficiales de Modulock. Compartiendo especificaciones de obra, guías de materiales y noticias del sector.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </section>
+                </div>
+
+                <!-- PANEL 3: JSON / PUBLISH -->
+                <div class="cms-panel" id="panel-json">
+                    
+                    <div class="cms-form-section">
+                        <div class="cms-section-title">Sincronización e Integración de Código</div>
+                        <p class="text-xs text-muted-foreground mb-6 leading-relaxed">
+                            Si deseas que los artículos sean visibles permanentemente para todos los usuarios en la web (y no solo guardados en tu navegador actual), descarga el archivo de base de datos o copia el código JSON generado e intégralo en el array del archivo <code class="text-white" style="font-family: monospace;">blog.js</code>.
+                        </p>
+                        
+                        <div class="admin-form-group">
+                            <label class="admin-label">Código JSON del Artículo Actual</label>
+                            <textarea id="cmsJsonTextarea" class="json-textarea" readonly></textarea>
+                        </div>
+                        
+                        <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                            <button id="cmsCopyJsonBtn" class="admin-submit-btn" style="margin-top:0; padding: 0.75rem 1.5rem !important; font-size: 0.75rem; width: auto; background-color: var(--color-foreground) !important; color: var(--color-background) !important;">Copiar Código JSON</button>
+                        </div>
+                    </div>
+
+                    <div class="cms-form-section">
+                        <div class="cms-section-title">Copias de Seguridad y Base de Datos Completa</div>
+                        <p class="text-xs text-muted-foreground mb-6 leading-relaxed">
+                            Descarga un archivo conteniendo todas tus publicaciones creadas o sube un archivo previamente guardado para restaurarlas en cualquier navegador.
+                        </p>
+                        
+                        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                            <button id="cmsExportDbBtn" class="admin-submit-btn" style="margin-top:0; padding: 0.75rem 1.5rem !important; font-size: 0.75rem; width: auto; display: flex; align-items: center; gap: 0.5rem;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                Descargar posts.json
+                            </button>
+                            
+                            <button id="cmsImportDbBtn" class="admin-submit-btn" style="margin-top:0; padding: 0.75rem 1.5rem !important; font-size: 0.75rem; width: auto; background-color: transparent !important; border: 1px solid var(--cms-border) !important; color: #fff !important; display: flex; align-items: center; gap: 0.5rem;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                                Importar posts.json
+                            </button>
+                            <input type="file" id="cmsImportFilePicker" accept=".json" style="display: none;" />
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+    <!-- CMS logic script -->
+    <script src="control.js"></script>
+</body>
+</html>
