@@ -3,12 +3,11 @@
   <defs>
     <style>
       .logo-path {
-        fill: #000000; /* Negro por defecto (para pestañas en modo claro) */
-      }
-      @media (prefers-color-scheme: dark) {
-        .logo-path {
-          fill: #ffffff; /* Blanco en modo oscuro */
-        }
+        fill: #ffffff;
+        stroke: #080808;
+        stroke-width: 16px;
+        stroke-linejoin: round;
+        stroke-linecap: round;
       }
     </style>
   </defs>

@@ -7,23 +7,8 @@
     <meta name="theme-color" content="#080808"/>
     
     <!-- Favicons -->
-    <link rel="icon" type="image/svg+xml" href="assets/favicon-light.svg" id="dynamicFavicon" />
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg?v=3" />
     <link rel="apple-touch-icon" href="assets/ML-BlancoNAranja.png" />
-    <script>
-        (function() {
-            function updateFavicon() {
-                var isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-                var favicon = document.getElementById('dynamicFavicon');
-                if (favicon) {
-                    favicon.href = (isDark ? 'assets/favicon-dark.svg' : 'assets/favicon-light.svg') + '?v=2';
-                }
-            }
-            updateFavicon();
-            if (window.matchMedia) {
-                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateFavicon);
-            }
-        })();
-    </script>
 
     <!-- Google Fonts & Stylesheet -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" />
