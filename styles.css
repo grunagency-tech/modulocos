@@ -869,8 +869,10 @@ nav {
     width: 4.5rem;
     height: 4.5rem;
     border-radius: 50%;
-    object-fit: cover;
+    object-fit: contain;
     border: 2px solid var(--primary-glow) !important;
+    background-color: #0c0c0d;
+    padding: 0.75rem;
     flex-shrink: 0;
 }
 
