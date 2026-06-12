@@ -416,7 +416,7 @@ console.log("Presión de diseño a 30m para viento de 120km/h: " + calculateWind
     // Update dynamic SEO Tags
     const updateSEOMetadata = (post) => {
         // Title
-        document.title = `${post.title} — Blog CAAMODULOCK`;
+        document.title = `${post.title} — Blog Modulock`;
 
         // Meta description
         let metaDesc = document.querySelector('meta[name="description"]');
@@ -424,7 +424,7 @@ console.log("Presión de diseño a 30m para viento de 120km/h: " + calculateWind
 
         // Open Graph
         let ogTitle = document.querySelector('meta[property="og:title"]');
-        if (ogTitle) ogTitle.setAttribute('content', `${post.title} — Blog CAAMODULOCK`);
+        if (ogTitle) ogTitle.setAttribute('content', `${post.title} — Blog Modulock`);
 
         let ogDesc = document.querySelector('meta[property="og:description"]');
         if (ogDesc) ogDesc.setAttribute('content', post.excerpt);
@@ -437,7 +437,7 @@ console.log("Presión de diseño a 30m para viento de 120km/h: " + calculateWind
 
         // Twitter Card
         let twTitle = document.querySelector('meta[name="twitter:title"]');
-        if (twTitle) twTitle.setAttribute('content', `${post.title} — Blog CAAMODULOCK`);
+        if (twTitle) twTitle.setAttribute('content', `${post.title} — Blog Modulock`);
 
         let twDesc = document.querySelector('meta[name="twitter:description"]');
         if (twDesc) twDesc.setAttribute('content', post.excerpt);
@@ -469,7 +469,7 @@ console.log("Presión de diseño a 30m para viento de 120km/h: " + calculateWind
             },
             "publisher": {
                 "@type": "Organization",
-                "name": "CAAMODULOCK",
+                "name": "Modulock",
                 "logo": {
                     "@type": "ImageObject",
                     "url": window.location.origin + "/assets/ML-BlancoNAranja.png"
@@ -616,7 +616,7 @@ console.log("Presión de diseño a 30m para viento de 120km/h: " + calculateWind
         blogArticleView.classList.remove('active');
         
         // Restore meta tags
-        document.title = "Blog — CAAMODULOCK | Cancelería de Aluminio, Vidrio y Seguridad";
+        document.title = "Blog — Modulock | Cancelería de Aluminio, Vidrio y Seguridad";
         let metaDesc = document.querySelector('meta[name="description"]');
         if (metaDesc) {
             metaDesc.setAttribute('content', "Artículos técnicos, guías y novedades sobre cancelería de aluminio nacional y europea, sistemas perimetrales de seguridad y herrería arquitectónica.");
