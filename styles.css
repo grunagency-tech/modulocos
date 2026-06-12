@@ -1017,4 +1017,11 @@ nav {
     }
 }
 
+/* Ensure the hamburger mobile menu toggle button is strictly hidden on desktop */
+@media (min-width: 768px) {
+    #mobileMenuToggle {
+        display: none !important;
+    }
+}
+
 
