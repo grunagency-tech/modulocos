@@ -695,52 +695,67 @@
                 }
 
                 const placeholder = grid.querySelector('.service-card-placeholder');
-                if (!placeholder) return;
                 
-                // Revelar las demás tarjetas y restaurar el grid primero para obtener dimensiones correctas en móvil
+                // Revelar las demás tarjetas y restaurar el grid
                 cards.forEach(c => {
                     c.classList.remove('is-hidden');
                 });
                 grid.classList.remove('has-expanded-card');
                 
-                // Forzar recalculado de layout
-                grid.offsetHeight;
-                
-                // Medir la posición actual del placeholder en el grid
-                const gridRect = grid.getBoundingClientRect();
-                const placeholderRect = placeholder.getBoundingClientRect();
-                const top = placeholderRect.top - gridRect.top;
-                const left = placeholderRect.left - gridRect.left;
-                const width = placeholderRect.width;
-                const height = placeholderRect.height;
-                
-                // Mover la tarjeta de vuelta a las coordenadas de su placeholder
-                card.classList.remove('is-expanded');
-                card.style.top = `${top}px`;
-                card.style.left = `${left}px`;
-                card.style.width = `${width}px`;
-                card.style.height = `${height}px`;
-                
-                // Resetear indicadores visuales
-                const label = card.querySelector('.service-card-label');
-                const arrow = card.querySelector('.service-card-arrow');
-                if (label) label.textContent = 'Ver más';
-                if (arrow) arrow.style.transform = 'rotate(0deg)';
-                
-                // Restaurar flujo estático tras terminar la transición (500ms)
-                setTimeout(() => {
-                    if (!card.classList.contains('is-expanded')) {
-                        card.style.position = '';
-                        card.style.top = '';
-                        card.style.left = '';
-                        card.style.width = '';
-                        card.style.height = '';
-                        card.style.zIndex = '';
-                        if (placeholder.parentNode) {
-                            placeholder.parentNode.removeChild(placeholder);
+                if (placeholder) {
+                    // Forzar recalculado de layout
+                    grid.offsetHeight;
+                    
+                    // Medir la posición actual del placeholder en el grid
+                    const gridRect = grid.getBoundingClientRect();
+                    const placeholderRect = placeholder.getBoundingClientRect();
+                    const top = placeholderRect.top - gridRect.top;
+                    const left = placeholderRect.left - gridRect.left;
+                    const width = placeholderRect.width;
+                    const height = placeholderRect.height;
+                    
+                    // Mover la tarjeta de vuelta a las coordenadas de su placeholder
+                    card.classList.remove('is-expanded');
+                    card.style.top = `${top}px`;
+                    card.style.left = `${left}px`;
+                    card.style.width = `${width}px`;
+                    card.style.height = `${height}px`;
+                    
+                    // Resetear indicadores visuales
+                    const label = card.querySelector('.service-card-label');
+                    const arrow = card.querySelector('.service-card-arrow');
+                    if (label) label.textContent = 'Ver más';
+                    if (arrow) arrow.style.transform = 'rotate(0deg)';
+                    
+                    // Restaurar flujo estático tras terminar la transición (500ms)
+                    setTimeout(() => {
+                        if (!card.classList.contains('is-expanded')) {
+                            card.style.position = '';
+                            card.style.top = '';
+                            card.style.left = '';
+                            card.style.width = '';
+                            card.style.height = '';
+                            card.style.zIndex = '';
+                            if (placeholder.parentNode) {
+                                placeholder.parentNode.removeChild(placeholder);
+                            }
                         }
-                    }
-                }, 500);
+                    }, 500);
+                } else {
+                    // Si no hay placeholder por algún motivo, simplemente cerramos la tarjeta restaurando estilos
+                    card.classList.remove('is-expanded');
+                    card.style.position = '';
+                    card.style.top = '';
+                    card.style.left = '';
+                    card.style.width = '';
+                    card.style.height = '';
+                    card.style.zIndex = '';
+                    
+                    const label = card.querySelector('.service-card-label');
+                    const arrow = card.querySelector('.service-card-arrow');
+                    if (label) label.textContent = 'Ver más';
+                    if (arrow) arrow.style.transform = 'rotate(0deg)';
+                }
             }
             
             // Función para expandir una tarjeta seleccionada
@@ -825,12 +840,33 @@
                 }, 300);
             }
             
+            // Eventos directos con parada de propagación para cerrar la tarjeta sin interferencia
+            document.querySelectorAll('.service-card-close-btn').forEach(btn => {
+                btn.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    const card = btn.closest('.service-card');
+                    if (card && card.classList.contains('is-expanded')) {
+                        closeCard(card);
+                    }
+                });
+            });
+
+            document.querySelectorAll('.service-card-icon').forEach(icon => {
+                icon.addEventListener('click', function (e) {
+                    const card = icon.closest('.service-card');
+                    if (card && card.classList.contains('is-expanded')) {
+                        e.stopPropagation();
+                        closeCard(card);
+                    }
+                });
+            });
+
             cards.forEach(card => {
                 card.addEventListener('click', function (e) {
                     const isExpanded = card.classList.contains('is-expanded');
                     
                     if (isExpanded) {
-                        // Cerrar únicamente al hacer clic en el botón / etiqueta CERRAR o el botón X de la esquina
+                        // Respaldo: cerrar únicamente al hacer clic en el botón o etiqueta de cerrar
                         if (e.target.closest('.service-card-icon') || e.target.closest('.service-card-close-btn')) {
                             closeCard(card);
                         }
