@@ -416,10 +416,17 @@
             <p class="text-xs text-muted-foreground mb-8">Gestor editorial premium de Modulock</p>
             
             <form id="cmsLoginForm" class="space-y-6">
+                <div class="admin-form-group" style="text-align: left; margin-bottom: 1rem;">
+                    <label class="admin-label">Usuario</label>
+                    <select id="cmsUserInput" class="admin-select" required>
+                        <option value="Alexandra Ortiz">Alexandra Ortiz</option>
+                        <option value="Modulock Team">Modulock Team</option>
+                    </select>
+                </div>
                 <div class="admin-form-group" style="text-align: left;">
                     <label class="admin-label">Clave de Acceso</label>
                     <input type="password" id="cmsPasswordInput" class="admin-input" placeholder="••••••••" required autocomplete="current-password" />
-                    <div id="cmsLoginError" class="text-red-500 text-xs mt-2" style="color: #ef4444; font-size: 0.75rem; display: none;">Contraseña incorrecta. Inténtelo de nuevo.</div>
+                    <div id="cmsLoginError" class="text-red-500 text-xs mt-2" style="color: #ef4444; font-size: 0.75rem; display: none;">Usuario o contraseña incorrectos. Inténtelo de nuevo.</div>
                 </div>
                 <button type="submit" class="admin-submit-btn">Desbloquear Panel</button>
             </form>
@@ -616,11 +623,11 @@
                                 
                                 <!-- Author box preview (fixed defaults) -->
                                 <div class="author-block">
-                                    <img src="assets/ML-BlancoNAranja.svg" class="author-avatar" alt="Avatar" />
+                                    <img src="assets/ML-BlancoNAranja.svg" class="author-avatar" alt="Avatar" id="articlePreviewAuthorAvatar" />
                                     <div class="author-info">
-                                        <h4 class="author-name">Equipo Modulock</h4>
-                                        <div class="author-role">Ingeniería y Seguridad</div>
-                                        <p class="author-bio">Redactores técnicos oficiales de Modulock. Compartiendo especificaciones de obra, guías de materiales y noticias del sector.</p>
+                                        <h4 class="author-name" id="articlePreviewAuthorName">Equipo Modulock</h4>
+                                        <div class="author-role" id="articlePreviewAuthorRole">Ingeniería y Seguridad</div>
+                                        <p class="author-bio" id="articlePreviewAuthorBio">Redactores técnicos oficiales de Modulock. Compartiendo especificaciones de obra, guías de materiales y noticias del sector.</p>
                                     </div>
                                 </div>
                             </div>

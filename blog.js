@@ -676,6 +676,7 @@ console.log("Presión de diseño a 30m para viento de 120km/h: " + calculateWind
     const loginModal = document.getElementById('loginModal');
     const closeLoginBtn = document.getElementById('closeLoginBtn');
     const loginForm = document.getElementById('loginForm');
+    const adminUserInput = document.getElementById('adminUserInput');
     const adminPasswordInput = document.getElementById('adminPasswordInput');
     const loginError = document.getElementById('loginError');
     const adminPanelModal = document.getElementById('adminPanelModal');
@@ -686,10 +687,32 @@ console.log("Presión de diseño a 30m para viento de 120km/h: " + calculateWind
     if (sessionStorage.getItem('modulock_is_admin') === null) {
         sessionStorage.setItem('modulock_is_admin', 'true');
     }
+    if (sessionStorage.getItem('modulock_is_admin') === 'true' && !sessionStorage.getItem('modulock_admin_user')) {
+        sessionStorage.setItem('modulock_admin_user', 'Alexandra Ortiz');
+    }
 
     // Check auth state helper
     const isAdminAuthenticated = () => {
         return sessionStorage.getItem('modulock_is_admin') === 'true';
+    };
+
+    const getLoggedAuthor = () => {
+        const currentUser = sessionStorage.getItem('modulock_admin_user') || 'Alexandra Ortiz';
+        if (currentUser === 'Modulock Team') {
+            return {
+                name: "Modulock Team",
+                role: "Ingeniería y Seguridad",
+                image: "assets/ML-BlancoNAranja.png",
+                bio: "Redactores técnicos oficiales de Modulock. Compartiendo especificaciones de obra, guías de materiales y noticias del sector."
+            };
+        } else {
+            return {
+                name: "Alexandra Ortiz",
+                role: "Dirección de Proyectos",
+                image: "assets/ML-BlancoNAranja.png",
+                bio: "Administradora de contenidos y proyectos especiales en Modulock."
+            };
+        }
     };
 
     // Open Admin workflow
@@ -712,11 +735,19 @@ console.log("Presión de diseño a 30m para viento de 120km/h: " + calculateWind
     // Handle Login Submit
     loginForm.addEventListener('submit', (e) => {
         e.preventDefault();
+        const user = adminUserInput ? adminUserInput.value : 'Alexandra Ortiz';
         const pwd = adminPasswordInput.value;
         
-        // Owner validation password
-        if (pwd === '12345') {
+        let isValid = false;
+        if (user === 'Alexandra Ortiz' && pwd === '12345') {
+            isValid = true;
+        } else if (user === 'Modulock Team' && pwd === '678910') {
+            isValid = true;
+        }
+
+        if (isValid) {
             sessionStorage.setItem('modulock_is_admin', 'true');
+            sessionStorage.setItem('modulock_admin_user', user);
             loginModal.classList.remove('active');
             loginForm.reset();
             loginError.style.display = 'none';
@@ -735,6 +766,7 @@ console.log("Presión de diseño a 30m para viento de 120km/h: " + calculateWind
     // Handle Logout
     logoutBtn.addEventListener('click', () => {
         sessionStorage.setItem('modulock_is_admin', 'false');
+        sessionStorage.removeItem('modulock_admin_user');
         adminPanelModal.classList.remove('active');
         createPostForm.reset();
         resetUploadUI();
@@ -930,12 +962,7 @@ console.log("Presión de diseño a 30m para viento de 120km/h: " + calculateWind
             readTime,
             date: getFormattedDate(),
             image,
-            author: {
-                name: "Equipo Modulock",
-                role: "Ingeniería y Seguridad",
-                image: "assets/ML-BlancoNAranja.png",
-                bio: "Redactores técnicos oficiales de Modulock. Compartiendo especificaciones de obra, guías de materiales y noticias del sector."
-            }
+            author: getLoggedAuthor()
         };
         
         // Save in localStorage

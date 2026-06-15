@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. PASSWORD GATING SECURITY
     const cmsLoginOverlay = document.getElementById('cmsLoginOverlay');
     const cmsLoginForm = document.getElementById('cmsLoginForm');
+    const cmsUserInput = document.getElementById('cmsUserInput');
     const cmsPasswordInput = document.getElementById('cmsPasswordInput');
     const cmsLoginError = document.getElementById('cmsLoginError');
     const cmsLogoutBtn = document.getElementById('cmsLogoutBtn');
@@ -10,6 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const checkAuth = () => {
         if (sessionStorage.getItem('modulock_is_admin') === 'true') {
             cmsLoginOverlay.classList.add('hidden');
+            if (!sessionStorage.getItem('modulock_admin_user')) {
+                sessionStorage.setItem('modulock_admin_user', 'Alexandra Ortiz');
+            }
         } else {
             cmsLoginOverlay.classList.remove('hidden');
             if (cmsPasswordInput) cmsPasswordInput.focus();
@@ -19,11 +23,24 @@ document.addEventListener('DOMContentLoaded', () => {
     if (cmsLoginForm) {
         cmsLoginForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            if (cmsPasswordInput.value === '12345') {
+            const user = cmsUserInput ? cmsUserInput.value : 'Alexandra Ortiz';
+            const pwd = cmsPasswordInput.value;
+
+            let isValid = false;
+            if (user === 'Alexandra Ortiz' && pwd === '12345') {
+                isValid = true;
+            } else if (user === 'Modulock Team' && pwd === '678910') {
+                isValid = true;
+            }
+
+            if (isValid) {
                 sessionStorage.setItem('modulock_is_admin', 'true');
+                sessionStorage.setItem('modulock_admin_user', user);
                 cmsLoginError.style.display = 'none';
                 cmsPasswordInput.value = '';
                 checkAuth();
+                renderLivePreview();
+                updateJsonOutput();
             } else {
                 cmsLoginError.style.display = 'block';
                 cmsPasswordInput.value = '';
@@ -35,6 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (cmsLogoutBtn) {
         cmsLogoutBtn.addEventListener('click', () => {
             sessionStorage.setItem('modulock_is_admin', 'false');
+            sessionStorage.removeItem('modulock_admin_user');
             checkAuth();
         });
     }
@@ -169,6 +187,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const articlePreviewDate = document.getElementById('articlePreviewDate');
     const articlePreviewReadTime = document.getElementById('articlePreviewReadTime');
     const articlePreviewContent = document.getElementById('articlePreviewContent');
+    const articlePreviewAuthorAvatar = document.getElementById('articlePreviewAuthorAvatar');
+    const articlePreviewAuthorName = document.getElementById('articlePreviewAuthorName');
+    const articlePreviewAuthorRole = document.getElementById('articlePreviewAuthorRole');
+    const articlePreviewAuthorBio = document.getElementById('articlePreviewAuthorBio');
 
     // JSON Page fields
     const cmsJsonTextarea = document.getElementById('cmsJsonTextarea');
@@ -179,6 +201,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // 5. HELPER METHODS
+    const getLoggedAuthor = () => {
+        const currentUser = sessionStorage.getItem('modulock_admin_user') || 'Alexandra Ortiz';
+        if (currentUser === 'Modulock Team') {
+            return {
+                name: "Modulock Team",
+                role: "Ingeniería y Seguridad",
+                image: "assets/ML-BlancoNAranja.png",
+                bio: "Redactores técnicos oficiales de Modulock. Compartiendo especificaciones de obra, guías de materiales y noticias del sector."
+            };
+        } else {
+            return {
+                name: "Alexandra Ortiz",
+                role: "Dirección de Proyectos",
+                image: "assets/ML-BlancoNAranja.png",
+                bio: "Administradora de contenidos y proyectos especiales en Modulock."
+            };
+        }
+    };
+
     const slugify = (text) => {
         return text.toLowerCase()
             .trim()
@@ -739,6 +780,24 @@ document.addEventListener('DOMContentLoaded', () => {
         articlePreviewReadTime.innerText = calculateReadTime();
         articlePreviewDate.innerText = getFormattedDate();
 
+        // Apply author metadata to preview fields
+        const loggedAuthor = getLoggedAuthor();
+        if (articlePreviewAuthor) {
+            articlePreviewAuthor.innerText = loggedAuthor.name;
+        }
+        if (articlePreviewAuthorAvatar) {
+            articlePreviewAuthorAvatar.src = loggedAuthor.image;
+        }
+        if (articlePreviewAuthorName) {
+            articlePreviewAuthorName.innerText = loggedAuthor.name;
+        }
+        if (articlePreviewAuthorRole) {
+            articlePreviewAuthorRole.innerText = loggedAuthor.role;
+        }
+        if (articlePreviewAuthorBio) {
+            articlePreviewAuthorBio.innerText = loggedAuthor.bio;
+        }
+
         // Compile content HTML
         const html = compileHTML();
         articlePreviewContent.innerHTML = html || '<p style="color:var(--cms-gray-text); font-style:italic;">Agrega bloques de contenido en la pestaña "Editor" para verlos renderizados aquí.</p>';
@@ -767,12 +826,7 @@ document.addEventListener('DOMContentLoaded', () => {
             readTime: calculateReadTime(),
             date: selectedPostId ? (posts.find(p => p.id === selectedPostId)?.date || getFormattedDate()) : getFormattedDate(),
             image: coverImg,
-            author: {
-                name: "Equipo Modulock",
-                role: "Ingeniería y Seguridad",
-                image: "assets/ML-BlancoNAranja.png",
-                bio: "Redactores técnicos oficiales de Modulock. Compartiendo especificaciones de obra, guías de materiales y noticias del sector."
-            },
+            author: getLoggedAuthor(),
             blocks: currentPostBlocks // Serialized layout model to preserve editing
         };
 
@@ -844,12 +898,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 readTime,
                 date: getFormattedDate(),
                 image,
-                author: {
-                    name: "Equipo Modulock",
-                    role: "Ingeniería y Seguridad",
-                    image: "assets/ML-BlancoNAranja.png",
-                    bio: "Redactores técnicos oficiales de Modulock. Compartiendo especificaciones de obra, guías de materiales y noticias del sector."
-                },
+                author: getLoggedAuthor(),
                 blocks: currentPostBlocks
             };
             customPosts.unshift(newPost);

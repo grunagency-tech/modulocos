@@ -351,10 +351,17 @@
                     <span id="closeLoginBtn" class="admin-modal-close-btn font-bold text-xl">&times;</span>
                 </div>
                 <form id="loginForm" class="space-y-6">
+                    <div class="admin-form-group" style="margin-bottom: 1rem;">
+                        <label class="admin-label">Usuario</label>
+                        <select id="adminUserInput" class="admin-select" required>
+                            <option value="Alexandra Ortiz">Alexandra Ortiz</option>
+                            <option value="Modulock Team">Modulock Team</option>
+                        </select>
+                    </div>
                     <div class="admin-form-group">
                         <label class="admin-label">Contraseña del Administrador</label>
                         <input type="password" id="adminPasswordInput" class="admin-input" placeholder="••••••••" required autocomplete="current-password" />
-                        <div id="loginError" class="text-red-500 text-xs mt-2" style="color: #ef4444; font-size: 0.75rem; display: none;">Contraseña incorrecta. Inténtelo de nuevo.</div>
+                        <div id="loginError" class="text-red-500 text-xs mt-2" style="color: #ef4444; font-size: 0.75rem; display: none;">Usuario o contraseña incorrectos. Inténtelo de nuevo.</div>
                     </div>
                     <button type="submit" class="admin-submit-btn">Ingresar</button>
                 </form>
