@@ -199,6 +199,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const cmsImportDbBtn = document.getElementById('cmsImportDbBtn');
     const cmsImportFilePicker = document.getElementById('cmsImportFilePicker');
 
+    // Cropper.js variables and modal references
+    const cmsCropModal = document.getElementById('cmsCropModal');
+    const cropModalImage = document.getElementById('cropModalImage');
+    const cropRotateLeftBtn = document.getElementById('cropRotateLeftBtn');
+    const cropRotateRightBtn = document.getElementById('cropRotateRightBtn');
+    const cropAspectFreeBtn = document.getElementById('cropAspectFreeBtn');
+    const cropAspect16_9Btn = document.getElementById('cropAspect16_9Btn');
+    const cropAspect4_3Btn = document.getElementById('cropAspect4_3Btn');
+    const cropAspect1_1Btn = document.getElementById('cropAspect1_1Btn');
+    const cropCancelBtn = document.getElementById('cropCancelBtn');
+    const cropSaveBtn = document.getElementById('cropSaveBtn');
+    let cropperInstance = null;
+
+
 
     // 5. HELPER METHODS
     const getLoggedAuthor = () => {
@@ -1025,54 +1039,153 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    const processUploadedFile = async (file) => {
-        uploadPrompt.style.display = 'none';
-        imagePreviewContainer.style.display = 'block';
-        imagePreview.src = 'data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100"><circle cx="50" cy="50" r="40" stroke="%23f5a55c" stroke-width="8" fill="none" stroke-dasharray="180 80"><animateTransform attributeName="transform" type="rotate" from="0 50 50" to="360 50 50" dur="1s" repeatCount="indefinite"/></circle></svg>';
-
-        const compressed = await compressImageFile(file);
-        if (compressed) {
-            uploadedImageBase64 = compressed;
-            imagePreview.src = compressed;
-            updateJsonOutput();
-        } else {
+    const processUploadedFile = (file) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (e) => {
+            const imageUrl = e.target.result;
+            openCropModal(imageUrl);
+        };
+        reader.onerror = () => {
             resetUploadUI();
-        }
+        };
     };
 
-    const compressImageFile = (file) => {
-        return new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = (e) => {
-                const img = new Image();
-                img.src = e.target.result;
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    let width = img.width;
-                    let height = img.height;
-                    
-                    const max = 720;
-                    if (width > height && width > max) {
-                        height = Math.round((height * max) / width);
-                        width = max;
-                    } else if (height > width && height > max) {
-                        width = Math.round((width * max) / height);
-                        height = max;
-                    }
+    const openCropModal = (imageUrl) => {
+        cropModalImage.src = imageUrl;
+        cmsCropModal.classList.remove('hidden');
+        
+        if (cropperInstance) {
+            cropperInstance.destroy();
+        }
+        
+        cropModalImage.onload = () => {
+            cropperInstance = new Cropper(cropModalImage, {
+                aspectRatio: 16 / 9,
+                viewMode: 1,
+                autoCropArea: 0.9,
+                responsive: true,
+                restore: false,
+                checkCrossOrigin: false,
+                modal: true,
+                guides: true,
+                center: true,
+                highlight: false,
+                cropBoxMovable: true,
+                cropBoxResizable: true,
+                toggleDragModeOnDblclick: false,
+            });
+            
+            setAspectButtonActive(cropAspect16_9Btn);
+            cropModalImage.onload = null;
+        };
+    };
 
-                    canvas.width = width;
-                    canvas.height = height;
-
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, width, height);
-                    resolve(canvas.toDataURL('image/jpeg', 0.65));
-                };
-                img.onerror = () => resolve(e.target.result);
-            };
-            reader.onerror = () => resolve(null);
+    const setAspectButtonActive = (activeBtn) => {
+        const buttons = [cropAspectFreeBtn, cropAspect16_9Btn, cropAspect4_3Btn, cropAspect1_1Btn];
+        buttons.forEach(btn => {
+            if (btn === activeBtn) {
+                btn.style.borderColor = 'var(--primary-glow)';
+                btn.style.color = 'var(--primary-glow)';
+            } else {
+                btn.style.borderColor = 'var(--cms-border)';
+                btn.style.color = '#fff';
+            }
         });
     };
+
+    const closeCropModal = () => {
+        cmsCropModal.classList.add('hidden');
+        if (cropperInstance) {
+            cropperInstance.destroy();
+            cropperInstance = null;
+        }
+        cropModalImage.src = '';
+    };
+
+    // Crop Modal Listeners
+    if (cropRotateLeftBtn) {
+        cropRotateLeftBtn.addEventListener('click', () => {
+            if (cropperInstance) cropperInstance.rotate(-90);
+        });
+    }
+
+    if (cropRotateRightBtn) {
+        cropRotateRightBtn.addEventListener('click', () => {
+            if (cropperInstance) cropperInstance.rotate(90);
+        });
+    }
+
+    if (cropAspectFreeBtn) {
+        cropAspectFreeBtn.addEventListener('click', () => {
+            if (cropperInstance) {
+                cropperInstance.setAspectRatio(NaN);
+                setAspectButtonActive(cropAspectFreeBtn);
+            }
+        });
+    }
+
+    if (cropAspect16_9Btn) {
+        cropAspect16_9Btn.addEventListener('click', () => {
+            if (cropperInstance) {
+                cropperInstance.setAspectRatio(16 / 9);
+                setAspectButtonActive(cropAspect16_9Btn);
+            }
+        });
+    }
+
+    if (cropAspect4_3Btn) {
+        cropAspect4_3Btn.addEventListener('click', () => {
+            if (cropperInstance) {
+                cropperInstance.setAspectRatio(4 / 3);
+                setAspectButtonActive(cropAspect4_3Btn);
+            }
+        });
+    }
+
+    if (cropAspect1_1Btn) {
+        cropAspect1_1Btn.addEventListener('click', () => {
+            if (cropperInstance) {
+                cropperInstance.setAspectRatio(1 / 1);
+                setAspectButtonActive(cropAspect1_1Btn);
+            }
+        });
+    }
+
+    if (cropCancelBtn) {
+        cropCancelBtn.addEventListener('click', () => {
+            closeCropModal();
+            resetUploadUI();
+        });
+    }
+
+    if (cropSaveBtn) {
+        cropSaveBtn.addEventListener('click', () => {
+            if (!cropperInstance) return;
+            
+            const canvas = cropperInstance.getCroppedCanvas({
+                maxWidth: 1280,
+                maxHeight: 720,
+                imageSmoothingEnabled: true,
+                imageSmoothingQuality: 'high'
+            });
+
+            if (canvas) {
+                const croppedBase64 = canvas.toDataURL('image/jpeg', 0.75);
+                uploadedImageBase64 = croppedBase64;
+                
+                uploadPrompt.style.display = 'none';
+                imagePreview.src = croppedBase64;
+                imagePreviewContainer.style.display = 'block';
+                
+                updateJsonOutput();
+                renderLivePreview();
+            }
+            
+            closeCropModal();
+        });
+    }
+
 
 
     // 12. TAB SWITCHING LOGIC

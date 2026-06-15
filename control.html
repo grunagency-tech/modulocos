@@ -13,6 +13,11 @@
     <!-- Google Fonts & Stylesheet -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" />
     <link rel="stylesheet" href="styles.css" />
+    
+    <!-- Cropper.js Image Editor -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+
 
     <style>
         /* Panel Custom Dashboard Styles (Vanilla CSS) */
@@ -671,6 +676,33 @@
 
         </main>
 
+    </div>
+
+    <!-- 3. IMAGE CROP MODAL -->
+    <div id="cmsCropModal" class="login-overlay hidden" style="z-index: 100000;">
+        <div class="login-box" style="max-width: 600px; width: 95%; padding: 2rem;">
+            <h3 class="text-lg font-bold uppercase tracking-wider text-white mb-2" style="font-size:1.1rem; margin-top:0;">Ajustar Imagen de Portada</h3>
+            <p class="text-xs text-muted-foreground mb-4" style="color: var(--cms-gray-text); font-size:0.75rem; margin-bottom:1.25rem;">Arrastra, haz zoom o rota la imagen para encuadrarla como desees.</p>
+            
+            <div style="max-height: 350px; overflow: hidden; background-color: #000; border-radius: 0.75rem; border: 1px solid var(--cms-border); display: flex; justify-content: center; align-items: center; margin-bottom: 1.5rem;">
+                <img id="cropModalImage" src="" style="max-width: 100%; max-height: 350px; display: block;" />
+            </div>
+            
+            <!-- Crop Controls / Buttons -->
+            <div style="display: flex; gap: 0.5rem; justify-content: center; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                <button type="button" id="cropRotateLeftBtn" class="block-control-btn" style="width: 2.2rem; height: 2.2rem; font-size: 1rem;" title="Rotar izquierda">↺</button>
+                <button type="button" id="cropRotateRightBtn" class="block-control-btn" style="width: 2.2rem; height: 2.2rem; font-size: 1rem;" title="Rotar derecha">↻</button>
+                <button type="button" id="cropAspectFreeBtn" class="add-block-btn" style="padding: 0.4rem 0.8rem !important; font-size: 0.65rem;">Libre</button>
+                <button type="button" id="cropAspect16_9Btn" class="add-block-btn" style="padding: 0.4rem 0.8rem !important; font-size: 0.65rem; border-color: var(--primary-glow); color: var(--primary-glow);">16:9 (Recomendado)</button>
+                <button type="button" id="cropAspect4_3Btn" class="add-block-btn" style="padding: 0.4rem 0.8rem !important; font-size: 0.65rem;">4:3</button>
+                <button type="button" id="cropAspect1_1Btn" class="add-block-btn" style="padding: 0.4rem 0.8rem !important; font-size: 0.65rem;">1:1</button>
+            </div>
+            
+            <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                <button type="button" id="cropCancelBtn" class="admin-logout-btn" style="padding: 0.6rem 1.25rem !important; font-size: 0.75rem; margin-top: 0; background-color: transparent !important; border: 1px solid var(--cms-border) !important; color: #fff !important; cursor: pointer;">Cancelar</button>
+                <button type="button" id="cropSaveBtn" class="admin-submit-btn" style="margin-top: 0; padding: 0.6rem 1.5rem !important; font-size: 0.75rem; width: auto; cursor: pointer;">Aplicar Ajuste</button>
+            </div>
+        </div>
     </div>
 
     <!-- CMS logic script -->
