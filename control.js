@@ -878,7 +878,9 @@ document.addEventListener('DOMContentLoaded', () => {
             blocks: currentPostBlocks // Serialized layout model to preserve editing
         };
 
-        cmsJsonTextarea.value = JSON.stringify(postObj, null, 2);
+        if (cmsJsonTextarea) {
+            cmsJsonTextarea.value = JSON.stringify(postObj, null, 2);
+        }
     };
 
 
@@ -1081,7 +1083,10 @@ document.addEventListener('DOMContentLoaded', () => {
             activeTab = btn.dataset.tab;
 
             cmsPanels.forEach(p => p.classList.remove('active'));
-            document.getElementById(`panel-${activeTab}`).classList.add('active');
+            const panel = document.getElementById(`panel-${activeTab}`);
+            if (panel) {
+                panel.classList.add('active');
+            }
 
             if (activeTab === 'preview') {
                 renderLivePreview();
