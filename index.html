@@ -200,8 +200,10 @@
             .service-card.is-expanded .service-card-expanded {
                 padding: 2rem !important;
                 padding-top: 0 !important;
-                max-height: none !important;
-                overflow: visible !important;
+                max-height: 500px !important;
+                overflow: hidden !important;
+                opacity: 1 !important;
+                transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease !important;
             }
             .service-card.is-expanded .service-card-expanded-content {
                 border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
@@ -677,8 +679,21 @@
             const grid = document.getElementById('servicesGrid');
             const cards = document.querySelectorAll('.service-card');
             
+            const isMobile = () => window.innerWidth < 768;
+
             // Función para cerrar una tarjeta activa
             function closeCard(card) {
+                if (isMobile()) {
+                    card.classList.remove('is-expanded');
+                    
+                    // Resetear indicadores visuales
+                    const label = card.querySelector('.service-card-label');
+                    const arrow = card.querySelector('.service-card-arrow');
+                    if (label) label.textContent = 'Ver más';
+                    if (arrow) arrow.style.transform = 'rotate(0deg)';
+                    return;
+                }
+
                 const placeholder = grid.querySelector('.service-card-placeholder');
                 if (!placeholder) return;
                 
@@ -730,6 +745,28 @@
             
             // Función para expandir una tarjeta seleccionada
             function expandCard(card) {
+                if (isMobile()) {
+                    // Cerrar cualquier otra tarjeta que pudiera estar abierta
+                    const openCard = grid.querySelector('.service-card.is-expanded');
+                    if (openCard) {
+                        closeCard(openCard);
+                    }
+                    
+                    card.classList.add('is-expanded');
+                    
+                    // Cambiar etiqueta e indicador visual de dirección
+                    const label = card.querySelector('.service-card-label');
+                    const arrow = card.querySelector('.service-card-arrow');
+                    if (label) label.textContent = 'CERRAR';
+                    if (arrow) arrow.style.transform = 'rotate(-180deg)';
+                    
+                    // Centrar la vista en la tarjeta de forma suave
+                    setTimeout(() => {
+                        card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }, 150);
+                    return;
+                }
+
                 // Cerrar cualquier otra tarjeta que pudiera estar abierta
                 const openCard = grid.querySelector('.service-card.is-expanded');
                 if (openCard) {
