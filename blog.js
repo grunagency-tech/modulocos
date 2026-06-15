@@ -324,7 +324,9 @@ console.log("Presión de diseño a 30m para viento de 120km/h: " + calculateWind
     // Render article list in grid
     const loadPosts = () => {
         const customPosts = JSON.parse(localStorage.getItem('modulock_blog_posts')) || [];
-        const allPosts = [...customPosts, ...defaultPosts];
+        const deletedSystem = JSON.parse(localStorage.getItem('modulock_deleted_system_posts')) || [];
+        const filteredDefault = defaultPosts.filter(p => !deletedSystem.includes(p.id));
+        const allPosts = [...customPosts, ...filteredDefault];
 
         // Apply filters
         const filteredPosts = allPosts.filter(post => {
@@ -528,7 +530,9 @@ console.log("Presión de diseño a 30m para viento de 120km/h: " + calculateWind
 
         // Render Related Articles (matching category, excluding current post)
         const customPosts = JSON.parse(localStorage.getItem('modulock_blog_posts')) || [];
-        const allPosts = [...customPosts, ...defaultPosts];
+        const deletedSystem = JSON.parse(localStorage.getItem('modulock_deleted_system_posts')) || [];
+        const filteredDefault = defaultPosts.filter(p => !deletedSystem.includes(p.id));
+        const allPosts = [...customPosts, ...filteredDefault];
 
         let related = allPosts.filter(p => p.category === post.category && p.slug !== post.slug);
         
@@ -602,7 +606,9 @@ console.log("Presión de diseño a 30m para viento de 120km/h: " + calculateWind
 
         if (postSlug) {
             const customPosts = JSON.parse(localStorage.getItem('modulock_blog_posts')) || [];
-            const allPosts = [...customPosts, ...defaultPosts];
+            const deletedSystem = JSON.parse(localStorage.getItem('modulock_deleted_system_posts')) || [];
+            const filteredDefault = defaultPosts.filter(p => !deletedSystem.includes(p.id));
+            const allPosts = [...customPosts, ...filteredDefault];
             const post = allPosts.find(p => p.slug === postSlug);
 
             if (post) {
