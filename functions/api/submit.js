@@ -57,50 +57,62 @@ export async function onRequestPost(context) {
             <html>
             <head>
                 <meta charset="utf-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <meta name="color-scheme" content="only dark">
+                <meta name="supported-color-schemes" content="only dark">
+                <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
                 <style>
+                    :root {
+                        color-scheme: only dark;
+                        supported-color-schemes: only dark;
+                    }
+                    
                     body {
-                        font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
-                        background-color: #0c0c0c;
+                        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+                        background-color: #080808;
                         color: #ffffff;
                         margin: 0;
                         padding: 0;
+                        -webkit-font-smoothing: antialiased;
                     }
                     .container {
                         max-width: 600px;
-                        margin: 30px auto;
+                        margin: 40px auto;
                         background-color: #121212;
-                        border: 1px solid #1a1a1a;
+                        border: 1px solid rgba(255, 255, 255, 0.08);
+                        border-top: 3px solid #f5a55c;
                         border-radius: 16px;
                         overflow: hidden;
-                        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+                        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
                     }
                     .header {
                         background-color: #080808;
-                        border-bottom: 2px solid #e0823a;
-                        padding: 30px 40px;
+                        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+                        padding: 35px 40px 25px 40px;
                         text-align: center;
                     }
-                    .logo-text {
-                        color: #ffffff;
-                        font-size: 24px;
-                        font-weight: 800;
-                        letter-spacing: 2px;
-                        margin: 0;
-                    }
-                    .logo-accent {
-                        color: #e0823a;
+                    .logo-subtitle {
+                        font-size: 9px;
+                        text-transform: uppercase;
+                        letter-spacing: 3px;
+                        color: #6b7280;
+                        margin-top: 10px;
+                        font-weight: 700;
                     }
                     .content {
                         padding: 40px;
                     }
                     h1 {
                         font-size: 20px;
-                        font-weight: 700;
+                        font-weight: 900;
                         margin-top: 0;
-                        margin-bottom: 24px;
+                        margin-bottom: 28px;
                         color: #ffffff;
-                        border-left: 3px solid #e0823a;
-                        padding-left: 12px;
+                        border-left: 4px solid #f5a55c;
+                        padding-left: 14px;
+                        text-transform: uppercase;
+                        letter-spacing: -0.5px;
+                        line-height: 1.1;
                     }
                     table {
                         width: 100%;
@@ -108,29 +120,30 @@ export async function onRequestPost(context) {
                         margin-bottom: 30px;
                     }
                     td {
-                        padding: 12px 0;
-                        border-bottom: 1px solid #1a1a1a;
+                        padding: 14px 0;
+                        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
                         vertical-align: top;
                     }
                     .label {
-                        width: 150px;
-                        font-size: 11px;
+                        width: 140px;
+                        font-size: 10px;
                         font-weight: 700;
                         text-transform: uppercase;
-                        color: #6b6b6b;
-                        letter-spacing: 1.5px;
+                        color: #888888;
+                        letter-spacing: 2px;
                     }
                     .value {
                         font-size: 14px;
-                        color: #e5e5e5;
+                        color: #ffffff;
+                        font-weight: 500;
                     }
                     .message-box {
-                        background-color: #0c0c0c;
-                        border: 1px solid #1a1a1a;
+                        background-color: #080808;
+                        border: 1px solid rgba(255, 255, 255, 0.08);
                         border-radius: 8px;
                         padding: 20px;
                         font-size: 14px;
-                        color: #d1d1d1;
+                        color: #e5e7eb;
                         line-height: 1.6;
                         margin-top: 10px;
                         white-space: pre-wrap;
@@ -141,31 +154,45 @@ export async function onRequestPost(context) {
                     }
                     .btn {
                         display: inline-block;
-                        background-color: #e0823a;
+                        background: #f5a55c;
+                        background: linear-gradient(135deg, #f5a55c 0%, #e0823a 100%) !important;
                         color: #080808 !important;
-                        font-weight: 700;
+                        font-weight: 900;
                         text-decoration: none;
-                        padding: 16px 32px;
-                        border-radius: 30px;
-                        font-size: 13px;
+                        padding: 16px 36px;
+                        border-radius: 9999px;
+                        font-size: 12px;
                         text-transform: uppercase;
                         letter-spacing: 2px;
-                        transition: background-color 0.3s;
+                        box-shadow: 0 4px 14px rgba(245, 165, 92, 0.35);
                     }
                     .footer {
                         background-color: #080808;
                         padding: 20px 40px;
                         text-align: center;
-                        font-size: 10px;
-                        color: #4b4b4b;
-                        letter-spacing: 1px;
+                        font-size: 9px;
+                        font-weight: 600;
+                        color: #525252;
+                        letter-spacing: 2px;
+                        border-top: 1px solid rgba(255, 255, 255, 0.08);
+                    }
+                    a[x-apple-data-detectors] {
+                        color: inherit !important;
+                        text-decoration: none !important;
+                        font-size: inherit !important;
+                        font-family: inherit !important;
+                        font-weight: inherit !important;
+                        line-height: inherit !important;
                     }
                 </style>
             </head>
             <body>
                 <div class="container">
                     <div class="header">
-                        <div class="logo-text">MODU<span class="logo-accent">LOCK</span></div>
+                        <a href="https://modulock.com.mx" style="text-decoration: none; border: none; display: block;">
+                            <img src="https://modulock.com.mx/assets/ML-BlancoNAranja.png" alt="MODULOCK" style="height: 55px; max-height: 55px; border: 0; display: block; margin: 0 auto; font-family: 'Inter', -apple-system, BlinkMacSystemFont, Arial, sans-serif; font-size: 24px; font-weight: 900; color: #ffffff; letter-spacing: 4px; text-transform: uppercase;" />
+                        </a>
+                        <div class="logo-subtitle">Cancelería & Seguridad Premium</div>
                     </div>
                     <div class="content">
                         <h1>Nueva Solicitud de Cotizaci&oacute;n</h1>
@@ -181,12 +208,14 @@ export async function onRequestPost(context) {
                             <tr>
                                 <td class="label">Tel&eacute;fono</td>
                                 <td class="value">
-                                    <a href="tel:${safePhoneHref}" style="color: #e0823a; text-decoration: none; font-weight: 600;">${safePhone}</a>
+                                    <a href="tel:${safePhoneHref}" style="color: #f5a55c !important; text-decoration: none; font-weight: 700;"><span style="color: #f5a55c !important;">${safePhone}</span></a>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="label">Proyecto</td>
-                                <td class="value">${safeProjectType || 'No especificado'}</td>
+                                <td class="value" style="color: #f5a55c !important; font-weight: 600;">
+                                    <span style="color: #f5a55c !important;">${safeProjectType || 'No especificado'}</span>
+                                </td>
                             </tr>
                         </table>
                         
@@ -194,7 +223,7 @@ export async function onRequestPost(context) {
                         <div class="message-box">${safeMessage}</div>
                         
                         <div class="actions">
-                            <a href="tel:${safePhoneHref}" class="btn">Llamar al Cliente</a>
+                            <a href="tel:${safePhoneHref}" class="btn" style="background: #f5a55c; background: linear-gradient(135deg, #f5a55c 0%, #e0823a 100%) !important; color: #080808 !important; text-decoration: none; display: inline-block; border-radius: 9999px; box-shadow: 0 4px 14px rgba(245, 165, 92, 0.35);"><span style="color: #080808 !important; font-weight: 900;">Llamar al Cliente</span></a>
                         </div>
                     </div>
                     <div class="footer">
