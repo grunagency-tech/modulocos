@@ -24,29 +24,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     scrollElements.forEach(el => revealObserver.observe(el));
 
-    // 2. Metrics Counter Animation
+    // 2. Metrics Counter Animation (High performance requestAnimationFrame)
     const animateCounter = (element) => {
         const target = parseInt(element.getAttribute('data-target'), 10);
         if (isNaN(target)) return;
 
-        let start = 0;
-        const duration = 2000; // 2 seconds
-        const stepTime = Math.abs(Math.floor(duration / target));
+        const duration = 800; // 0.8 seconds (faster and snappier)
+        const startTime = performance.now();
         
-        // Dynamic increments for larger numbers so all finish around 2s
-        const increment = target > 100 ? Math.ceil(target / 100) : 1;
         const suffix = target === 100 ? '%' : '+';
         const isStates = target === 32 || target === 4 || target === 1; // These have no suffix
-        
-        const timer = setInterval(() => {
-            start += increment;
-            if (start >= target) {
+
+        const updateCounter = (currentTime) => {
+            const elapsedTime = currentTime - startTime;
+            if (elapsedTime >= duration) {
                 element.textContent = target + (isStates ? '' : suffix);
-                clearInterval(timer);
             } else {
-                element.textContent = start + (isStates ? '' : suffix);
+                const progress = elapsedTime / duration;
+                // Easing out quad: smooth deceleration
+                const easeProgress = progress * (2 - progress); 
+                const currentVal = Math.floor(easeProgress * target);
+                element.textContent = currentVal + (isStates ? '' : suffix);
+                requestAnimationFrame(updateCounter);
             }
-        }, stepTime * (target > 100 ? 100 : 1));
+        };
+        
+        requestAnimationFrame(updateCounter);
     };
 
     // 3. Navbar Autohide on Scroll Down, Show on Scroll Up
