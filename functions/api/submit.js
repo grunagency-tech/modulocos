@@ -50,6 +50,32 @@ export async function onRequestPost(context) {
             );
         }
 
+        // 3.5 Fetch logo asset and convert to base64 for CID attachment
+        let logoAttachment = null;
+        try {
+            const logoUrl = new URL('/assets/ML-BlancoNAranja.png', context.request.url).toString();
+            const logoRes = await fetch(logoUrl);
+            if (logoRes.ok) {
+                const logoBuffer = await logoRes.arrayBuffer();
+                let binary = '';
+                const bytes = new Uint8Array(logoBuffer);
+                const len = bytes.byteLength;
+                for (let i = 0; i < len; i++) {
+                    binary += String.fromCharCode(bytes[i]);
+                }
+                const logoBase64 = btoa(binary);
+                logoAttachment = {
+                    content: logoBase64,
+                    filename: 'ML-BlancoNAranja.png',
+                    contentId: 'logo'
+                };
+            } else {
+                console.error(`Failed to fetch logo from ${logoUrl}: ${logoRes.status}`);
+            }
+        } catch (e) {
+            console.error('Error fetching logo image for email attachment:', e);
+        }
+
         // 4. Format beautiful HTML email for notifications (using sanitized variables)
         const safePhoneHref = safePhone.replace(/[^0-9+\-() ]/g, ''); // tel: href — digits and common chars only
         const emailHtml = `
@@ -60,78 +86,76 @@ export async function onRequestPost(context) {
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
             </head>
-            <body style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f4f4f5; color: #18181b; margin: 0; padding: 0; -webkit-font-smoothing: antialiased;">
-                <div style="max-width: 600px; margin: 40px auto; background-color: #ffffff; border: 1px solid #e4e4e7; border-top: 4px solid #f5a55c; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05);">
+            <body style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #080808; color: #ffffff; margin: 0; padding: 0; -webkit-font-smoothing: antialiased;">
+                <div style="max-width: 600px; margin: 40px auto; background-color: #121212; border: 1px solid rgba(255, 255, 255, 0.08); border-top: 4px solid #f5a55c; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.65);">
                     
                     <!-- Header -->
-                    <div style="background-color: #ffffff; border-bottom: 1px solid #e4e4e7; padding: 30px 40px; text-align: center;">
+                    <div style="background-color: #080808; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding: 35px 40px 25px 40px; text-align: center;">
                         <a href="https://modulock.com.mx" style="text-decoration: none; border: none; display: inline-block;">
-                            <div style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, Arial, sans-serif; font-size: 24px; font-weight: 900; color: #18181b; letter-spacing: 4px; text-transform: uppercase; margin: 0; line-height: 1;">
-                                MODU<span style="color: #f5a55c;">LOCK</span>
-                            </div>
+                            <img src="cid:logo" alt="MODULOCK" style="height: 55px; max-height: 55px; border: 0; display: block; margin: 0 auto; font-family: 'Inter', Arial, sans-serif; font-size: 24px; font-weight: 900; color: #ffffff; letter-spacing: 4px; text-transform: uppercase;" />
                         </a>
-                        <div style="font-size: 9px; text-transform: uppercase; letter-spacing: 3px; color: #71717a; margin-top: 8px; font-weight: 700;">
+                        <div style="font-size: 9px; text-transform: uppercase; letter-spacing: 3px; color: #6b7280; margin-top: 10px; font-weight: 700;">
                             Cancelería & Seguridad Premium
                         </div>
                     </div>
                     
                     <!-- Content -->
                     <div style="padding: 40px;">
-                        <h1 style="font-size: 18px; font-weight: 900; margin-top: 0; margin-bottom: 24px; color: #18181b; border-left: 4px solid #f5a55c; padding-left: 12px; text-transform: uppercase; letter-spacing: -0.3px; line-height: 1.1;">
+                        <h1 style="font-size: 18px; font-weight: 900; margin-top: 0; margin-bottom: 24px; color: #ffffff; border-left: 4px solid #f5a55c; padding-left: 12px; text-transform: uppercase; letter-spacing: -0.3px; line-height: 1.1;">
                             Nueva Solicitud de Cotizaci&oacute;n
                         </h1>
                         
                         <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
                             <tr>
-                                <td style="width: 130px; font-size: 10px; font-weight: 700; text-transform: uppercase; color: #71717a; letter-spacing: 1.5px; padding: 12px 0; border-bottom: 1px solid #e4e4e7; vertical-align: middle;">
+                                <td style="width: 130px; font-size: 10px; font-weight: 700; text-transform: uppercase; color: #888888; letter-spacing: 1.5px; padding: 12px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.08); vertical-align: middle;">
                                     Cliente
                                 </td>
-                                <td style="font-size: 14px; color: #18181b; font-weight: 600; padding: 12px 0; border-bottom: 1px solid #e4e4e7; vertical-align: middle;">
+                                <td style="font-size: 14px; color: #ffffff; font-weight: 500; padding: 12px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.08); vertical-align: middle;">
                                     ${safeName}
                                 </td>
                             </tr>
                             <tr>
-                                <td style="width: 130px; font-size: 10px; font-weight: 700; text-transform: uppercase; color: #71717a; letter-spacing: 1.5px; padding: 12px 0; border-bottom: 1px solid #e4e4e7; vertical-align: middle;">
+                                <td style="width: 130px; font-size: 10px; font-weight: 700; text-transform: uppercase; color: #888888; letter-spacing: 1.5px; padding: 12px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.08); vertical-align: middle;">
                                     Empresa
                                 </td>
-                                <td style="font-size: 14px; color: #18181b; font-weight: 600; padding: 12px 0; border-bottom: 1px solid #e4e4e7; vertical-align: middle;">
+                                <td style="font-size: 14px; color: #ffffff; font-weight: 500; padding: 12px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.08); vertical-align: middle;">
                                     ${safeCompany}
                                 </td>
                             </tr>
                             <tr>
-                                <td style="width: 130px; font-size: 10px; font-weight: 700; text-transform: uppercase; color: #71717a; letter-spacing: 1.5px; padding: 12px 0; border-bottom: 1px solid #e4e4e7; vertical-align: middle;">
+                                <td style="width: 130px; font-size: 10px; font-weight: 700; text-transform: uppercase; color: #888888; letter-spacing: 1.5px; padding: 12px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.08); vertical-align: middle;">
                                     Tel&eacute;fono
                                 </td>
-                                <td style="font-size: 14px; font-weight: 700; padding: 12px 0; border-bottom: 1px solid #e4e4e7; vertical-align: middle;">
+                                <td style="font-size: 14px; font-weight: 700; padding: 12px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.08); vertical-align: middle;">
                                     <a href="tel:${safePhoneHref}" style="color: #f5a55c; text-decoration: none; font-weight: 700;"><span style="color: #f5a55c !important;">${safePhone}</span></a>
                                 </td>
                             </tr>
                             <tr>
-                                <td style="width: 130px; font-size: 10px; font-weight: 700; text-transform: uppercase; color: #71717a; letter-spacing: 1.5px; padding: 12px 0; border-bottom: 1px solid #e4e4e7; vertical-align: middle;">
+                                <td style="width: 130px; font-size: 10px; font-weight: 700; text-transform: uppercase; color: #888888; letter-spacing: 1.5px; padding: 12px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.08); vertical-align: middle;">
                                     Proyecto
                                 </td>
-                                <td style="font-size: 14px; color: #f5a55c; font-weight: 700; padding: 12px 0; border-bottom: 1px solid #e4e4e7; vertical-align: middle;">
+                                <td style="font-size: 14px; color: #f5a55c; font-weight: 700; padding: 12px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.08); vertical-align: middle;">
                                     <span style="color: #f5a55c !important;">${safeProjectType || 'No especificado'}</span>
                                 </td>
                             </tr>
                         </table>
                         
-                        <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #71717a; letter-spacing: 1.5px; margin-bottom: 8px;">
+                        <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #888888; letter-spacing: 1.5px; margin-bottom: 8px;">
                             Mensaje de Consulta
                         </div>
-                        <div style="background-color: #f4f4f5; border: 1px solid #e4e4e7; border-radius: 6px; padding: 15px 20px; font-size: 14px; color: #3f3f46; line-height: 1.5; white-space: pre-wrap;">
+                        <div style="background-color: #080808; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 6px; padding: 15px 20px; font-size: 14px; color: #d1d5db; line-height: 1.5; white-space: pre-wrap;">
                             ${safeMessage}
                         </div>
                         
                         <div style="text-align: center; margin-top: 35px;">
-                            <a href="tel:${safePhoneHref}" style="display: inline-block; background-color: #f5a55c; color: #18181b !important; font-weight: 800; text-decoration: none; padding: 14px 32px; border-radius: 9999px; font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; box-shadow: 0 4px 6px -1px rgba(245, 165, 92, 0.2), 0 2px 4px -1px rgba(245, 165, 92, 0.1); line-height: 1;">
-                                <span style="color: #18181b !important; font-weight: 900;">Llamar al Cliente</span>
+                            <a href="tel:${safePhoneHref}" style="display: inline-block; background-color: #f5a55c; color: #080808 !important; font-weight: 900; text-decoration: none; padding: 16px 36px; border-radius: 9999px; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; box-shadow: 0 4px 14px rgba(245, 165, 92, 0.35); line-height: 1;">
+                                <span style="color: #080808 !important; font-weight: 900;">Llamar al Cliente</span>
                             </a>
                         </div>
                     </div>
                     
                     <!-- Footer -->
-                    <div style="background-color: #f4f4f5; border-top: 1px solid #e4e4e7; padding: 20px 40px; text-align: center; font-size: 9px; font-weight: 600; color: #71717a; letter-spacing: 1.5px; line-height: 1.4;">
+                    <div style="background-color: #080808; border-top: 1px solid rgba(255, 255, 255, 0.08); padding: 20px 40px; text-align: center; font-size: 9px; font-weight: 600; color: #525252; letter-spacing: 2px; line-height: 1.4;">
                         ESTE CORREO FUE GENERADO AUTOM&Aacute;TICAMENTE DESDE EL SITIO WEB MODULOCK
                     </div>
                 </div>
@@ -153,7 +177,8 @@ export async function onRequestPost(context) {
                 from: fromEmail,
                 to: [notificationEmail],
                 subject: `Nueva Cotización: ${safeName} (${safeProjectType || 'General'})`,
-                html: emailHtml
+                html: emailHtml,
+                attachments: logoAttachment ? [logoAttachment] : []
             })
         }).then(async (res) => {
             if (!res.ok) {
