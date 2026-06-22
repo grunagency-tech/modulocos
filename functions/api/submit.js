@@ -165,7 +165,7 @@ export async function onRequestPost(context) {
             <body>
                 <div class="container">
                     <div class="header">
-                        <div class="logo-text">MODU<span class="logo-accent">LOCK</span></div>
+                        <div class="logo-text" style="color: #ffffff !important;">MODULOCK</div>
                     </div>
                     <div class="content">
                         <h1>Nueva Solicitud de Cotizaci&oacute;n</h1>
@@ -194,7 +194,7 @@ export async function onRequestPost(context) {
                         <div class="message-box">${safeMessage}</div>
                         
                         <div class="actions">
-                            <a href="tel:${safePhoneHref}" class="btn">Llamar al Cliente</a>
+                            <a href="tel:${safePhoneHref}" class="btn" style="color: #080808 !important; text-decoration: none;"><span style="color: #080808 !important;">Llamar al Cliente</span></a>
                         </div>
                     </div>
                     <div class="footer">
