@@ -34,8 +34,8 @@ export async function onRequestPost(context) {
 
         const env = context.env;
         const resendApiKey = env.RESEND_API_KEY;
-        const notificationEmail = env.NOTIFICATION_EMAIL || 'contacto@cancelesmodulock.com.mx';
-        const fromEmail = env.FROM_EMAIL || 'Contacto Web Modulock <web@cancelesmodulock.com.mx>';
+        const notificationEmail = env.cotizaciones_email || env.NOTIFICATION_EMAIL || 'cotizaciones@modulock.com.mx';
+        const fromEmail = env.FROM_EMAIL || 'Contacto Web Modulock <web@modulock.com.mx>';
         const n8nWebhookUrl = env.N8N_WEBHOOK_URL;
 
         // Verify that at least Resend API key is configured
