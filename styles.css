@@ -1029,8 +1029,8 @@ nav {
 /* WhatsApp Floating Button */
 .whatsapp-btn-float {
     position: fixed;
-    bottom: 7rem; /* Stacked above the phone call button */
-    right: 1.5rem;
+    bottom: 2rem;
+    right: 2rem;
     width: 3.5rem;
     height: 3.5rem;
     background-color: #25d366;
