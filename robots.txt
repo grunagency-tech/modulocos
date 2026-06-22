@@ -4,4 +4,4 @@ Disallow: /functions/
 Disallow: /api/
 
 # Sitemap
-Sitemap: https://cancelesmodulock.com.mx/sitemap.xml
+Sitemap: https://modulock.com.mx/sitemap.xml

@@ -192,7 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 formStatus.innerHTML = `
                     <div class="mt-4 p-4 border border-[#ef4444]/20 bg-[#ef4444]/5 rounded-xl text-left">
                         <strong class="text-white block mb-1">Error al Enviar la Solicitud</strong>
-                        No pudimos enlazar con el servidor de contacto en este momento. Por favor, llámanos directamente al <strong>+52 55 5880 9974</strong> o escríbenos a <strong>contacto@cancelesmodulock.com.mx</strong>.
+                        No pudimos enlazar con el servidor de contacto en este momento. Por favor, llámanos directamente al <strong>+52 55 5880 9974</strong> o escríbenos a <strong>cotizaciones@modulock.com.mx</strong>.
                     </div>
                 `;
             });
