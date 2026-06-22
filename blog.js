@@ -722,14 +722,16 @@ console.log("Presión de diseño a 30m para viento de 120km/h: " + calculateWind
     };
 
     // Open Admin workflow
-    adminTrigger.addEventListener('click', () => {
-        if (isAdminAuthenticated()) {
-            adminPanelModal.classList.add('active');
-        } else {
-            loginModal.classList.add('active');
-            adminPasswordInput.focus();
-        }
-    });
+    if (adminTrigger) {
+        adminTrigger.addEventListener('click', () => {
+            if (isAdminAuthenticated()) {
+                adminPanelModal.classList.add('active');
+            } else {
+                loginModal.classList.add('active');
+                adminPasswordInput.focus();
+            }
+        });
+    }
 
     // Close Login Modal
     closeLoginBtn.addEventListener('click', () => {
