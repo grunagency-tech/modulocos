@@ -58,175 +58,80 @@ export async function onRequestPost(context) {
             <head>
                 <meta charset="utf-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <meta name="color-scheme" content="only dark">
-                <meta name="supported-color-schemes" content="only dark">
                 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-                <style>
-                    :root {
-                        color-scheme: only dark;
-                        supported-color-schemes: only dark;
-                    }
-                    
-                    body {
-                        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-                        background-color: #080808;
-                        color: #ffffff;
-                        margin: 0;
-                        padding: 0;
-                        -webkit-font-smoothing: antialiased;
-                    }
-                    .container {
-                        max-width: 600px;
-                        margin: 40px auto;
-                        background-color: #121212;
-                        border: 1px solid rgba(255, 255, 255, 0.08);
-                        border-top: 3px solid #f5a55c;
-                        border-radius: 16px;
-                        overflow: hidden;
-                        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
-                    }
-                    .header {
-                        background-color: #080808;
-                        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-                        padding: 35px 40px 25px 40px;
-                        text-align: center;
-                    }
-                    .logo-subtitle {
-                        font-size: 9px;
-                        text-transform: uppercase;
-                        letter-spacing: 3px;
-                        color: #6b7280;
-                        margin-top: 10px;
-                        font-weight: 700;
-                    }
-                    .content {
-                        padding: 40px;
-                    }
-                    h1 {
-                        font-size: 20px;
-                        font-weight: 900;
-                        margin-top: 0;
-                        margin-bottom: 28px;
-                        color: #ffffff;
-                        border-left: 4px solid #f5a55c;
-                        padding-left: 14px;
-                        text-transform: uppercase;
-                        letter-spacing: -0.5px;
-                        line-height: 1.1;
-                    }
-                    table {
-                        width: 100%;
-                        border-collapse: collapse;
-                        margin-bottom: 30px;
-                    }
-                    td {
-                        padding: 14px 0;
-                        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-                        vertical-align: top;
-                    }
-                    .label {
-                        width: 140px;
-                        font-size: 10px;
-                        font-weight: 700;
-                        text-transform: uppercase;
-                        color: #888888;
-                        letter-spacing: 2px;
-                    }
-                    .value {
-                        font-size: 14px;
-                        color: #ffffff;
-                        font-weight: 500;
-                    }
-                    .message-box {
-                        background-color: #080808;
-                        border: 1px solid rgba(255, 255, 255, 0.08);
-                        border-radius: 8px;
-                        padding: 20px;
-                        font-size: 14px;
-                        color: #e5e7eb;
-                        line-height: 1.6;
-                        margin-top: 10px;
-                        white-space: pre-wrap;
-                    }
-                    .actions {
-                        text-align: center;
-                        margin-top: 40px;
-                    }
-                    .btn {
-                        display: inline-block;
-                        background: #f5a55c;
-                        background: linear-gradient(135deg, #f5a55c 0%, #e0823a 100%) !important;
-                        color: #080808 !important;
-                        font-weight: 900;
-                        text-decoration: none;
-                        padding: 16px 36px;
-                        border-radius: 9999px;
-                        font-size: 12px;
-                        text-transform: uppercase;
-                        letter-spacing: 2px;
-                        box-shadow: 0 4px 14px rgba(245, 165, 92, 0.35);
-                    }
-                    .footer {
-                        background-color: #080808;
-                        padding: 20px 40px;
-                        text-align: center;
-                        font-size: 9px;
-                        font-weight: 600;
-                        color: #525252;
-                        letter-spacing: 2px;
-                        border-top: 1px solid rgba(255, 255, 255, 0.08);
-                    }
-                    a[x-apple-data-detectors] {
-                        color: inherit !important;
-                        text-decoration: none !important;
-                        font-size: inherit !important;
-                        font-family: inherit !important;
-                        font-weight: inherit !important;
-                        line-height: inherit !important;
-                    }
-                </style>
             </head>
-            <body>
-                <div class="container">
-                    <div class="header">
-                        <a href="https://modulock.com.mx" style="text-decoration: none; border: none; display: block;">
-                            <img src="https://modulock.com.mx/assets/ML-BlancoNAranja.png" alt="MODULOCK" style="height: 55px; max-height: 55px; border: 0; display: block; margin: 0 auto; font-family: 'Inter', -apple-system, BlinkMacSystemFont, Arial, sans-serif; font-size: 24px; font-weight: 900; color: #ffffff; letter-spacing: 4px; text-transform: uppercase;" />
+            <body style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f4f4f5; color: #18181b; margin: 0; padding: 0; -webkit-font-smoothing: antialiased;">
+                <div style="max-width: 600px; margin: 40px auto; background-color: #ffffff; border: 1px solid #e4e4e7; border-top: 4px solid #f5a55c; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05);">
+                    
+                    <!-- Header -->
+                    <div style="background-color: #ffffff; border-bottom: 1px solid #e4e4e7; padding: 30px 40px; text-align: center;">
+                        <a href="https://modulock.com.mx" style="text-decoration: none; border: none; display: inline-block;">
+                            <div style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, Arial, sans-serif; font-size: 24px; font-weight: 900; color: #18181b; letter-spacing: 4px; text-transform: uppercase; margin: 0; line-height: 1;">
+                                MODU<span style="color: #f5a55c;">LOCK</span>
+                            </div>
                         </a>
-                        <div class="logo-subtitle">Cancelería & Seguridad Premium</div>
+                        <div style="font-size: 9px; text-transform: uppercase; letter-spacing: 3px; color: #71717a; margin-top: 8px; font-weight: 700;">
+                            Cancelería & Seguridad Premium
+                        </div>
                     </div>
-                    <div class="content">
-                        <h1>Nueva Solicitud de Cotizaci&oacute;n</h1>
-                        <table>
+                    
+                    <!-- Content -->
+                    <div style="padding: 40px;">
+                        <h1 style="font-size: 18px; font-weight: 900; margin-top: 0; margin-bottom: 24px; color: #18181b; border-left: 4px solid #f5a55c; padding-left: 12px; text-transform: uppercase; letter-spacing: -0.3px; line-height: 1.1;">
+                            Nueva Solicitud de Cotizaci&oacute;n
+                        </h1>
+                        
+                        <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
                             <tr>
-                                <td class="label">Cliente</td>
-                                <td class="value">${safeName}</td>
-                            </tr>
-                            <tr>
-                                <td class="label">Empresa</td>
-                                <td class="value">${safeCompany}</td>
-                            </tr>
-                            <tr>
-                                <td class="label">Tel&eacute;fono</td>
-                                <td class="value">
-                                    <a href="tel:${safePhoneHref}" style="color: #f5a55c !important; text-decoration: none; font-weight: 700;"><span style="color: #f5a55c !important;">${safePhone}</span></a>
+                                <td style="width: 130px; font-size: 10px; font-weight: 700; text-transform: uppercase; color: #71717a; letter-spacing: 1.5px; padding: 12px 0; border-bottom: 1px solid #e4e4e7; vertical-align: middle;">
+                                    Cliente
+                                </td>
+                                <td style="font-size: 14px; color: #18181b; font-weight: 600; padding: 12px 0; border-bottom: 1px solid #e4e4e7; vertical-align: middle;">
+                                    ${safeName}
                                 </td>
                             </tr>
                             <tr>
-                                <td class="label">Proyecto</td>
-                                <td class="value" style="color: #f5a55c !important; font-weight: 600;">
+                                <td style="width: 130px; font-size: 10px; font-weight: 700; text-transform: uppercase; color: #71717a; letter-spacing: 1.5px; padding: 12px 0; border-bottom: 1px solid #e4e4e7; vertical-align: middle;">
+                                    Empresa
+                                </td>
+                                <td style="font-size: 14px; color: #18181b; font-weight: 600; padding: 12px 0; border-bottom: 1px solid #e4e4e7; vertical-align: middle;">
+                                    ${safeCompany}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 130px; font-size: 10px; font-weight: 700; text-transform: uppercase; color: #71717a; letter-spacing: 1.5px; padding: 12px 0; border-bottom: 1px solid #e4e4e7; vertical-align: middle;">
+                                    Tel&eacute;fono
+                                </td>
+                                <td style="font-size: 14px; font-weight: 700; padding: 12px 0; border-bottom: 1px solid #e4e4e7; vertical-align: middle;">
+                                    <a href="tel:${safePhoneHref}" style="color: #f5a55c; text-decoration: none; font-weight: 700;"><span style="color: #f5a55c !important;">${safePhone}</span></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 130px; font-size: 10px; font-weight: 700; text-transform: uppercase; color: #71717a; letter-spacing: 1.5px; padding: 12px 0; border-bottom: 1px solid #e4e4e7; vertical-align: middle;">
+                                    Proyecto
+                                </td>
+                                <td style="font-size: 14px; color: #f5a55c; font-weight: 700; padding: 12px 0; border-bottom: 1px solid #e4e4e7; vertical-align: middle;">
                                     <span style="color: #f5a55c !important;">${safeProjectType || 'No especificado'}</span>
                                 </td>
                             </tr>
                         </table>
                         
-                        <div class="label" style="margin-bottom: 8px;">Mensaje de Consulta</div>
-                        <div class="message-box">${safeMessage}</div>
+                        <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: #71717a; letter-spacing: 1.5px; margin-bottom: 8px;">
+                            Mensaje de Consulta
+                        </div>
+                        <div style="background-color: #f4f4f5; border: 1px solid #e4e4e7; border-radius: 6px; padding: 15px 20px; font-size: 14px; color: #3f3f46; line-height: 1.5; white-space: pre-wrap;">
+                            ${safeMessage}
+                        </div>
                         
-                        <div class="actions">
-                            <a href="tel:${safePhoneHref}" class="btn" style="background: #f5a55c; background: linear-gradient(135deg, #f5a55c 0%, #e0823a 100%) !important; color: #080808 !important; text-decoration: none; display: inline-block; border-radius: 9999px; box-shadow: 0 4px 14px rgba(245, 165, 92, 0.35);"><span style="color: #080808 !important; font-weight: 900;">Llamar al Cliente</span></a>
+                        <div style="text-align: center; margin-top: 35px;">
+                            <a href="tel:${safePhoneHref}" style="display: inline-block; background-color: #f5a55c; color: #18181b !important; font-weight: 800; text-decoration: none; padding: 14px 32px; border-radius: 9999px; font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; box-shadow: 0 4px 6px -1px rgba(245, 165, 92, 0.2), 0 2px 4px -1px rgba(245, 165, 92, 0.1); line-height: 1;">
+                                <span style="color: #18181b !important; font-weight: 900;">Llamar al Cliente</span>
+                            </a>
                         </div>
                     </div>
-                    <div class="footer">
+                    
+                    <!-- Footer -->
+                    <div style="background-color: #f4f4f5; border-top: 1px solid #e4e4e7; padding: 20px 40px; text-align: center; font-size: 9px; font-weight: 600; color: #71717a; letter-spacing: 1.5px; line-height: 1.4;">
                         ESTE CORREO FUE GENERADO AUTOM&Aacute;TICAMENTE DESDE EL SITIO WEB MODULOCK
                     </div>
                 </div>
