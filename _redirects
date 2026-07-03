@@ -1,6 +1,6 @@
 # Fuerza redireccionamiento HTTPS en caso de que alguien acceda por HTTP
-http://cancelesmodulock.com.mx/* https://cancelesmodulock.com.mx/:splat 301
-http://www.cancelesmodulock.com.mx/* https://cancelesmodulock.com.mx/:splat 301
+http://modulock.com.mx/* https://modulock.com.mx/:splat 301
+http://www.modulock.com.mx/* https://modulock.com.mx/:splat 301
 
 # Redirige www → non-www (dominio canónico)
-https://www.cancelesmodulock.com.mx/* https://cancelesmodulock.com.mx/:splat 301
+https://www.modulock.com.mx/* https://modulock.com.mx/:splat 301
