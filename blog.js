@@ -978,6 +978,13 @@ console.log("Presión de diseño a 30m para viento de 120km/h: " + calculateWind
         customPosts.unshift(newPost); // Add at the start (newest first)
         localStorage.setItem('modulock_blog_posts', JSON.stringify(customPosts));
         
+        // Sync to Cloudflare KV
+        fetch('/api/posts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ customPosts })
+        }).catch(err => console.error("Error al sincronizar con KV:", err));
+        
         // Reset and close admin panel
         createPostForm.reset();
         resetUploadUI();
@@ -1080,6 +1087,25 @@ console.log("Presión de diseño a 30m para viento de 120km/h: " + calculateWind
         });
     }
 
-    // Check route on page enter to support deep linking
-    checkRoute();
+    // Fetch posts from Cloudflare KV database first to sync, then run routing
+    fetch('/api/posts')
+        .then(res => {
+            if (res.ok) return res.json();
+            throw new Error("API error");
+        })
+        .then(data => {
+            if (data.customPosts) {
+                localStorage.setItem('modulock_blog_posts', JSON.stringify(data.customPosts));
+            }
+            if (data.deletedSystem) {
+                localStorage.setItem('modulock_deleted_system_posts', JSON.stringify(data.deletedSystem));
+            }
+        })
+        .catch(err => {
+            console.warn("Could not sync from KV, using local fallback:", err);
+        })
+        .finally(() => {
+            // Check route on page enter to support deep linking
+            checkRoute();
+        });
 });

@@ -260,9 +260,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // 6. DB LOADER AND SIDEBAR RENDERER
-    const loadPostsDatabase = () => {
-        const customPosts = JSON.parse(localStorage.getItem('modulock_blog_posts')) || [];
-        const deletedSystem = JSON.parse(localStorage.getItem('modulock_deleted_system_posts')) || [];
+    const loadPostsDatabase = async () => {
+        let customPosts = [];
+        let deletedSystem = [];
+
+        try {
+            const response = await fetch('/api/posts');
+            if (response.ok) {
+                const data = await response.json();
+                customPosts = data.customPosts || [];
+                deletedSystem = data.deletedSystem || [];
+                
+                // Sync back to localstorage as fallback
+                localStorage.setItem('modulock_blog_posts', JSON.stringify(customPosts));
+                localStorage.setItem('modulock_deleted_system_posts', JSON.stringify(deletedSystem));
+            } else {
+                throw new Error("HTTP error " + response.status);
+            }
+        } catch (err) {
+            console.warn("No se pudo cargar desde KV (se usará respaldo local):", err);
+            // Fallback to localStorage
+            customPosts = JSON.parse(localStorage.getItem('modulock_blog_posts')) || [];
+            deletedSystem = JSON.parse(localStorage.getItem('modulock_deleted_system_posts')) || [];
+        }
         
         // Convert custom posts into local database structure
         const mappedCustom = customPosts.map(p => ({
@@ -273,6 +293,25 @@ document.addEventListener('DOMContentLoaded', () => {
         const filteredDefault = defaultPosts.filter(p => !deletedSystem.includes(p.id));
         posts = [...filteredDefault, ...mappedCustom];
         renderSidebarPosts();
+    };
+
+    const savePostsToCloud = async (customPosts, deletedSystem) => {
+        try {
+            const body = {};
+            if (customPosts !== undefined) body.customPosts = customPosts;
+            if (deletedSystem !== undefined) body.deletedSystem = deletedSystem;
+            
+            const response = await fetch('/api/posts', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+            if (!response.ok) {
+                throw new Error("HTTP error " + response.status);
+            }
+        } catch (err) {
+            console.error("Error al guardar posts en Cloudflare KV:", err);
+        }
     };
 
     const renderSidebarPosts = () => {
@@ -331,7 +370,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    const deletePost = (postId, isSystem, postTitle) => {
+    const deletePost = async (postId, isSystem, postTitle) => {
         const confirmDelete = confirm(`¿Estás seguro de que deseas eliminar la entrada "${postTitle}"?`);
         if (!confirmDelete) return;
 
@@ -340,14 +379,16 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!deletedSystem.includes(postId)) {
                 deletedSystem.push(postId);
                 localStorage.setItem('modulock_deleted_system_posts', JSON.stringify(deletedSystem));
+                await savePostsToCloud(undefined, deletedSystem);
             }
         } else {
             const customPosts = JSON.parse(localStorage.getItem('modulock_blog_posts')) || [];
             const filtered = customPosts.filter(p => p.id !== postId);
             localStorage.setItem('modulock_blog_posts', JSON.stringify(filtered));
+            await savePostsToCloud(filtered, undefined);
         }
 
-        loadPostsDatabase();
+        await loadPostsDatabase();
 
         if (selectedPostId === postId) {
             createNewDraft();
@@ -910,7 +951,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // 10. SAVE CHANGES LOGIC (COMMIT TO LOCAL STORAGE)
-    cmsSaveBtn.addEventListener('click', () => {
+    cmsSaveBtn.addEventListener('click', async () => {
         if (selectedPostIsSystem) {
             alert("Los posts del sistema no se pueden modificar directamente.");
             return;
@@ -944,46 +985,60 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const customPosts = JSON.parse(localStorage.getItem('modulock_blog_posts')) || [];
 
-        if (selectedPostId) {
-            // Update existing custom post
-            const idx = customPosts.findIndex(p => p.id === selectedPostId);
-            if (idx !== -1) {
-                customPosts[idx] = {
-                    ...customPosts[idx],
+        const originalBtnText = cmsSaveBtn.innerText;
+        cmsSaveBtn.innerText = "Guardando...";
+        cmsSaveBtn.disabled = true;
+
+        try {
+            if (selectedPostId) {
+                // Update existing custom post
+                const idx = customPosts.findIndex(p => p.id === selectedPostId);
+                if (idx !== -1) {
+                    customPosts[idx] = {
+                        ...customPosts[idx],
+                        title,
+                        category,
+                        excerpt,
+                        content: html,
+                        readTime,
+                        image,
+                        blocks: currentPostBlocks
+                    };
+                }
+                localStorage.setItem('modulock_blog_posts', JSON.stringify(customPosts));
+                await savePostsToCloud(customPosts, undefined);
+                alert("Artículo actualizado con éxito.");
+            } else {
+                // Create a new post
+                const newPostId = Date.now();
+                const newPost = {
+                    id: newPostId,
+                    slug: slugify(title),
                     title,
                     category,
                     excerpt,
                     content: html,
                     readTime,
+                    date: getFormattedDate(),
                     image,
+                    author: getLoggedAuthor(),
                     blocks: currentPostBlocks
                 };
+                customPosts.unshift(newPost);
+                localStorage.setItem('modulock_blog_posts', JSON.stringify(customPosts));
+                await savePostsToCloud(customPosts, undefined);
+                selectedPostId = newPostId;
+                alert("Artículo guardado y publicado en el blog con éxito.");
             }
-            localStorage.setItem('modulock_blog_posts', JSON.stringify(customPosts));
-            alert("Artículo actualizado con éxito.");
-        } else {
-            // Create a new post
-            const newPostId = Date.now();
-            const newPost = {
-                id: newPostId,
-                slug: slugify(title),
-                title,
-                category,
-                excerpt,
-                content: html,
-                readTime,
-                date: getFormattedDate(),
-                image,
-                author: getLoggedAuthor(),
-                blocks: currentPostBlocks
-            };
-            customPosts.unshift(newPost);
-            localStorage.setItem('modulock_blog_posts', JSON.stringify(customPosts));
-            selectedPostId = newPostId;
-            alert("Artículo guardado y publicado en local.");
+        } catch (saveErr) {
+            console.error("Error saving post to cloud:", saveErr);
+            alert("Error al guardar en el servidor: " + saveErr.message);
+        } finally {
+            cmsSaveBtn.innerText = originalBtnText;
+            cmsSaveBtn.disabled = false;
         }
 
-        loadPostsDatabase();
+        await loadPostsDatabase();
         selectPost(selectedPostId);
     });
 
