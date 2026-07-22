@@ -1052,7 +1052,6 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const openCropModal = (imageUrl) => {
-        cropModalImage.src = imageUrl;
         cmsCropModal.classList.remove('hidden');
         
         if (cropperInstance) {
@@ -1079,6 +1078,13 @@ document.addEventListener('DOMContentLoaded', () => {
             setAspectButtonActive(cropAspect16_9Btn);
             cropModalImage.onload = null;
         };
+        cropModalImage.onerror = () => {
+            console.error("Failed to load image for cropping");
+            closeCropModal();
+            resetUploadUI();
+            cropModalImage.onerror = null;
+        };
+        cropModalImage.src = imageUrl;
     };
 
     const setAspectButtonActive = (activeBtn) => {

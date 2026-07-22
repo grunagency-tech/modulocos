@@ -887,7 +887,6 @@ console.log("Presión de diseño a 30m para viento de 120km/h: " + calculateWind
             reader.readAsDataURL(file);
             reader.onload = (event) => {
                 const img = new Image();
-                img.src = event.target.result;
                 img.onload = () => {
                     try {
                         const canvas = document.createElement('canvas');
@@ -922,6 +921,7 @@ console.log("Presión de diseño a 30m para viento de 120km/h: " + calculateWind
                 img.onerror = () => {
                     resolve(event.target.result);
                 };
+                img.src = event.target.result;
             };
             reader.onerror = () => {
                 resolve(null);
