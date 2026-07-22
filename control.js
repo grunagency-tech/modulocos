@@ -307,10 +307,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify(body)
             });
             if (!response.ok) {
-                throw new Error("HTTP error " + response.status);
+                const errData = await response.json().catch(() => ({}));
+                throw new Error(errData.error || "HTTP error " + response.status);
             }
         } catch (err) {
             console.error("Error al guardar posts en Cloudflare KV:", err);
+            alert("Error al sincronizar con el servidor: " + err.message);
+            throw err;
         }
     };
 
