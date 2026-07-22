@@ -176,16 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const imagePreviewContainer = document.getElementById('imagePreviewContainer');
     const imagePreview = document.getElementById('imagePreview');
     const removeUploadedImage = document.getElementById('removeUploadedImage');
-    const imgbbApiKeyInput = document.getElementById('imgbbApiKeyInput');
     const blockBuilder = document.getElementById('blockBuilder');
-
-    // Load saved ImgBB key
-    if (imgbbApiKeyInput) {
-        imgbbApiKeyInput.value = localStorage.getItem('modulock_imgbb_key') || '';
-        imgbbApiKeyInput.addEventListener('input', () => {
-            localStorage.setItem('modulock_imgbb_key', imgbbApiKeyInput.value.trim());
-        });
-    }
 
     // Preview Pane fields
     const articlePreviewHero = document.getElementById('articlePreviewHero');
@@ -1235,33 +1226,28 @@ document.addEventListener('DOMContentLoaded', () => {
                     let finalImageUrl = croppedBase64;
                     let uploadSuccessful = false;
 
-                    // Try uploading to ImgBB
+                    // Try uploading to Cloudflare KV database
                     try {
-                        const defaultKey = "b0a701962bf1ce455e3962d3a957828a"; // Default fallback key
-                        const userKey = imgbbApiKeyInput ? imgbbApiKeyInput.value.trim() : "";
-                        const apiKey = userKey || defaultKey;
-                        
-                        const base64Data = croppedBase64.split(',')[1] || croppedBase64;
-                        const formData = new FormData();
-                        formData.append("image", base64Data);
-                        
-                        const response = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
+                        const response = await fetch('/api/upload', {
                             method: "POST",
-                            body: formData
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({ image: croppedBase64 })
                         });
                         
                         if (!response.ok) {
                             const errData = await response.json();
-                            throw new Error(errData.error?.message || "Error al subir la imagen a la nube.");
+                            throw new Error(errData.error || "Error al subir la imagen a Cloudflare.");
                         }
                         
                         const result = await response.json();
-                        finalImageUrl = result.data.url;
+                        finalImageUrl = result.url;
                         uploadSuccessful = true;
                     } catch (uploadErr) {
-                        console.error("ImgBB upload failed:", uploadErr);
+                        console.error("Cloudflare KV upload failed:", uploadErr);
                         const useLocal = confirm(
-                            "No se pudo guardar la imagen en la nube (ImgBB): " + uploadErr.message + 
+                            "No se pudo guardar la imagen en Cloudflare (KV): " + uploadErr.message + 
                             "\n\n¿Deseas guardarla localmente en tu navegador temporalmente como alternativa?"
                         );
                         if (!useLocal) {
