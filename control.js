@@ -379,21 +379,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (isSystem) {
             const deletedSystem = JSON.parse(localStorage.getItem('modulock_deleted_system_posts')) || [];
-            if (!deletedSystem.includes(postId)) {
+            if (!deletedSystem.map(String).includes(postId.toString())) {
                 deletedSystem.push(postId);
                 localStorage.setItem('modulock_deleted_system_posts', JSON.stringify(deletedSystem));
                 await savePostsToCloud(undefined, deletedSystem);
             }
         } else {
             const customPosts = JSON.parse(localStorage.getItem('modulock_blog_posts')) || [];
-            const filtered = customPosts.filter(p => p.id !== postId);
+            const filtered = customPosts.filter(p => p.id.toString() !== postId.toString());
             localStorage.setItem('modulock_blog_posts', JSON.stringify(filtered));
             await savePostsToCloud(filtered, undefined);
         }
 
         await loadPostsDatabase();
 
-        if (selectedPostId === postId) {
+        if (selectedPostId && selectedPostId.toString() === postId.toString()) {
             createNewDraft();
         } else {
             renderSidebarPosts();
