@@ -1059,23 +1059,40 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         cropModalImage.onload = () => {
-            cropperInstance = new Cropper(cropModalImage, {
-                aspectRatio: 16 / 9,
-                viewMode: 1,
-                autoCropArea: 0.9,
-                responsive: true,
-                restore: false,
-                checkCrossOrigin: false,
-                modal: true,
-                guides: true,
-                center: true,
-                highlight: false,
-                cropBoxMovable: true,
-                cropBoxResizable: true,
-                toggleDragModeOnDblclick: false,
-            });
-            
-            setAspectButtonActive(cropAspect16_9Btn);
+            try {
+                if (typeof Cropper === 'undefined') {
+                    throw new Error("La librería de recorte (Cropper) no se pudo cargar.");
+                }
+                cropperInstance = new Cropper(cropModalImage, {
+                    aspectRatio: 16 / 9,
+                    viewMode: 1,
+                    autoCropArea: 0.9,
+                    responsive: true,
+                    restore: false,
+                    checkCrossOrigin: false,
+                    modal: true,
+                    guides: true,
+                    center: true,
+                    highlight: false,
+                    cropBoxMovable: true,
+                    cropBoxResizable: true,
+                    toggleDragModeOnDblclick: false,
+                });
+                
+                setAspectButtonActive(cropAspect16_9Btn);
+            } catch (error) {
+                console.error("Cropper initialization failed:", error);
+                
+                // Fallback: use the original image directly
+                uploadedImageBase64 = imageUrl;
+                uploadPrompt.style.display = 'none';
+                imagePreview.src = imageUrl;
+                imagePreviewContainer.style.display = 'block';
+                
+                closeCropModal();
+                updateJsonOutput();
+                renderLivePreview();
+            }
             cropModalImage.onload = null;
         };
         cropModalImage.onerror = () => {
