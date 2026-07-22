@@ -1101,7 +1101,12 @@ document.addEventListener('DOMContentLoaded', () => {
             resetUploadUI();
             cropModalImage.onerror = null;
         };
-        cropModalImage.src = imageUrl;
+        
+        // Defer image source assignment to next tick to ensure entire control.js executes first,
+        // preventing reference errors for closeCropModal, updateJsonOutput, etc.
+        setTimeout(() => {
+            cropModalImage.src = imageUrl;
+        }, 0);
     };
 
     const setAspectButtonActive = (activeBtn) => {
