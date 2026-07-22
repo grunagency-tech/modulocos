@@ -1191,15 +1191,28 @@ document.addEventListener('DOMContentLoaded', () => {
         cropSaveBtn.addEventListener('click', () => {
             if (!cropperInstance) return;
             
-            const canvas = cropperInstance.getCroppedCanvas({
-                maxWidth: 1280,
-                maxHeight: 720,
-                imageSmoothingEnabled: true,
-                imageSmoothingQuality: 'high'
-            });
+            let croppedBase64 = null;
+            try {
+                const canvas = cropperInstance.getCroppedCanvas({
+                    maxWidth: 1280,
+                    maxHeight: 720,
+                    imageSmoothingEnabled: true,
+                    imageSmoothingQuality: 'high'
+                });
 
-            if (canvas) {
-                const croppedBase64 = canvas.toDataURL('image/jpeg', 0.75);
+                if (canvas) {
+                    croppedBase64 = canvas.toDataURL('image/jpeg', 0.75);
+                }
+            } catch (e) {
+                console.error("Failed to crop canvas, using original image", e);
+            }
+
+            // Fallback: If cropping failed or canvas is null, use the original image source
+            if (!croppedBase64) {
+                croppedBase64 = cropModalImage.src;
+            }
+
+            if (croppedBase64) {
                 uploadedImageBase64 = croppedBase64;
                 
                 uploadPrompt.style.display = 'none';
