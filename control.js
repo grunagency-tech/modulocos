@@ -822,47 +822,57 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const renderLivePreview = () => {
-        const titleVal = postTitle.value || "Título del Artículo";
-        const catVal = postCategory.value;
-        const excerptVal = postExcerpt.value || "Resumen breve explicativo del artículo.";
-        
-        let coverImg = "assets/service-aluminum-DfJojfyS.jpg";
-        const selectedSource = document.querySelector('input[name="imageSource"]:checked').value;
-        if (selectedSource === 'upload' && uploadedImageBase64) {
-            coverImg = uploadedImageBase64;
-        } else {
-            coverImg = postImage.value;
-        }
+        try {
+            const titleVal = postTitle.value || "Título del Artículo";
+            const catVal = postCategory.value;
+            const excerptVal = postExcerpt.value || "Resumen breve explicativo del artículo.";
+            
+            let coverImg = "assets/service-aluminum-DfJojfyS.jpg";
+            const checkedRadio = document.querySelector('input[name="imageSource"]:checked');
+            const selectedSource = checkedRadio ? checkedRadio.value : 'default';
+            if (selectedSource === 'upload' && uploadedImageBase64) {
+                coverImg = uploadedImageBase64;
+            } else {
+                coverImg = postImage.value || "assets/service-aluminum-DfJojfyS.jpg";
+            }
 
-        // Apply metadata to preview fields
-        articlePreviewTitle.innerText = titleVal;
-        articlePreviewCategory.innerText = catVal;
-        articlePreviewHeroImg.src = coverImg;
-        articlePreviewHeroImg.alt = titleVal;
-        articlePreviewReadTime.innerText = calculateReadTime();
-        articlePreviewDate.innerText = getFormattedDate();
+            // Apply metadata to preview fields
+            if (articlePreviewTitle) articlePreviewTitle.innerText = titleVal;
+            if (articlePreviewCategory) articlePreviewCategory.innerText = catVal;
+            if (articlePreviewHeroImg) {
+                articlePreviewHeroImg.src = coverImg;
+                articlePreviewHeroImg.alt = titleVal;
+            }
+            if (articlePreviewReadTime) articlePreviewReadTime.innerText = calculateReadTime();
+            if (articlePreviewDate) articlePreviewDate.innerText = getFormattedDate();
 
-        // Apply author metadata to preview fields
-        const loggedAuthor = getLoggedAuthor();
-        if (articlePreviewAuthor) {
-            articlePreviewAuthor.innerText = loggedAuthor.name;
-        }
-        if (articlePreviewAuthorAvatar) {
-            articlePreviewAuthorAvatar.src = loggedAuthor.image;
-        }
-        if (articlePreviewAuthorName) {
-            articlePreviewAuthorName.innerText = loggedAuthor.name;
-        }
-        if (articlePreviewAuthorRole) {
-            articlePreviewAuthorRole.innerText = loggedAuthor.role;
-        }
-        if (articlePreviewAuthorBio) {
-            articlePreviewAuthorBio.innerText = loggedAuthor.bio;
-        }
+            // Apply author metadata to preview fields
+            const loggedAuthor = getLoggedAuthor();
+            if (articlePreviewAuthor) {
+                articlePreviewAuthor.innerText = loggedAuthor.name;
+            }
+            if (articlePreviewAuthorAvatar) {
+                articlePreviewAuthorAvatar.src = loggedAuthor.image;
+            }
+            if (articlePreviewAuthorName) {
+                articlePreviewAuthorName.innerText = loggedAuthor.name;
+            }
+            if (articlePreviewAuthorRole) {
+                articlePreviewAuthorRole.innerText = loggedAuthor.role;
+            }
+            if (articlePreviewAuthorBio) {
+                articlePreviewAuthorBio.innerText = loggedAuthor.bio;
+            }
 
-        // Compile content HTML
-        const html = compileHTML();
-        articlePreviewContent.innerHTML = html || '<p style="color:var(--cms-gray-text); font-style:italic;">Agrega bloques de contenido en la pestaña "Editor" para verlos renderizados aquí.</p>';
+            // Compile content HTML
+            const html = compileHTML();
+            if (articlePreviewContent) {
+                articlePreviewContent.innerHTML = html || '<p style="color:var(--cms-gray-text); font-style:italic;">Agrega bloques de contenido en la pestaña "Editor" para verlos renderizados aquí.</p>';
+            }
+        } catch (err) {
+            console.error("Error in renderLivePreview:", err);
+            alert("Error al generar vista previa: " + err.message);
+        }
     };
 
     const updateJsonOutput = () => {
@@ -871,11 +881,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const excerptVal = postExcerpt.value || "";
         
         let coverImg = "assets/service-aluminum-DfJojfyS.jpg";
-        const selectedSource = document.querySelector('input[name="imageSource"]:checked').value;
+        const checkedRadio = document.querySelector('input[name="imageSource"]:checked');
+        const selectedSource = checkedRadio ? checkedRadio.value : 'default';
         if (selectedSource === 'upload' && uploadedImageBase64) {
             coverImg = uploadedImageBase64;
         } else {
-            coverImg = postImage.value;
+            coverImg = postImage.value || "assets/service-aluminum-DfJojfyS.jpg";
         }
 
         const postObj = {
@@ -915,7 +926,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         let image = "";
-        const selectedSource = document.querySelector('input[name="imageSource"]:checked').value;
+        const checkedRadio = document.querySelector('input[name="imageSource"]:checked');
+        const selectedSource = checkedRadio ? checkedRadio.value : 'default';
         if (selectedSource === 'upload') {
             if (uploadedImageBase64) {
                 image = uploadedImageBase64;
@@ -924,7 +936,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
         } else {
-            image = postImage.value;
+            image = postImage.value || "assets/service-aluminum-DfJojfyS.jpg";
         }
 
         const html = compileHTML();
