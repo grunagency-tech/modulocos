@@ -928,6 +928,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let image = "";
         const checkedRadio = document.querySelector('input[name="imageSource"]:checked');
         const selectedSource = checkedRadio ? checkedRadio.value : 'default';
+        alert("DEBUG SAVE: selectedSource = " + selectedSource + ", uploadedImageBase64 = " + uploadedImageBase64);
         if (selectedSource === 'upload') {
             if (uploadedImageBase64) {
                 image = uploadedImageBase64;
@@ -1272,6 +1273,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
 
                     uploadedImageBase64 = finalImageUrl;
+                    alert("DEBUG UPLOAD: Succeeded. Variable uploadedImageBase64 = " + uploadedImageBase64);
                     
                     uploadPrompt.style.display = 'none';
                     imagePreview.src = finalImageUrl;
