@@ -1189,41 +1189,60 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (cropSaveBtn) {
         cropSaveBtn.addEventListener('click', () => {
-            if (!cropperInstance) return;
+            if (!cropperInstance) {
+                alert("Error: La herramienta de recorte no está inicializada.");
+                return;
+            }
             
-            let croppedBase64 = null;
             try {
-                const canvas = cropperInstance.getCroppedCanvas({
-                    maxWidth: 1280,
-                    maxHeight: 720,
-                    imageSmoothingEnabled: true,
-                    imageSmoothingQuality: 'high'
-                });
+                let croppedBase64 = null;
+                try {
+                    const canvas = cropperInstance.getCroppedCanvas({
+                        maxWidth: 1280,
+                        maxHeight: 720,
+                        imageSmoothingEnabled: true,
+                        imageSmoothingQuality: 'high'
+                    });
 
-                if (canvas) {
-                    croppedBase64 = canvas.toDataURL('image/jpeg', 0.75);
+                    if (canvas) {
+                        croppedBase64 = canvas.toDataURL('image/jpeg', 0.75);
+                    }
+                } catch (e) {
+                    console.error("Failed to crop canvas, using original image", e);
                 }
-            } catch (e) {
-                console.error("Failed to crop canvas, using original image", e);
-            }
 
-            // Fallback: If cropping failed or canvas is null, use the original image source
-            if (!croppedBase64) {
-                croppedBase64 = cropModalImage.src;
-            }
+                // Fallback: If cropping failed or canvas is null, use the original image source
+                if (!croppedBase64) {
+                    croppedBase64 = cropModalImage.src;
+                }
 
-            if (croppedBase64) {
-                uploadedImageBase64 = croppedBase64;
-                
-                uploadPrompt.style.display = 'none';
-                imagePreview.src = croppedBase64;
-                imagePreviewContainer.style.display = 'block';
-                
-                updateJsonOutput();
-                renderLivePreview();
+                if (croppedBase64) {
+                    uploadedImageBase64 = croppedBase64;
+                    
+                    uploadPrompt.style.display = 'none';
+                    imagePreview.src = croppedBase64;
+                    imagePreviewContainer.style.display = 'block';
+                    
+                    try {
+                        updateJsonOutput();
+                    } catch (errJson) {
+                        console.error("updateJsonOutput failed:", errJson);
+                    }
+                    
+                    try {
+                        renderLivePreview();
+                    } catch (errPrev) {
+                        console.error("renderLivePreview failed:", errPrev);
+                    }
+                } else {
+                    alert("No se pudo obtener la imagen recortada ni la original.");
+                }
+            } catch (globalErr) {
+                console.error("Global cropSaveBtn error:", globalErr);
+                alert("Error al procesar la imagen: " + globalErr.message);
+            } finally {
+                closeCropModal();
             }
-            
-            closeCropModal();
         });
     }
 
