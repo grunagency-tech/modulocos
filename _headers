@@ -1,3 +1,9 @@
+/control
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/control.html
+  Cache-Control: no-cache, no-store, must-revalidate
+
 /*
   # Previene Clickjacking — no permite embeber la web en iframes de terceros
   X-Frame-Options: DENY
