@@ -373,7 +373,7 @@ document.addEventListener('DOMContentLoaded', () => {
         postExcerpt.value = post.excerpt;
 
         // Cover image selector
-        if (post.image.startsWith('data:image/')) {
+        if (post.image.startsWith('data:image/') || post.image.startsWith('/images/') || post.image.startsWith('http')) {
             // It is an uploaded base64 custom image
             const uploadRadio = document.querySelector('input[name="imageSource"][value="upload"]');
             if (uploadRadio) uploadRadio.checked = true;
