@@ -176,7 +176,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const imagePreviewContainer = document.getElementById('imagePreviewContainer');
     const imagePreview = document.getElementById('imagePreview');
     const removeUploadedImage = document.getElementById('removeUploadedImage');
+    const imgbbApiKeyInput = document.getElementById('imgbbApiKeyInput');
     const blockBuilder = document.getElementById('blockBuilder');
+
+    // Load saved ImgBB key
+    if (imgbbApiKeyInput) {
+        imgbbApiKeyInput.value = localStorage.getItem('modulock_imgbb_key') || '';
+        imgbbApiKeyInput.addEventListener('input', () => {
+            localStorage.setItem('modulock_imgbb_key', imgbbApiKeyInput.value.trim());
+        });
+    }
 
     // Preview Pane fields
     const articlePreviewHero = document.getElementById('articlePreviewHero');
@@ -1188,12 +1197,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (cropSaveBtn) {
-        cropSaveBtn.addEventListener('click', () => {
+        cropSaveBtn.addEventListener('click', async () => {
             if (!cropperInstance) {
                 alert("Error: La herramienta de recorte no está inicializada.");
                 return;
             }
             
+            // Disable buttons and show loading indicator
+            const originalSaveText = cropSaveBtn.innerText;
+            cropSaveBtn.innerText = "Subiendo a la nube...";
+            cropSaveBtn.disabled = true;
+            if (cropCancelBtn) cropCancelBtn.disabled = true;
+
             try {
                 let croppedBase64 = null;
                 try {
@@ -1217,10 +1232,51 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 if (croppedBase64) {
-                    uploadedImageBase64 = croppedBase64;
+                    let finalImageUrl = croppedBase64;
+                    let uploadSuccessful = false;
+
+                    // Try uploading to ImgBB
+                    try {
+                        const defaultKey = "b0a701962bf1ce455e3962d3a957828a"; // Default fallback key
+                        const userKey = imgbbApiKeyInput ? imgbbApiKeyInput.value.trim() : "";
+                        const apiKey = userKey || defaultKey;
+                        
+                        const base64Data = croppedBase64.split(',')[1] || croppedBase64;
+                        const formData = new FormData();
+                        formData.append("image", base64Data);
+                        
+                        const response = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
+                            method: "POST",
+                            body: formData
+                        });
+                        
+                        if (!response.ok) {
+                            const errData = await response.json();
+                            throw new Error(errData.error?.message || "Error al subir la imagen a la nube.");
+                        }
+                        
+                        const result = await response.json();
+                        finalImageUrl = result.data.url;
+                        uploadSuccessful = true;
+                    } catch (uploadErr) {
+                        console.error("ImgBB upload failed:", uploadErr);
+                        const useLocal = confirm(
+                            "No se pudo guardar la imagen en la nube (ImgBB): " + uploadErr.message + 
+                            "\n\n¿Deseas guardarla localmente en tu navegador temporalmente como alternativa?"
+                        );
+                        if (!useLocal) {
+                            // If they don't want to use local fallback, abort the save and let them retry
+                            cropSaveBtn.innerText = originalSaveText;
+                            cropSaveBtn.disabled = false;
+                            if (cropCancelBtn) cropCancelBtn.disabled = false;
+                            return;
+                        }
+                    }
+
+                    uploadedImageBase64 = finalImageUrl;
                     
                     uploadPrompt.style.display = 'none';
-                    imagePreview.src = croppedBase64;
+                    imagePreview.src = finalImageUrl;
                     imagePreviewContainer.style.display = 'block';
                     
                     try {
@@ -1234,6 +1290,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     } catch (errPrev) {
                         console.error("renderLivePreview failed:", errPrev);
                     }
+                    
+                    // Only close modal if save succeeded or fell back
+                    closeCropModal();
                 } else {
                     alert("No se pudo obtener la imagen recortada ni la original.");
                 }
@@ -1241,7 +1300,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error("Global cropSaveBtn error:", globalErr);
                 alert("Error al procesar la imagen: " + globalErr.message);
             } finally {
-                closeCropModal();
+                // Restore button state
+                cropSaveBtn.innerText = originalSaveText;
+                cropSaveBtn.disabled = false;
+                if (cropCancelBtn) cropCancelBtn.disabled = false;
             }
         });
     }
