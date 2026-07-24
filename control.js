@@ -160,6 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const cmsSearchInput = document.getElementById('cmsSearchInput');
     const cmsNewPostBtn = document.getElementById('cmsNewPostBtn');
     const cmsSaveBtn = document.getElementById('cmsSaveBtn');
+    const cmsSaveDraftBtn = document.getElementById('cmsSaveDraftBtn');
     const cmsTabBtns = document.querySelectorAll('.cms-tab-btn');
     const cmsPanels = document.querySelectorAll('.cms-panel');
 
@@ -334,8 +335,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const item = document.createElement('div');
             item.className = `cms-post-item ${selectedPostId === post.id ? 'active' : ''}`;
             
-            const badgeClass = post.isSystem ? 'badge-system' : 'badge-custom';
-            const badgeText = post.isSystem ? 'Sistema' : 'Personalizado';
+            const badgeClass = post.isSystem ? 'badge-system' : (post.isDraft ? 'badge-draft' : 'badge-custom');
+            const badgeText = post.isSystem ? 'Sistema' : (post.isDraft ? 'Borrador' : 'Personalizado');
 
             item.innerHTML = `
                 <div class="cms-post-item-title">${post.title}</div>
@@ -394,7 +395,7 @@ document.addEventListener('DOMContentLoaded', () => {
         await loadPostsDatabase();
 
         if (selectedPostId && selectedPostId.toString() === postId.toString()) {
-            createNewDraft();
+            await createNewDraft();
         } else {
             renderSidebarPosts();
         }
@@ -465,42 +466,64 @@ document.addEventListener('DOMContentLoaded', () => {
             actionRow.style.display = isEditable ? 'flex' : 'none';
         }
 
-        // Disable save button for system posts
+        // Handle buttons based on edit state
         if (isEditable) {
+            const currentPost = posts.find(p => p.id === selectedPostId);
+            const isDraft = currentPost ? currentPost.isDraft : true;
+
             cmsSaveBtn.disabled = false;
-            cmsSaveBtn.innerText = selectedPostId ? 'Guardar Cambios' : 'Crear Post';
+            cmsSaveBtn.innerText = isDraft ? 'Publicar Artículo' : 'Guardar Cambios';
             cmsSaveBtn.style.opacity = '1';
+
+            if (cmsSaveDraftBtn) {
+                cmsSaveDraftBtn.style.display = 'inline-block';
+                cmsSaveDraftBtn.disabled = false;
+                cmsSaveDraftBtn.innerText = 'Guardar Borrador';
+            }
         } else {
             cmsSaveBtn.disabled = true;
             cmsSaveBtn.innerText = 'Lectura (Default)';
             cmsSaveBtn.style.opacity = '0.5';
+
+            if (cmsSaveDraftBtn) {
+                cmsSaveDraftBtn.style.display = 'none';
+                cmsSaveDraftBtn.disabled = true;
+            }
         }
     };
 
-    const createNewDraft = () => {
-        selectedPostId = null;
+    const createNewDraft = async () => {
+        // Create the draft object in the database immediately
+        const newPostId = Date.now();
+        const newPost = {
+            id: newPostId,
+            slug: `borrador-${newPostId}`,
+            title: 'Borrador sin título',
+            category: 'Aluminio y Vidrio',
+            excerpt: 'Escribe un resumen breve aquí...',
+            content: '<p>Comienza a escribir tu artículo...</p>',
+            readTime: '1 min de lectura',
+            date: getFormattedDate(),
+            image: 'assets/service-aluminum-DfJojfyS.jpg',
+            author: getLoggedAuthor(),
+            blocks: [{ id: Date.now(), type: 'p', value: '' }],
+            isDraft: true
+        };
+
+        // Add to local database
+        const customPosts = JSON.parse(localStorage.getItem('modulock_blog_posts')) || [];
+        customPosts.unshift(newPost);
+        localStorage.setItem('modulock_blog_posts', JSON.stringify(customPosts));
+
+        // Sync to cloud KV (non-blocking)
+        savePostsToCloud(customPosts, undefined);
+
+        // Update active database and select the post
+        selectedPostId = newPostId;
         selectedPostIsSystem = false;
-        renderSidebarPosts();
-
-        // Reset fields
-        postTitle.value = '';
-        postCategory.value = 'Aluminio y Vidrio';
-        postExcerpt.value = '';
-        const defaultRadio = document.querySelector('input[name="imageSource"][value="default"]');
-        if (defaultRadio) defaultRadio.checked = true;
-        defaultImageContainer.style.display = 'block';
-        uploadImageContainer.style.display = 'none';
-        postImage.value = 'assets/service-aluminum-DfJojfyS.jpg';
-
-        resetUploadUI();
-        toggleEditorInputs(true);
-
-        // Prepopulate with a single paragraph block to make onboarding easier
-        currentPostBlocks = [
-            { id: Date.now(), type: 'p', value: '' }
-        ];
-        renderBlocks();
-        updateJsonOutput();
+        
+        await loadPostsDatabase();
+        selectPost(newPostId);
     };
 
 
@@ -1032,8 +1055,8 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
 
-    // 10. SAVE CHANGES LOGIC (COMMIT TO LOCAL STORAGE)
-    cmsSaveBtn.addEventListener('click', async () => {
+    // 10. SAVE CHANGES LOGIC (COMMIT TO LOCAL STORAGE & CLOUD KV)
+    const savePostWorkflow = async (asDraft) => {
         if (selectedPostIsSystem) {
             alert("Los posts del sistema no se pueden modificar directamente.");
             return;
@@ -1043,8 +1066,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const category = postCategory.value;
         const excerpt = postExcerpt.value.trim();
 
-        if (!title || !excerpt) {
-            alert("Por favor rellena el título y el resumen.");
+        if (!title) {
+            alert("Por favor rellena el título del artículo.");
             return;
         }
 
@@ -1067,36 +1090,52 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const customPosts = JSON.parse(localStorage.getItem('modulock_blog_posts')) || [];
 
-        const originalBtnText = cmsSaveBtn.innerText;
-        cmsSaveBtn.innerText = "Guardando...";
+        const activeBtn = asDraft ? cmsSaveDraftBtn : cmsSaveBtn;
+        const originalBtnText = activeBtn ? activeBtn.innerText : "Guardar";
+        
+        if (activeBtn) {
+            activeBtn.innerText = "Guardando...";
+        }
         cmsSaveBtn.disabled = true;
+        if (cmsSaveDraftBtn) cmsSaveDraftBtn.disabled = true;
 
         try {
             if (selectedPostId) {
-                // Update existing custom post
                 const idx = customPosts.findIndex(p => p.id === selectedPostId);
                 if (idx !== -1) {
                     customPosts[idx] = {
                         ...customPosts[idx],
                         title,
+                        slug: asDraft ? `borrador-${selectedPostId}` : slugify(title),
                         category,
                         excerpt,
                         content: html,
                         readTime,
                         image,
-                        blocks: currentPostBlocks
+                        blocks: currentPostBlocks,
+                        isDraft: asDraft
                     };
+                } else {
+                    customPosts.unshift({
+                        id: selectedPostId,
+                        slug: asDraft ? `borrador-${selectedPostId}` : slugify(title),
+                        title,
+                        category,
+                        excerpt,
+                        content: html,
+                        readTime,
+                        date: getFormattedDate(),
+                        image,
+                        author: getLoggedAuthor(),
+                        blocks: currentPostBlocks,
+                        isDraft: asDraft
+                    });
                 }
-                localStorage.setItem('modulock_blog_posts', JSON.stringify(customPosts));
-                await savePostsToCloud(customPosts, undefined);
-                localStorage.removeItem('modulock_current_draft');
-                alert("Artículo actualizado con éxito.");
             } else {
-                // Create a new post
                 const newPostId = Date.now();
-                const newPost = {
+                customPosts.unshift({
                     id: newPostId,
-                    slug: slugify(title),
+                    slug: asDraft ? `borrador-${newPostId}` : slugify(title),
                     title,
                     category,
                     excerpt,
@@ -1105,26 +1144,42 @@ document.addEventListener('DOMContentLoaded', () => {
                     date: getFormattedDate(),
                     image,
                     author: getLoggedAuthor(),
-                    blocks: currentPostBlocks
-                };
-                customPosts.unshift(newPost);
-                localStorage.setItem('modulock_blog_posts', JSON.stringify(customPosts));
-                await savePostsToCloud(customPosts, undefined);
-                localStorage.removeItem('modulock_current_draft');
+                    blocks: currentPostBlocks,
+                    isDraft: asDraft
+                });
                 selectedPostId = newPostId;
-                alert("Artículo guardado y publicado en el blog con éxito.");
+            }
+
+            localStorage.setItem('modulock_blog_posts', JSON.stringify(customPosts));
+            await savePostsToCloud(customPosts, undefined);
+            localStorage.removeItem('modulock_current_draft');
+            
+            await loadPostsDatabase();
+            selectPost(selectedPostId);
+
+            if (asDraft) {
+                alert("Borrador guardado con éxito.");
+            } else {
+                alert("Artículo publicado con éxito en el blog.");
             }
         } catch (saveErr) {
             console.error("Error saving post to cloud:", saveErr);
             alert("Error al guardar en el servidor: " + saveErr.message);
         } finally {
-            cmsSaveBtn.innerText = originalBtnText;
+            if (activeBtn) {
+                activeBtn.innerText = originalBtnText;
+            }
             cmsSaveBtn.disabled = false;
+            if (cmsSaveDraftBtn) {
+                cmsSaveDraftBtn.disabled = false;
+            }
         }
+    };
 
-        await loadPostsDatabase();
-        selectPost(selectedPostId);
-    });
+    cmsSaveBtn.addEventListener('click', () => savePostWorkflow(false));
+    if (cmsSaveDraftBtn) {
+        cmsSaveDraftBtn.addEventListener('click', () => savePostWorkflow(true));
+    }
 
 
     // 11. COVER IMAGE UPLOADER & CANVAS COMPRESSION
@@ -1611,7 +1666,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // INITIALIZE CMS APPLICATION
     (async () => {
         await loadPostsDatabase();
-        createNewDraft();
+        if (posts.length > 0) {
+            selectPost(posts[0].id);
+        } else {
+            await createNewDraft();
+        }
         checkAndRestoreDraft();
     })();
 
