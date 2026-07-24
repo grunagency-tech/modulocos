@@ -971,6 +971,32 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    let isRestoringDraft = false;
+
+    const saveDraftToLocalStorage = () => {
+        if (isRestoringDraft) return;
+        
+        const hasContent = postTitle.value.trim() || postExcerpt.value.trim() || currentPostBlocks.length > 0;
+        if (!hasContent) {
+            localStorage.removeItem('modulock_current_draft');
+            return;
+        }
+        
+        const draft = {
+            selectedPostId,
+            selectedPostIsSystem,
+            title: postTitle.value,
+            category: postCategory.value,
+            excerpt: postExcerpt.value,
+            uploadedImageBase64,
+            imageSource: document.querySelector('input[name="imageSource"]:checked')?.value || 'default',
+            imageValue: postImage.value,
+            blocks: currentPostBlocks,
+            timestamp: Date.now()
+        };
+        localStorage.setItem('modulock_current_draft', JSON.stringify(draft));
+    };
+
     const updateJsonOutput = () => {
         const titleVal = postTitle.value || "Sin título";
         const catVal = postCategory.value;
@@ -1002,6 +1028,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (cmsJsonTextarea) {
             cmsJsonTextarea.value = JSON.stringify(postObj, null, 2);
         }
+        saveDraftToLocalStorage();
     };
 
 
@@ -1062,6 +1089,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 localStorage.setItem('modulock_blog_posts', JSON.stringify(customPosts));
                 await savePostsToCloud(customPosts, undefined);
+                localStorage.removeItem('modulock_current_draft');
                 alert("Artículo actualizado con éxito.");
             } else {
                 // Create a new post
@@ -1082,6 +1110,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 customPosts.unshift(newPost);
                 localStorage.setItem('modulock_blog_posts', JSON.stringify(customPosts));
                 await savePostsToCloud(customPosts, undefined);
+                localStorage.removeItem('modulock_current_draft');
                 selectedPostId = newPostId;
                 alert("Artículo guardado y publicado en el blog con éxito.");
             }
@@ -1529,8 +1558,61 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
+    const checkAndRestoreDraft = () => {
+        const draftStr = localStorage.getItem('modulock_current_draft');
+        if (draftStr) {
+            try {
+                const draft = JSON.parse(draftStr);
+                const confirmRestore = confirm("Detectamos un borrador no guardado de tu último artículo. ¿Deseas recuperarlo para seguir editando?");
+                if (confirmRestore) {
+                    isRestoringDraft = true;
+                    selectedPostId = draft.selectedPostId;
+                    selectedPostIsSystem = draft.selectedPostIsSystem;
+                    postTitle.value = draft.title || '';
+                    postCategory.value = draft.category || 'Aluminio y Vidrio';
+                    postExcerpt.value = draft.excerpt || '';
+                    uploadedImageBase64 = draft.uploadedImageBase64 || '';
+                    
+                    // Restore image source radio
+                    const radioVal = draft.imageSource || 'default';
+                    const radio = document.querySelector(`input[name="imageSource"][value="${radioVal}"]`);
+                    if (radio) {
+                        radio.checked = true;
+                        if (radioVal === 'upload') {
+                            defaultImageContainer.style.display = 'none';
+                            uploadImageContainer.style.display = 'block';
+                            if (uploadedImageBase64) {
+                                imagePreview.src = uploadedImageBase64;
+                                imagePreviewContainer.style.display = 'block';
+                                uploadPrompt.style.display = 'none';
+                            }
+                        } else {
+                            defaultImageContainer.style.display = 'block';
+                            uploadImageContainer.style.display = 'none';
+                            postImage.value = draft.imageValue || '';
+                        }
+                    }
+                    
+                    currentPostBlocks = draft.blocks || [];
+                    renderBlocks();
+                    updateJsonOutput();
+                    renderLivePreview();
+                    isRestoringDraft = false;
+                } else {
+                    localStorage.removeItem('modulock_current_draft');
+                }
+            } catch (e) {
+                console.error("Error restoring draft:", e);
+                isRestoringDraft = false;
+            }
+        }
+    };
+
     // INITIALIZE CMS APPLICATION
-    loadPostsDatabase();
-    createNewDraft();
+    (async () => {
+        await loadPostsDatabase();
+        createNewDraft();
+        checkAndRestoreDraft();
+    })();
 
 });

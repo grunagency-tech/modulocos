@@ -8,10 +8,33 @@ export async function onRequestGet(context) {
             });
         }
 
-        const customPosts = await kv.get('blog_custom_posts', { type: 'json' }) || [];
-        const deletedSystem = await kv.get('blog_deleted_system_posts', { type: 'json' }) || [];
+        const customPostsStr = await kv.get('blog_custom_posts') || '[]';
+        const deletedSystemStr = await kv.get('blog_deleted_system_posts') || '[]';
 
-        return new Response(JSON.stringify({ customPosts, deletedSystem }), {
+        let customPosts = [];
+        let deletedSystem = [];
+        let parseError = null;
+
+        try {
+            customPosts = JSON.parse(customPostsStr);
+        } catch (e) {
+            parseError = `customPosts parse error: ${e.message}`;
+        }
+
+        try {
+            deletedSystem = JSON.parse(deletedSystemStr);
+        } catch (e) {
+            parseError = (parseError ? parseError + '; ' : '') + `deletedSystem parse error: ${e.message}`;
+        }
+
+        const responseObj = { customPosts, deletedSystem };
+        if (parseError) {
+            responseObj.parseError = parseError;
+            responseObj.rawCustomPosts = customPostsStr;
+            responseObj.rawDeletedSystem = deletedSystemStr;
+        }
+
+        return new Response(JSON.stringify(responseObj), {
             headers: { 
                 'Content-Type': 'application/json',
                 'Cache-Control': 'no-cache, no-store, must-revalidate'
