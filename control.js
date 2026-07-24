@@ -617,7 +617,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Render headers and rows editor
                 let headersHTML = '';
                 block.value.headers.forEach((h, hIdx) => {
-                    headersHTML += `<th><input type="text" value="${h}" ${!isEditable ? 'disabled' : ''} oninput="window.cmsUpdateTableHeader(${block.id}, ${hIdx}, this.value)" /></th>`;
+                    headersHTML += `
+                        <th>
+                            <div style="display:flex; align-items:center; gap:0.25rem; min-width:80px;">
+                                <input type="text" value="${h}" ${!isEditable ? 'disabled' : ''} oninput="window.cmsUpdateTableHeader(${block.id}, ${hIdx}, this.value)" style="flex:1; width:100%;" />
+                                ${isEditable && block.value.headers.length > 1 ? `
+                                    <button type="button" class="block-control-btn btn-delete" style="width:1.25rem; height:1.25rem; font-size:0.65rem; padding:0; display:flex; align-items:center; justify-content:center;" title="Eliminar columna" onclick="window.cmsDeleteTableColumn(${block.id}, ${hIdx})">&times;</button>
+                                ` : ''}
+                            </div>
+                        </th>`;
                 });
 
                 let rowsHTML = '';
@@ -650,6 +658,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     ${isEditable ? `
                         <div style="display:flex; gap:0.5rem; margin-top:0.75rem;">
                             <button type="button" class="add-block-btn" style="padding:0.3rem 0.75rem !important; font-size:0.65rem;" onclick="window.cmsAddTableRow(${block.id})">+ Agregar Fila</button>
+                            <button type="button" class="add-block-btn" style="padding:0.3rem 0.75rem !important; font-size:0.65rem;" onclick="window.cmsAddTableColumn(${block.id})">+ Agregar Columna</button>
                         </div>
                     ` : ''}
                 `;
@@ -720,12 +729,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.cmsUpdateTableHeader = (blockId, hIdx, newVal) => {
         const b = currentPostBlocks.find(x => x.id === blockId);
-        if (b) b.value.headers[hIdx] = newVal;
+        if (b) {
+            b.value.headers[hIdx] = newVal;
+            updateJsonOutput();
+            renderLivePreview();
+        }
     };
 
     window.cmsUpdateTableCell = (blockId, rIdx, cIdx, newVal) => {
         const b = currentPostBlocks.find(x => x.id === blockId);
-        if (b) b.value.rows[rIdx][cIdx] = newVal;
+        if (b) {
+            b.value.rows[rIdx][cIdx] = newVal;
+            updateJsonOutput();
+            renderLivePreview();
+        }
     };
 
     window.cmsAddTableRow = (blockId) => {
@@ -735,6 +752,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const newRow = Array(cols).fill('');
             b.value.rows.push(newRow);
             renderBlocks();
+            updateJsonOutput();
+            renderLivePreview();
         }
     };
 
@@ -743,12 +762,41 @@ document.addEventListener('DOMContentLoaded', () => {
         if (b && b.value.rows.length > 1) {
             b.value.rows.splice(rIdx, 1);
             renderBlocks();
+            updateJsonOutput();
+            renderLivePreview();
+        }
+    };
+
+    window.cmsAddTableColumn = (blockId) => {
+        const b = currentPostBlocks.find(x => x.id === blockId);
+        if (b) {
+            const nextColNum = b.value.headers.length + 1;
+            b.value.headers.push(`Columna ${nextColNum}`);
+            b.value.rows.forEach(r => r.push(''));
+            renderBlocks();
+            updateJsonOutput();
+            renderLivePreview();
+        }
+    };
+
+    window.cmsDeleteTableColumn = (blockId, cIdx) => {
+        const b = currentPostBlocks.find(x => x.id === blockId);
+        if (b && b.value.headers.length > 1) {
+            b.value.headers.splice(cIdx, 1);
+            b.value.rows.forEach(r => r.splice(cIdx, 1));
+            renderBlocks();
+            updateJsonOutput();
+            renderLivePreview();
         }
     };
 
     window.cmsUpdateFaqVal = (blockId, fIdx, field, newVal) => {
         const b = currentPostBlocks.find(x => x.id === blockId);
-        if (b) b.value[fIdx][field] = newVal;
+        if (b) {
+            b.value[fIdx][field] = newVal;
+            updateJsonOutput();
+            renderLivePreview();
+        }
     };
 
     window.cmsAddFaqRow = (blockId) => {
@@ -756,6 +804,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (b) {
             b.value.push({ question: 'Pregunta frecuente', answer: 'Respuesta' });
             renderBlocks();
+            updateJsonOutput();
+            renderLivePreview();
         }
     };
 
@@ -764,6 +814,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (b && b.value.length > 1) {
             b.value.splice(fIdx, 1);
             renderBlocks();
+            updateJsonOutput();
+            renderLivePreview();
         }
     };
 
